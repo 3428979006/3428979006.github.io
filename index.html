@@ -43,14 +43,17 @@
     <div class="tips">⚠️未成年人禁止下单 | FG俱乐部 全天接单<br>下单后请进群联系管理员付款，未付款/已退款订单一律不予打单</div>
     <div class="title">FG俱乐部<br>护航下单综合系统</div>
 
-    <!-- 订单查询区域 订单编号+商品编号 双重验证 -->
+<!-- 订单查询区域 订单编号+商品编号 双重验证 -->
+<form method="POST" data-netlify="true" name="order-form">
     <div class="query-box">
         <h3 style="text-align:center;color:#ffd700;margin-bottom:10px;">订单查询验证</h3>
-        <input placeholder="请输入订单编号" id="queryOrderId">
-        <input placeholder="请输入商品编号" id="queryShopCode">
-        <button class="btn1" onclick="queryOrder()">立即查询订单</button>
+        <input type="text" name="order_id" placeholder="请输入订单编号" id="queryOrderId">
+        <input type="text" name="product_id" placeholder="请输入商品编号" id="queryShopCode">
+        <button type="submit" class="btn1">立即查询订单</button>
         <div id="queryResult" style="margin-top:10px;text-align:center;"></div>
     </div>
+</form>
+
 
     <!-- 商品套餐 -->
     <div class="box">
