@@ -12,7 +12,6 @@
             font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
         }
 
-        /* 动态军工暗黑背景 - 顶级电竞官网同款 */
         body {
             background: linear-gradient(-45deg, #121826, #0F172A, #1E293B, #0F172A);
             background-size: 400% 400%;
@@ -29,7 +28,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 雪花特效 - 柔和不突兀 */
         .snow {
             position: fixed;
             background: rgba(255,255,255,0.3);
@@ -42,7 +40,6 @@
             z-index: 2;
         }
 
-        /* 顶部视觉区 - 沉浸式设计 */
         .hero-header {
             text-align: center;
             padding: 40px 20px;
@@ -65,7 +62,6 @@
             letter-spacing: 2px;
         }
 
-        /* 顶级公告栏 - 警示醒目不刺眼 */
         .notice-bar {
             background: rgba(239,68,68,0.08);
             backdrop-filter: blur(20px);
@@ -79,7 +75,6 @@
             line-height: 1.8;
         }
 
-        /* 终极卡片设计 - 双层磨砂玻璃 */
         .glass-card {
             background: rgba(255,255,255,0.04);
             backdrop-filter: blur(22px);
@@ -115,7 +110,6 @@
             border-radius: 3px;
         }
 
-        /* 输入框 - 军工质感设计 */
         .input-item {
             width: 100%;
             background: rgba(255,255,255,0.05);
@@ -134,7 +128,6 @@
             box-shadow: 0 0 12px rgba(16,185,129,0.2);
         }
 
-        /* 顶级按钮 - 渐变发光+按压反馈 */
         .btn {
             width: 100%;
             padding: 18px;
@@ -176,7 +169,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 商品列表 - 极致整洁 */
         .goods-item {
             padding: 20px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -208,7 +200,6 @@
             margin-bottom: 12px;
         }
 
-        /* 订单展示 - 专业清晰 */
         .order-item {
             background: rgba(255,255,255,0.05);
             border-left: 4px solid #10B981;
@@ -223,7 +214,6 @@
             margin: 4px 0;
         }
 
-        /* 导航按钮组 */
         .nav-group {
             display: flex;
             flex-wrap: wrap;
@@ -236,7 +226,6 @@
             padding: 16px 28px;
         }
 
-        /* 弹窗 - 顶级磨砂质感 */
         .modal {
             position: fixed;
             top: 0;
@@ -274,25 +263,11 @@
             margin-bottom: 30px;
         }
 
-        /* 工具类 */
-        .hidden {
-            display: none;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-success {
-            color: #10B981;
-            font-weight: bold;
-        }
-        .text-danger {
-            color: #F87171;
-            font-weight: bold;
-        }
-        .text-warning {
-            color: #EAB308;
-            font-weight: bold;
-        }
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-success { color: #10B981; font-weight: bold; }
+        .text-danger { color: #F87171; font-weight: bold; }
+        .text-warning { color: #EAB308; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -341,20 +316,20 @@
     </div>
 </div>
 
-<!-- 顶部视觉区 -->
+<!-- 顶部 -->
 <div class="hero-header">
     <h1>FG 俱乐部</h1>
     <p>暗区突围 · 专业护航 | 物资 | 代练 一站式服务</p>
 </div>
 
-<!-- 公告栏 -->
+<!-- 公告 -->
 <div class="notice-bar">
     ⚠️ 未成年人请勿下单 | FG俱乐部平台24小时稳定接单<br>
     所有订单必须加入官方QQ群对接，未进群不安排服务
 </div>
 
-<!-- 订单查询 -->
-<div class="glass-card" id="card_query">
+<!-- 订单查询 永远固定显示 -->
+<div class="glass-card">
     <h3 class="card-title">🔍 FG俱乐部 订单快速查询</h3>
     <input class="input-item" placeholder="输入订单编号" id="queryOrderId">
     <input class="input-item" placeholder="输入游戏ID" id="queryGameId">
@@ -363,8 +338,8 @@
     <div style="text-align:center;margin-top:18px;" id="queryResult"></div>
 </div>
 
-<!-- 商品列表 -->
-<div class="glass-card" id="card_goods">
+<!-- 商品列表 永远固定显示 -->
+<div class="glass-card">
     <h3 class="card-title">📦 FG俱乐部 精品护航套餐</h3>
 
     <div class="goods-item">
@@ -428,37 +403,34 @@
     <button class="btn btn-success" onclick="submitOrder()">确认提交订单</button>
 </div>
 
-<!-- 导航入口 -->
+<!-- 导航按钮 -->
 <div class="nav-group">
     <button class="btn btn-dark" onclick="showAdmin()">🔐 FG俱乐部 管理员后台</button>
     <button class="btn btn-dark" onclick="showOrderManage()">📋 FG俱乐部 订单管理</button>
 </div>
 
-<!-- 管理员登录 -->
+<!-- 以下全部是后台页面 -->
 <div class="glass-card hidden" id="adminLogin">
     <h3 class="card-title">FG俱乐部 管理员登录</h3>
     <input class="input-item" type="password" placeholder="输入管理员密码" id="adminPwd">
     <button class="btn btn-success" onclick="loginAdmin()">登录后台</button>
-    <button class="btn btn-dark" onclick="hideAll()">返回首页</button>
+    <button class="btn btn-dark" onclick="backHome()">返回首页</button>
 </div>
 
-<!-- 订单状态管理 -->
 <div class="glass-card hidden" id="adminMain">
     <h3 class="card-title">📋 FG俱乐部 订单状态管理</h3>
     <div id="orderList"></div>
-    <button class="btn btn-dark" onclick="hideAll()">退出后台</button>
+    <button class="btn btn-dark" onclick="backHome()">退出后台</button>
 </div>
 
-<!-- 订单删除管理 -->
 <div class="glass-card hidden" id="orderDelManage">
     <h3 class="card-title">🗑️ FG俱乐部 订单删除管理</h3>
     <button class="btn btn-danger" onclick="clearAllOrder()">清空所有订单</button>
     <div id="delOrderList" style="margin-top:20px;"></div>
-    <button class="btn btn-dark" onclick="hideAll()">退出后台</button>
+    <button class="btn btn-dark" onclick="backHome()">退出后台</button>
 </div>
 
 <script>
-    // 核心配置
     const CONFIG = {
         adminPwd: '13467925QQ',
         mailTo: '3428979006@qq.com',
@@ -470,245 +442,151 @@
     let currentOrder = null;
     let adminType = 0;
 
-    // 本地存储操作
-    function getOrders() {
-        const data = localStorage.getItem(CONFIG.orderKey);
-        return data ? JSON.parse(data) : [];
-    }
-    function saveOrders(orders) {
-        localStorage.setItem(CONFIG.orderKey, JSON.stringify(orders));
-    }
+    function getOrders(){let d=localStorage.getItem(CONFIG.orderKey);return d?JSON.parse(d):[]}
+    function saveOrders(o){localStorage.setItem(CONFIG.orderKey,JSON.stringify(o))}
 
-    // 选择商品
-    function selectGoods(name, price, code) {
-        currentGoods = { name, price, code };
-        document.getElementById('formTitle').innerText = `FG俱乐部 下单：${name}`;
-        document.getElementById('formPrice').innerText = `价格：¥${price}`;
-        document.getElementById('orderForm').classList.remove('hidden');
-        window.scrollTo(0, document.body.scrollHeight);
+    function selectGoods(name,price,code){
+        currentGoods={name,price,code};
+        document.getElementById("formTitle").innerText=`FG俱乐部 下单：${name}`;
+        document.getElementById("formPrice").innerText=`价格：¥${price}`;
+        document.getElementById("orderForm").classList.remove("hidden");
+        window.scrollTo(0,document.body.scrollHeight);
     }
 
-    // 生成订单号
-    function createOrderNo() {
-        const date = new Date();
-        const rand = Math.floor(Math.random()*90000+10000);
-        return `FG${date.getFullYear().toString().slice(2)}${date.getMonth()+1}${date.getDate()}${rand}`;
+    function createOrderNo(){
+        let d=new Date();
+        let r=Math.floor(Math.random()*90000+10000);
+        return `FG${d.getFullYear().toString().slice(2)}${d.getMonth()+1}${d.getDate()}${r}`;
     }
 
-    // 提交订单
-    function submitOrder() {
-        const gameId = document.getElementById('gameId').value.trim();
-        const goodsCode = document.getElementById('goodsCode').value.trim();
-        const remark = document.getElementById('userRemark').value.trim();
-
-        if(!gameId) return alert('请填写游戏ID！');
-        if(!goodsCode || goodsCode !== currentGoods.code) return alert('商品编号错误！');
-
-        const orderNo = createOrderNo();
-        const order = {
-            orderNo,
-            goodsName: currentGoods.name,
-            price: currentGoods.price,
-            goodsCode: currentGoods.code,
-            gameId,
-            remark,
-            createTime: new Date().toLocaleString(),
-            status: '待付款'
-        };
-
-        const orders = getOrders();
-        orders.push(order);
-        saveOrders(orders);
-
-        document.getElementById('orderIdTip').innerText = `FG俱乐部 订单编号：${orderNo}`;
-        document.getElementById('qqModal').style.display = 'flex';
-        document.getElementById('orderForm').classList.add('hidden');
+    function submitOrder(){
+        let gameId=document.getElementById("gameId").value.trim();
+        let goodsCode=document.getElementById("goodsCode").value.trim();
+        let remark=document.getElementById("userRemark").value.trim();
+        if(!gameId)return alert("请填写游戏ID！");
+        if(!goodsCode||goodsCode!==currentGoods.code)return alert("商品编号错误！");
+        let orderNo=createOrderNo();
+        let order={orderNo,goodsName:currentGoods.name,price:currentGoods.price,goodsCode:currentGoods.code,gameId,remark,createTime:new Date().toLocaleString(),status:"待付款"};
+        let arr=getOrders();arr.push(order);saveOrders(arr);
+        document.getElementById("orderIdTip").innerText=`FG俱乐部 订单编号：${orderNo}`;
+        document.getElementById("qqModal").style.display="flex";
+        document.getElementById("orderForm").classList.add("hidden");
     }
 
-    // 查询订单
-    function checkOrder() {
-        const orderNo = document.getElementById('queryOrderId').value.trim();
-        const gameId = document.getElementById('queryGameId').value.trim();
-        const goodsCode = document.getElementById('queryGoodsId').value.trim();
-
-        if(!orderNo || !gameId || !goodsCode) {
-            document.getElementById('queryResult').innerHTML = `<span class="text-danger">请填写完整查询信息！</span>`;
+    function checkOrder(){
+        let o=document.getElementById("queryOrderId").value.trim();
+        let g=document.getElementById("queryGameId").value.trim();
+        let c=document.getElementById("queryGoodsId").value.trim();
+        if(!o||!g||!c){
+            document.getElementById("queryResult").innerHTML='<span class="text-danger">请填写完整查询信息！</span>';
             return;
         }
-
-        const orders = getOrders();
-        const order = orders.find(item => item.orderNo === orderNo && item.gameId === gameId && item.goodsCode === goodsCode);
-
-        if(order) {
-            currentOrder = order;
-            document.getElementById('queryResult').innerHTML = `<span class="text-success">✅ FG俱乐部 订单查询成功</span>`;
-            showOrderInfo(order);
-        } else {
-            document.getElementById('queryResult').innerHTML = `<span class="text-danger">❌ 未找到FG俱乐部对应订单</span>`;
+        let arr=getOrders();
+        let res=arr.find(x=>x.orderNo===o&&x.gameId===g&&x.goodsCode===c);
+        if(res){
+            currentOrder=res;
+            document.getElementById("queryResult").innerHTML='<span class="text-success">✅ FG俱乐部 订单查询成功</span>';
+            showOrderInfo(res);
+        }else{
+            document.getElementById("queryResult").innerHTML='<span class="text-danger">❌ 未找到FG俱乐部对应订单</span>';
         }
     }
 
-    // 显示订单信息
-    function showOrderInfo(order) {
-        const info = `
-订单编号：${order.orderNo}
-商品名称：${order.goodsName}
-商品价格：${order.price}
-游戏ID：${order.gameId}
-订单状态：${order.status}
-下单时间：${order.createTime}
-备注：${order.remark || '无备注'}
-        `;
-        document.getElementById('orderInfo').innerText = info;
-        document.getElementById('mailModal').style.display = 'flex';
+    function showOrderInfo(order){
+        let info=`订单编号：${order.orderNo}\n商品名称：${order.goodsName}\n商品价格：${order.price}\n游戏ID：${order.gameId}\n订单状态：${order.status}\n下单时间：${order.createTime}\n备注：${order.remark||"无备注"}`;
+        document.getElementById("orderInfo").innerText=info;
+        document.getElementById("mailModal").style.display="flex";
     }
 
-    // 弹窗操作
-    function joinQQ() {
-        window.location.href = `mqqapi://card/show_pslcard?uin=${CONFIG.qqGroup}&card_type=group`;
-        closeModal();
-    }
-    function closeModal() {
-        document.getElementById('qqModal').style.display = 'none';
-    }
-    function closeMailModal() {
-        document.getElementById('mailModal').style.display = 'none';
-    }
+    function joinQQ(){window.location.href=`mqqapi://card/show_pslcard?uin=${CONFIG.qqGroup}&card_type=group`;closeModal()}
+    function closeModal(){document.getElementById("qqModal").style.display="none"}
+    function closeMailModal(){document.getElementById("mailModal").style.display="none"}
 
-    // 发送邮件
-    function sendMail() {
-        if(!currentOrder) return;
-        const subject = `FG俱乐部订单通知-${currentOrder.orderNo}`;
-        const body = `
-订单编号：${currentOrder.orderNo}
-商品：${currentOrder.goodsName}
-价格：${currentOrder.price}
-游戏ID：${currentOrder.gameId}
-状态：${currentOrder.status}
-下单时间：${currentOrder.createTime}
-备注：${currentOrder.remark || '无'}
-        `;
-        window.location.href = `mailto:${CONFIG.mailTo}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    function sendMail(){
+        if(!currentOrder)return;
+        let subj=`FG俱乐部订单通知-${currentOrder.orderNo}`;
+        let body=`订单编号：${currentOrder.orderNo}\n商品：${currentOrder.goodsName}\n价格：${currentOrder.price}\n游戏ID：${currentOrder.gameId}\n状态：${currentOrder.status}\n下单时间：${currentOrder.createTime}\n备注：${currentOrder.remark||"无"}`;
+        window.location.href=`mailto:${CONFIG.mailTo}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
         closeMailModal();
     }
 
-    // 管理员按钮
-    function showAdmin() {
-        hideAdminOnly();
-        adminType = 1;
-        document.getElementById('adminLogin').classList.remove('hidden');
+    // 【关键】打开后台：只隐藏后台页面，首页查询+商品完全不动
+    function showAdmin(){
+        hideAllAdmin();
+        adminType=1;
+        document.getElementById("adminLogin").classList.remove("hidden");
     }
-    function showOrderManage() {
-        hideAdminOnly();
-        adminType = 2;
-        document.getElementById('adminLogin').classList.remove('hidden');
-    }
-
-    // 只隐藏后台面板，不隐藏首页【查询、商品】
-    function hideAdminOnly() {
-        // 隐藏后台相关
-        document.getElementById('adminLogin').classList.add('hidden');
-        document.getElementById('adminMain').classList.add('hidden');
-        document.getElementById('orderDelManage').classList.add('hidden');
+    function showOrderManage(){
+        hideAllAdmin();
+        adminType=2;
+        document.getElementById("adminLogin").classList.remove("hidden");
     }
 
-    // 返回首页：关闭所有后台，显示查询、商品
-    function hideAll() {
-        // 隐藏所有后台
-        hideAdminOnly();
-        // 首页模块强制显示
-        document.getElementById('card_query').classList.remove('hidden');
-        document.getElementById('card_goods').classList.remove('hidden');
-        adminType = 0;
+    // 只隐藏所有后台板块
+    function hideAllAdmin(){
+        document.getElementById("adminLogin").classList.add("hidden");
+        document.getElementById("adminMain").classList.add("hidden");
+        document.getElementById("orderDelManage").classList.add("hidden");
     }
 
-    function loginAdmin() {
-        const pwd = document.getElementById('adminPwd').value.trim();
-        if(pwd !== CONFIG.adminPwd) return alert('FG俱乐部 管理员密码错误！');
+    // 返回首页
+    function backHome(){
+        hideAllAdmin();
+        adminType=0;
+    }
 
-        hideAdminOnly();
-        if(adminType === 1) {
-            document.getElementById('adminMain').classList.remove('hidden');
+    function loginAdmin(){
+        let pwd=document.getElementById("adminPwd").value.trim();
+        if(pwd!==CONFIG.adminPwd)return alert("FG俱乐部 管理员密码错误！");
+        hideAllAdmin();
+        if(adminType===1){
+            document.getElementById("adminMain").classList.remove("hidden");
             renderOrderList();
-        } else {
-            document.getElementById('orderDelManage').classList.remove('hidden');
+        }else{
+            document.getElementById("orderDelManage").classList.remove("hidden");
             renderDelOrderList();
         }
     }
 
-    // 渲染订单列表
-    function renderOrderList() {
-        const orders = getOrders();
-        let html = '';
-        if(orders.length === 0) {
-            html = '<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
-        } else {
-            orders.forEach((order, index) => {
-                let statusClass = '';
-                if(order.status === '待付款') statusClass = 'text-warning';
-                else if(order.status === '已付款') statusClass = 'text-success';
-                else statusClass = 'text-danger';
-
-                html += `
-<div class="order-item">
-    <p>订单号：${order.orderNo}</p>
-    <p>商品：${order.goodsName}</p>
-    <p>游戏ID：${order.gameId}</p>
-    <p>状态：<span class="${statusClass}">${order.status}</span></p>
-    <p>时间：${order.createTime}</p>
-    <button class="btn btn-success" onclick="changeStatus(${index},'已付款')">已付款</button>
-    <button class="btn btn-warning" onclick="changeStatus(${index},'待付款')" style="margin:10px 0;">待付款</button>
-    <button class="btn btn-danger" onclick="changeStatus(${index},'已退款')">已退款</button>
-</div>
-                `;
+    function renderOrderList(){
+        let arr=getOrders();let html="";
+        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
+        else{
+            arr.forEach((o,i)=>{
+                let cls="text-warning";
+                if(o.status=="已付款")cls="text-success";
+                if(o.status=="已退款")cls="text-danger";
+                html+=`<div class="order-item"><p>订单号：${o.orderNo}</p><p>商品：${o.goodsName}</p><p>游戏ID：${o.gameId}</p><p>状态：<span class="${cls}">${o.status}</span></p><p>时间：${o.createTime}</p><button class="btn btn-success" onclick="changeStatus(${i},'已付款')">已付款</button><button class="btn btn-warning" onclick="changeStatus(${i},'待付款')" style="margin:10px 0;">待付款</button><button class="btn btn-danger" onclick="changeStatus(${i},'已退款')">已退款</button></div>`;
             });
         }
-        document.getElementById('orderList').innerHTML = html;
+        document.getElementById("orderList").innerHTML=html;
     }
 
-    // 修改订单状态
-    function changeStatus(index, status) {
-        const orders = getOrders();
-        orders[index].status = status;
-        saveOrders(orders);
-        renderOrderList();
+    function changeStatus(i,s){
+        let arr=getOrders();arr[i].status=s;saveOrders(arr);renderOrderList();
     }
 
-    // 渲染删除订单列表
-    function renderDelOrderList() {
-        const orders = getOrders();
-        let html = '';
-        if(orders.length === 0) {
-            html = '<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
-        } else {
-            orders.forEach((order, index) => {
-                html += `
-<div class="order-item">
-    <p>订单号：${order.orderNo}</p>
-    <p>商品：${order.goodsName}</p>
-    <button class="btn btn-danger" onclick="delOrder(${index})">删除订单</button>
-</div>
-                `;
+    function renderDelOrderList(){
+        let arr=getOrders();let html="";
+        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
+        else{
+            arr.forEach((o,i)=>{
+                html+=`<div class="order-item"><p>订单号：${o.orderNo}</p><p>商品：${o.goodsName}</p><button class="btn btn-danger" onclick="delOrder(${i})">删除订单</button></div>`;
             });
         }
-        document.getElementById('delOrderList').innerHTML = html;
+        document.getElementById("delOrderList").innerHTML=html;
     }
 
-    // 删除单条订单
-    function delOrder(index) {
-        if(!confirm('确认删除该订单？删除后无法恢复！')) return;
-        const orders = getOrders();
-        orders.splice(index, 1);
-        saveOrders(orders);
-        renderDelOrderList();
+    function delOrder(i){
+        if(!confirm("确认删除该订单？删除后无法恢复！"))return;
+        let arr=getOrders();arr.splice(i,1);saveOrders(arr);renderDelOrderList();
     }
 
-    // 清空所有订单
-    function clearAllOrder() {
-        if(!confirm('⚠️ 确认清空FG俱乐部所有订单？此操作不可恢复！')) return;
-        saveOrders([]);
-        renderDelOrderList();
+    function clearAllOrder(){
+        if(!confirm("⚠️ 确认清空FG俱乐部所有订单？此操作不可恢复！"))return;
+        saveOrders([]);renderDelOrderList();
     }
 </script>
+
 </body>
 </html>
