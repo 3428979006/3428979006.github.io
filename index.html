@@ -1,103 +1,103 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FG俱乐部 终极综合管理系统</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#11151c;color:#fff;padding:20px;font-family:sans-serif;overflow-x: hidden;}
-        .title{text-align:center;font-size:26px;color:#ffd700;font-weight:bold;margin-bottom:15px;}
-        .tips{background:#ff3333;padding:10px;border-radius:8px;text-align:center;font-size:14px;margin-bottom:20px;}
-        .box{background:#1e2530;padding:15px;border-radius:12px;margin-bottom:15px;}
-        .box h3{font-size:17px;margin-bottom:5px;}
-        .price{color:#ff5050;margin:8px 0;font-weight:bold;}
-        .desc{color:#aaa;font-size:14px;line-height:1.6;}
-        button{width:100%;padding:11px;border-radius:8px;border:0;margin-top:10px;font-size:15px;cursor:pointer;}
-        .btn1{background:#0066ff;color:#fff;}
-        .info-box{margin-top:20px;padding:20px;background:#253040;border-radius:12px;text-align:center;display:none;border:1px solid #ffd700;}
-        .order-id{font-size:20px;color:#ffd700;font-weight:bold;margin:10px 0;}
-        .qun-num{font-size:24px;color:#ffd700;font-weight:bold;margin:15px 0;}
-        .text-tip{font-size:15px;line-height:1.8;color:#eee;}
-        input,textarea{width:100%;padding:12px;margin:8px 0;background:#272e3a;border:0;border-radius:8px;color:#fff;}
-        .entry-group{margin-top:30px;text-align:center;}
-        .entry-group button{background:#444;color:#ccc;font-size:14px;padding:8px;width:auto;margin:5px;}
-        .back-btn{background:#555;margin-top:15px;}
-        .order-item{background:#1e2530;padding:15px;border-radius:10px;margin:10px 0;border-left:4px solid #ffd700;}
-        .ks-item{background:#1a202c;padding:12px;border-radius:8px;margin:8px 0;}
-        .sp-notice{color:#ffd700;font-size:14px;}
-        .wait-pay{color:#ff6666;font-weight:bold;}
-        .ok-pay{color:#39ff66;font-weight:bold;}
-        .refund-pay{color:#ff9900;font-weight:bold;}
-        .board-apply{background:#2a3240;padding:10px;border-radius:6px;margin:8px 0;}
-        .yes-btn{background:#28a745;padding:4px 8px;border:none;border-radius:4px;color:#fff;}
-        .no-btn{background:#dc3545;padding:4px 8px;border:none;border-radius:4px;color:#fff;margin-left:5px;}
-        .query-box{background:#1e2530;padding:15px;border-radius:12px;margin-bottom:20px;}
-        .ks-wait{color:#ffaa00;font-weight:bold;}
-        .ks-pass{color:#39ff66;font-weight:bold;}
-        .ks-fail{color:#ff4444;font-weight:bold;}
-    </style>
-</head>
-<body>
+<！DOCTYPE html>
+<超文本标记语言 朗="zh-CN">
+<头>
+    <元 字符集="UTF-8">
+    <元 姓名="视口" 内容="宽度=设备宽度，初始比例=1.0">
+    <标题>FG俱乐部 终极综合管理系统</标题>
+    <风格>
+        *{边缘:0;padding:0;箱体尺寸:边框框;}
+        身体{背景：#11151c；颜色：#fff；padding:20PX;字体系列:无衬线;overflow-x: 隐藏的;}
+        .标题{text-align:中心;字体大小:26PX;颜色：#ffd700；字体粗细:大胆的;底边距:15PX;}
+        .提示{背景：#ff3333；padding:10PX;边界半径:8PX;text-align:中心;字体大小:14PX;底边距:20PX;}
+        .盒子{背景：#1e2530；padding:15PX;边界半径:12PX;底边距:15PX;}
+        .盒子 H3{字体大小:17PX;底边距:5PX;}
+        .价格{颜色：#ff5050；边缘:8PX 0;字体粗细:大胆的;}
+        .DESC{颜色：#aaa；字体大小:14PX;线高:1.6;}
+        按钮{宽度:100%;padding:11PX;边界半径:8PX;边境:0;上边距:10PX;字体大小:15PX;光标:指针;}
+        .btn1{背景：#0066ff；颜色：#fff；}
+        .信息框{上边距:20PX;padding:20PX;背景:#253040;边界半径:12PX;text-align:中心;显示:没有一个;边境:1PX 固体#ffd700；}
+        .order-id{字体大小:20PX;颜色：#ffd700；字体粗细:大胆的;边缘:10PX 0;}
+        .qun-num{字体大小:24PX;颜色：#ffd700；字体粗细:大胆的;边缘:15PX 0;}
+        .文字提示{字体大小:15PX;线高:1.8;颜色：#eee；}
+        输入,textarea{宽度:100%;padding:12PX;边缘:8PX 0;背景：#272e3a；边境:0;边界半径:8PX;颜色：#fff；}
+        .入口组{上边距:30PX;text-align:中心;}
+        .入口组 按钮{背景:#444;颜色：#ccc；字体大小:14PX;padding:8PX;宽度:自动;边缘:5PX;}
+        .back-btn{背景:#555;上边距:15PX;}
+        .订单-项目{背景：#1e2530；padding:15PX;边界半径:10PX;边缘:10PX 0;左边框:4PX 固体#ffd700；}
+        .ks-项目{背景：#1a202c；padding:12PX;边界半径:8PX;边缘:8PX 0;}
+        .SP-通知{颜色：#ffd700；字体大小:14PX;}
+        .等待支付{颜色：#ff6666；字体粗细:大胆的;}
+        .ok-pay{颜色：#39ff66；字体粗细:大胆的;}
+        .退-付{颜色：#ff9900；字体粗细:大胆的;}
+        .board-apply{背景：#2a3240；padding:10PX;边界半径:6PX;边缘:8PX 0;}
+        .是-btn{背景：#28a745；padding:4PX 8PX;边境:没有一个;边界半径:4PX;颜色：#fff；}
+        .no-btn{背景：#dc3545；padding:4PX 8PX;边境:没有一个;边界半径:4PX;颜色：#fff；左边距:5PX;}
+        .查询框{背景：#1e2530；padding:15PX;边界半径:12PX;底边距:20PX;}
+        .ks-wait{颜色：#ffaa00；字体粗细:大胆的;}
+        .ks-pass{颜色：#39ff66；字体粗细:大胆的;}
+        .ks-fail{颜色：#ff4444；字体粗细:大胆的;}
+    </风格>
+</头>
+<身体>
 
-    <div class="tips">⚠️未成年人禁止下单 | FG俱乐部 全天接单<br>下单后请进群联系管理员付款，未付款/已退款订单一律不予打单</div>
-    <div class="title">FG俱乐部<br>护航下单综合系统</div>
+    <div 班级="提示">⚠️未成年人禁止下单 | FG俱乐部 全天接单<溴>下单后请进群联系管理员付款，未付款/已退款订单一律不予打单</div>
+    <div 班级="标题">FG俱乐部<溴>护航下单综合系统</div>
 
 <!-- 订单查询区域 订单编号+商品编号 双重验证 -->
-<form method="POST" data-netlify="true" name="order-form">
-    <div class="query-box">
-        <h3 style="text-align:center;color:#ffd700;margin-bottom:10px;">订单查询验证</h3>
-        <input type="text" name="order_id" placeholder="请输入订单编号" id="queryOrderId">
-        <input type="text" name="product_id" placeholder="请输入商品编号" id="queryShopCode">
-        <button type="submit" class="btn1">立即查询订单</button>
-        <div id="queryResult" style="margin-top:10px;text-align:center;"></div>
+<形式 方法="POST" data-netlify="真" 姓名="订单表单">
+    <div 班级="查询框">
+        <H3 风格="text-align:中心;颜色：#ffd700；底边距:10PX;">订单查询验证</H3>
+        <输入 类型="文本" 姓名="order_id" 占位符="请输入订单编号" 身份标识="queryOrderId">
+        <输入 类型="文本" 姓名="product_id" 占位符="请输入商品编号" 身份标识="queryShopCode">
+        <按钮 类型="提交" 班级="btn1">立即查询订单</按钮>
+        <div 身份标识="queryResult" 风格="上边距:10PX;text-align:中心;"></div>
     </div>
-</form>
+</形式>
 
 
-    <!-- 商品套餐 -->
-    <div class="box">
-        <h3>200万保底护航</h3>
-        <div class="price">售价：20元</div>
-        <div class="desc">保底200万物资，性价比套餐</div>
-        <div class="sp-notice">商品编号：SP001</div>
-        <button class="btn1" onclick="order1()">立即下单</button>
-    </div>
-
-    <div class="box">
-        <h3>340万护航</h3>
-        <div class="price">售价：34.99元</div>
-        <div class="desc">稳定护航 340万物资保底</div>
-        <div class="sp-notice">商品编号：SP002</div>
-        <button class="btn1" onclick="order2()">立即下单</button>
+    <! -- 商品套餐 -->
+    <div 班级="框">
+        <H3>200万保底护航</H3>
+        <div 班级="价格">售价：20元</div>
+        <div 班级="描述">保底200万物资，性价比套餐.</div>
+        <div 班级="sp-notice">商品编号：SP001</div>
+        <按钮 班级="btn1" onClick="order1()">立即下单</按钮>
     </div>
 
-    <div class="box">
-        <h3>大金单</h3>
-        <div class="price">售价：33.33元</div>
-        <div class="desc">保底350万，出一大金减60万保底</div>
-        <div class="sp-notice">商品编号：SP003</div>
-        <button class="btn1" onclick="order3()">立即下单</button>
+    <div 班级="框">
+        <H3>340万护航</H3>
+        <div 班级="价格">售价：34.99元</div>
+        <div 班级="描述">稳定护航 340万物资保底</div>
+        <div 班级="sp-notice">商品编号：SP002</div>
+        <按钮 班级="btn1" onClick="订单2()">立即下单</按钮>
     </div>
 
-    <div class="box">
-        <h3>机密单</h3>
-        <div class="price">私聊管理员</div>
-        <div class="desc">不出机密保底1000万物资</div>
-        <div class="sp-notice">商品编号：SP004</div>
-        <button class="btn1" onclick="order4()">立即下单</button>
+    <div 班级="框">
+        <H3>大金单</H3>
+        <div 班级="价格">售价：33.33元</div>
+        <div 班级="描述">保底350万，出一大金减60万保底</div>
+        <div 班级="sp-notice">商品编号：SP003</div>
+        <按钮 班级="btn1" onClick="order3()">立即下单</按钮>
     </div>
 
-    <!-- 下单表单 -->
-    <div class="box" id="form" style="display:none;">
-        <h3 id="serviceName"></h3>
-        <div class="price" id="servicePrice"></div>
-        <input placeholder="请输入对应商品编号" id="shopCode">
-        <input placeholder="请输入暗区突围游戏ID" id="gameId">
-        <textarea placeholder="备注 / 上线时间 / 个人需求" id="remark"></textarea>
-        <button class="btn1" onclick="submitOrder()">提交订单</button>
-        <div class="info-box" id="infoBox">
-            <div class="text-tip">订单提交成功！</div>
+    <div 班级="框">
+        <H3>机密单</H3>
+        <div 班级="价格">私聊管理员</div>
+        <div 班级="描述">不出机密保底1000万物资</div>
+        <div 班级="sp-notice">商品编号：SP004</div>
+        <按钮 班级="btn1" onClick="order4()">立即下单</按钮>
+    </div>
+
+    <! -- 下单表单 -->
+    <div 班级="框" 身份标识="窗体" 风格="显示:没有一个;">
+        <H3 身份标识="服务名称"></H3>
+        <div 班级="价格" 身份标识="servicePrice"></div>
+        <输入 占位符="请输入对应商品编号" 身份标识="商店代码">
+        <输入 占位符="请输入暗区突围游戏ID" 身份标识="游戏ID">
+        <textarea 占位符="备注 / 上线时间 / 个人需求" 身份标识="备注"></textarea>
+        <按钮 班级="btn1" onClick="submitOrder()">提交订单</按钮>
+        <div 班级="信息框" 身份标识="信息框">
+            <div 班级="文字提示">订单提交成功！</div>
             <div class="order-id">订单编号：<span id="ordNum"></span></div>
             <div class="text-tip">请手动前往QQ搜索以下群号加入群聊</div>
             <div class="qun-num">1101681704</div>
@@ -552,18 +552,95 @@ function showBoardMem(){
         let d = mem[i];
         html += `
         <div class="board-apply">
-            <p>成员：${d.name} | 加入时间：${d.time}</p>
+            <p>成员：${d.姓名} | 加入时间：${d.time}</p>
             <button class="no-btn" onclick="delBoardMem(${i})">移出董事会</button>
         </div>
         `;
     }
-    document.getElementById("boardMemList").innerHTML = html;
+    document.getElementById("boardMemList").innerHTML = 超文本标记语言;
 }
 function delBoardMem(idx){
     window.globalBoardMember.splice(idx,1);
     showBoardData();
-}
-</script>
+    <!DOCTYPE 超文本标记语言>
+<html 朗="zh-CN">
+<头>
+    <meta 字符集="UTF-8">
+    <meta 姓名="视口" 内容="宽度=设备宽度，初始比例=1.0">
+    <标题>真实自然雪花飘落特效</title>
+    <风格>
+        *{边缘: 0;padding: 0;盒子-sizing: 边境-盒子;}
+        身体{
+            宽度: 100vw;
+            height: 100vh;
+            overflow: 隐藏的;
+            背景: #050815; /* 深色夜空背景，凸显雪花 */
+        }
+        /* 雪花样式 */
+        .雪{
+            位置: 绝对的;
+            背景: #fff;
+            边境-半径: 50%;
+            不透明度: 0.85;
+            指针-事件: 没有一个;
+        }
+</style>
+</head>
+<身体>
 
-</body>
-</html>
+<脚本>
+// 生成雪花数量
+ConstsnowCount=120;
+// 获取页面宽高
+ConstwinW=窗户.innerWidth;
+ConstwinH=窗户.innerHeight;
+
+// 循环创建雪花
+为(让我=0; 我<snowCount; 我++){
+    让雪=文件.createElement('div');
+    雪.className='雪';
+
+    //随机雪花大小1px~6px大小层次分明
+    让大小=数学.随机() * 5+1;
+    雪.风格.宽度=大小+'px';
+    雪.风格.高度=大小++;
+
+    // 初始横向随机位置
+    让startx=数学.随机() * winW;
+    雪.风格.左=startx+'px';
+    雪.风格.顶端=数学.随机()* -winH+'px';
+
+    // 下落速度随机 慢/中/快 自然区分
+    让快速=数学.随机() * 2+1;
+    // 左右摇摆幅度 模拟风吹效果
+    让SpeedX=数学.随机() * 1 - 0.5;
+    // 透明度随机 更真实
+    雪.风格.不透明度=数学.随机() * 0.7+0.3;
+
+    文件.身体.appendChild(雪);
+
+    // 雪花动画运动
+    功能 snowMove(){
+        让顶端=parseFloat(雪.风格.顶端);
+        让左=parseFloat(雪.风格.左);
+
+        雪.风格.顶端=顶端+快速+'px';
+        雪.风格.左=左+SpeedX+'px';
+
+        // 雪花落出屏幕顶部重置循环
+        如果(顶端>winH){
+            雪.风格.顶端='-10px';
+            雪.风格.左=数学.随机() * winW+'px';
+        }
+        requestAnimationFrame(snowMove);
+    }
+    snowMove();
+}
+
+// 窗口大小自适应
+窗户.addEventListener('调整大小',()=>{
+    位置.重载();
+})
+</剧本>
+</身体>
+</超文本标记语言>
