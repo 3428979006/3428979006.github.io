@@ -289,6 +289,7 @@ for(var i=0;i<=320;i++){createSnowflake();}
 <div class="qq-group-modal" id="qqModal">
     <div class="qq-box">
         <h3>✅ 订单提交成功</h3>
+        <p id="qqModalOrderId" style="color:#ffd369; font-weight:bold;"></p>
         <p>请务必加入官方QQ群进行付款对接<br>未进群订单一律不予安排服务<br>客服会在群内为您安排打手</p>
         <button class="btn-blue" onclick="joinQQGroup()">立即打开QQ加入群聊</button>
         <button class="btn-dark" style="margin-top:15px" onclick="closeQQModal()">暂时稍后</button>
@@ -547,6 +548,8 @@ function submitNewOrder(){
     arr.push(order);
     saveOrderData(arr);
 
+    // 显示订单号到QQ弹窗
+    document.getElementById("qqModalOrderId").innerText = "你的订单编号：" + orderId;
     document.getElementById("qqModal").style.display = "flex";
 }
 
@@ -577,7 +580,7 @@ function checkOrder(){
     }
 
     if(res){
-        document.getElementById("queryResult").innerHTML = '<span class="text-green">✅ 订单查询成功，信息已核对</span>';
+        document.getElementById("queryResult").innerHTML = '<span class="text-green">✅ 订单查询成功，订单编号：' + res.id + '</span>';
         nowOrderData = res;
         openMailModal(res);
     }else{
@@ -678,4 +681,5 @@ function changeStatus(i,txt){
 
 </body>
 </html>
+
 
