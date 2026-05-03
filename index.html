@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FG俱乐部 | 暗区突围护航平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>FG俱乐部 | 暗区突围专业护航平台</title>
     <style>
         * {
             margin: 0;
@@ -13,35 +13,34 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f1729 0%, #1a2744 50%, #0b1326 100%);
+            background: linear-gradient(145deg, #0b1326 0%, #101a33 50%, #0f1729 100%);
             min-height: 100vh;
-            color: #fff;
+            color: #ffffff;
             padding: 16px;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* 雪花特效 大量细小 全屏真实飘落 */
+        /* 终极雪花特效 完美层级 永不遮挡 */
         .snowflake {
             position: fixed;
-            top: -15px;
+            top: -20px;
             background: #ffffff;
             border-radius: 50%;
-            opacity: 0.45;
+            opacity: 0.35;
             pointer-events: none;
             z-index: 1;
         }
         @keyframes snowFall {
-            0% {transform: translateY(0); opacity: 0;}
+            0% {transform: translateY(0) rotate(0deg); opacity: 0;}
             15% {opacity: 0.7;}
-            100% {transform: translateY(100vh); opacity: 0;}
+            100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
         }
         @keyframes snowSwing {
-            0% {transform: translateX(-12px);}
-            100% {transform: translateX(12px);}
+            0% {transform: translateX(-15px);}
+            100% {transform: translateX(15px);}
         }
 
-        /* 所有页面内容层级高于雪花 */
         body > div:not(.snowflake) {
             position: relative;
             z-index: 2;
@@ -49,456 +48,628 @@
 
         .header {
             text-align: center;
-            padding: 20px 0;
+            padding: 25px 0;
         }
         .header h1 {
-            font-size: 30px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            margin-bottom: 6px;
+            font-size: 32px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(74, 222, 128, 0.25);
+            margin-bottom: 8px;
         }
         .header p {
             color: #a0b4d8;
-            font-size: 14px;
+            font-size: 15px;
+            letter-spacing: 1px;
         }
 
         .notice {
-            background: rgba(255, 60, 60, 0.2);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 80, 80, 0.3);
-            border-radius: 12px;
-            padding: 14px;
+            background: rgba(255, 70, 70, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 90, 90, 0.25);
+            border-radius: 14px;
+            padding: 16px;
             text-align: center;
             font-size: 14px;
-            color: #ffcaca;
-            margin-bottom: 20px;
+            color: #ffd0d0;
+            margin-bottom: 22px;
+            line-height: 1.7;
         }
 
         .card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 14px 45px rgba(0, 0, 0, 0.35);
         }
 
         .card h3 {
             text-align: center;
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: #fff;
+            font-size: 21px;
+            margin-bottom: 18px;
+            color: #ffffff;
         }
 
         input, textarea {
             width: 100%;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 15px 18px;
+            margin: 10px 0;
             color: #fff;
             font-size: 15px;
             outline: none;
+            transition: 0.3s;
         }
         input:focus, textarea:focus {
-            border-color: #fff;
+            border-color: #4ade80;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 12px rgba(74, 222, 128, 0.15);
         }
 
         button {
             width: 100%;
-            padding: 13px;
-            margin-top: 10px;
+            padding: 14px;
+            margin-top: 12px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
         button:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
         }
 
         .btn-blue {
             background: linear-gradient(90deg, #3a86ff, #2563eb);
             color: #fff;
+            box-shadow: 0 6px 18px rgba(58, 134, 255, 0.25);
         }
         .btn-green {
             background: linear-gradient(90deg, #10b981, #059669);
             color: #fff;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
         }
         .btn-red {
             background: linear-gradient(90deg, #ef4444, #dc2626);
             color: #fff;
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.2);
         }
         .btn-dark {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.08);
             color: #d1d9e8;
         }
 
+        .goods-item {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .goods-item:last-child{border-bottom:none;}
         .goods-price {
             color: #ff6b6b;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 10px 0;
         }
         .goods-desc {
             color: #b4c2d8;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
         .goods-code {
-            color: #fff;
+            color: #cccccc;
             font-size: 14px;
-            margin-top: 6px;
-            opacity: 0.8;
+            margin-top: 8px;
         }
 
         .order-item {
-            background: rgba(255,255,255,0.06);
-            border-left: 3px solid #fff;
-            padding: 16px;
-            border-radius: 12px;
-            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #4ade80;
+            padding: 18px;
+            border-radius: 14px;
+            margin: 15px 0;
+            line-height: 1.8;
         }
+        .order-item p {margin:4px 0;}
 
         .nav-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin: 25px 0;
+            margin: 28px 0;
         }
         .nav-group button {
             width: auto;
-            padding: 11px 18px;
+            padding: 12px 20px;
         }
 
-        .hidden-panel {
-            display: none;
-        }
+        .hidden-panel {display: none;}
 
-        /* 自定义邮件弹窗样式 */
+        /* 邮件弹窗 终极美化 */
         .mail-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            top: 0;left: 0;width: 100%;height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;display: none;
+            align-items: center;justify-content: center;padding: 20px;
         }
         .mail-box {
-            background: #151e33;
-            padding: 25px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.2);
-            width: 100%;
-            max-width: 400px;
+            background: #121a2d;
+            padding: 30px;border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            width: 100%;max-width: 420px;
         }
         .mail-box h4 {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #ffd369;
+            text-align: center;margin-bottom: 18px;
+            color: #ffd369;font-size: 19px;
         }
         .mail-info {
-            font-size: 14px;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            color: #eee;
+            font-size: 14px;line-height: 2;color: #e5e7eb;
+            background: rgba(255,255,255,0.04);
+            padding: 15px;border-radius: 12px;
+            margin-bottom: 22px;
         }
-        .btn-row {
-            display: flex;
-            gap: 10px;
+        .btn-row {display: flex;gap: 12px;}
+        .btn-row button {flex:1;}
+
+        /* QQ加群弹窗 终极美化 */
+        .qq-group-modal {
+            position: fixed;top: 0;left: 0;width: 100%;height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;display: none;
+            align-items: center;justify-content: center;padding: 20px;
         }
-        .btn-row button {
-            flex: 1;
+        .qq-box {
+            background: #121a2d;
+            padding: 35px;border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.18);
+            text-align: center;width: 100%;max-width: 380px;
+        }
+        .qq-box h3 {
+            color: #4ade80;margin-bottom: 18px;font-size: 24px;
+        }
+        .qq-box p {
+            color: #ccc;margin-bottom: 28px;
+            line-height: 1.8;font-size: 15px;
         }
 
-        #queryResult {
-            margin-top: 12px;
-            text-align: center;
-        }
-        .text-green {color:#4ade80;font-weight:bold;}
-        .text-red {color:#ff6b6b;font-weight:bold;}
+        #queryResult {margin-top: 15px;text-align: center;}
+        .text-green {color:#4ade80;font-weight:bold;font-size:15px;}
+        .text-red {color:#ff6b6b;font-weight:bold;font-size:15px;}
+
+        .status-wait{color:#ffc145;font-weight:bold;}
+        .status-ok{color:#4ade80;font-weight:bold;}
+        .status-refund{color:#ff6b6b;font-weight:bold;}
     </style>
 </head>
 <body>
 
-<!-- 雪花生成 -->
+<!-- 终极密集自然雪花 -->
 <script>
-// 生成260个细小雪花，保证全屏密集飘落
-for(let i = 0; i <= 260; i++){
-    let snow = document.createElement("div");
+function createSnowflake(){
+    var snow = document.createElement("div");
     snow.className = "snowflake";
-    let size = Math.random() * 3 + 2;
+    var size = Math.random() * 4 + 1.5;
     snow.style.width = size + "px";
     snow.style.height = size + "px";
     snow.style.left = Math.random() * 100 + "vw";
-    let fallTime = Math.random() * 7 + 4;
-    let swingTime = Math.random() * 3 + 1.5;
-    snow.style.animation = `snowFall ${fallTime}s linear infinite, snowSwing ${swingTime}s ease-in-out infinite alternate`;
+    var fallTime = Math.random() * 8 + 5;
+    var swingTime = Math.random() * 4 + 2;
+    snow.style.animation = "snowFall "+fallTime+"s linear infinite, snowSwing "+swingTime+"s ease-in-out infinite alternate";
     document.body.appendChild(snow);
 }
+for(var i=0;i<=320;i++){createSnowflake();}
 </script>
 
-<!-- 邮件确认弹窗 -->
+<!-- 邮件弹窗 -->
 <div class="mail-modal" id="mailModal">
     <div class="mail-box">
-        <h4>📩 订单信息邮件发送确认</h4>
+        <h4>📩 订单信息邮件通知</h4>
         <div class="mail-info" id="mailInfoBox"></div>
         <div class="btn-row">
             <button class="btn-dark" onclick="closeMailModal()">取消</button>
-            <button class="btn-green" onclick="goSendMail()">立即发送邮件</button>
+            <button class="btn-green" onclick="goSendMail()">发送邮件通知</button>
         </div>
     </div>
 </div>
 
-    <div class="header">
-        <h1>FG 俱乐部</h1>
-        <p>暗区突围 · 专业护航一站式服务平台</p>
+<!-- QQ加群弹窗 -->
+<div class="qq-group-modal" id="qqModal">
+    <div class="qq-box">
+        <h3>✅ 订单提交成功</h3>
+        <p>请务必加入官方QQ群进行付款对接<br>未进群订单一律不予安排服务<br>客服会在群内为您安排打手</p>
+        <button class="btn-blue" onclick="joinQQGroup()">立即打开QQ加入群聊</button>
+        <button class="btn-dark" style="margin-top:15px" onclick="closeQQModal()">暂时稍后</button>
+    </div>
+</div>
+
+<div class="header">
+    <h1>FG 俱乐部</h1>
+    <p>暗区突围 · 专业护航 / 物资 / 代练 服务平台</p>
+</div>
+
+<div class="notice">
+    ⚠️ 未成年人请勿下单 | 平台全天稳定接单<br>
+    所有订单必须加入官方QQ群对接客服，未进群不安排服务
+</div>
+
+<div class="card">
+    <h3>🔍 订单查询入口</h3>
+    <input placeholder="请输入订单编号" id="queryOrderId">
+    <input placeholder="请输入游戏绑定ID" id="queryGameId">
+    <input placeholder="请输入商品编号" id="queryGoodsId">
+    <button class="btn-blue" onclick="checkOrder()">立即查询订单</button>
+    <div id="queryResult"></div>
+</div>
+
+<div class="card">
+    <h3>📦 全部护航商品</h3>
+
+    <!-- 订单1 -->
+    <div class="goods-item">
+        <h4>体验单 100W</h4>
+        <div class="goods-price">售价：13.99 元</div>
+        <div class="goods-desc">每日限1单，包100w物资，不支持指定打手，不催客服</div>
+        <div class="goods-code">商品编号：SP001</div>
+        <button class="btn-blue" onclick="selectGoods('体验单 100W','13.99 元','SP001')">立即下单购买</button>
     </div>
 
-    <div class="notice">
-        ⚠️ 未成年人禁止下单 | 平台全天稳定接单<br>
-        下单请务必加入QQ群联系管理员付款，未付款订单一律不安排服务
+    <!-- 订单2 -->
+    <div class="goods-item">
+        <h4>T7套装单 保底1大金</h4>
+        <div class="goods-price">售价：89.99 元</div>
+        <div class="goods-desc">含T7热成像、全新六头六甲、GS2耳机，任选一满改枪械（带弹）</div>
+        <div class="goods-code">商品编号：SP002</div>
+        <button class="btn-blue" onclick="selectGoods('T7套装单 保底1大金','89.99 元','SP002')">立即下单购买</button>
     </div>
 
+    <!-- 订单3 -->
+    <div class="goods-item">
+        <h4>保底单 340W</h4>
+        <div class="goods-price">售价：43.99 元</div>
+        <div class="goods-desc">包340w物资，如需指定地图（要塞/电台）请备注</div>
+        <div class="goods-code">商品编号：SP003</div>
+        <button class="btn-blue" onclick="selectGoods('保底单 340W','43.99 元','SP003')">立即下单购买</button>
+    </div>
+
+    <!-- 订单4 -->
+    <div class="goods-item">
+        <h4>保底单 1000W</h4>
+        <div class="goods-price">售价：私聊客服</div>
+        <div class="goods-desc">全程护航保底1000w物资，安全路线，高爆率</div>
+        <div class="goods-code">商品编号：SP004</div>
+        <button class="btn-blue" onclick="selectGoods('保底单 1000W','私聊客服','SP004')">立即下单购买</button>
+    </div>
+
+    <!-- 订单5 -->
+    <div class="goods-item">
+        <h4>单局单 单局500W</h4>
+        <div class="goods-price">售价：私聊客服</div>
+        <div class="goods-desc">单局带出500w物资，未带出继续打，打手全程护航</div>
+        <div class="goods-code">商品编号：SP005</div>
+        <button class="btn-blue" onclick="selectGoods('单局单 单局500W','私聊客服','SP005')">立即下单购买</button>
+    </div>
+
+    <!-- 订单6 -->
+    <div class="goods-item">
+        <h4>单局单 单局300W</h4>
+        <div class="goods-price">售价：119.99 元</div>
+        <div class="goods-desc">单局带出300w才结算，期间打手不允许不收装备就走，全程护航</div>
+        <div class="goods-code">商品编号：SP006</div>
+        <button class="btn-blue" onclick="selectGoods('单局单 单局300W','119.99 元','SP006')">立即下单购买</button>
+    </div>
+
+    <!-- 订单7 -->
+    <div class="goods-item">
+        <h4>战地指挥官 指哪打哪</h4>
+        <div class="goods-price">售价：79.99 元</div>
+        <div class="goods-desc">初始保底300w，地图为强化要塞，老板可使用终端查看附近敌人位置</div>
+        <div class="goods-code">商品编号：SP007</div>
+        <button class="btn-blue" onclick="selectGoods('战地指挥官 指哪打哪','79.99 元','SP007')">立即下单购买</button>
+    </div>
+
+    <!-- 订单8 -->
+    <div class="goods-item">
+        <h4>三金单 单局三金</h4>
+        <div class="goods-price">售价：259.99 元</div>
+        <div class="goods-desc">单局带出3个检视大金，T7也算大金，为防止运气不好秒出，累计保底1000w</div>
+        <div class="goods-code">商品编号：SP008</div>
+        <button class="btn-blue" onclick="selectGoods('三金单 单局三金','259.99 元','SP008')">立即下单购买</button>
+    </div>
+
+    <!-- 订单9 -->
+    <div class="goods-item">
+        <h4>双金单 单局双金</h4>
+        <div class="goods-price">售价：139.99 元</div>
+        <div class="goods-desc">单局带出2个检视大金，T7也算大金，为防止运气不好秒出，累计保底1000w</div>
+        <div class="goods-code">商品编号：SP009</div>
+        <button class="btn-blue" onclick="selectGoods('双金单 单局双金','139.99 元','SP009')">立即下单购买</button>
+    </div>
+
+    <!-- 订单10 -->
+    <div class="goods-item">
+        <h4>移动保镖单 老板乱动</h4>
+        <div class="goods-price">售价：私聊客服</div>
+        <div class="goods-desc">全程贴身保护，老板可自由移动，打手全程护航，不被敌人偷袭</div>
+        <div class="goods-code">商品编号：SP010</div>
+        <button class="btn-blue" onclick="selectGoods('移动保镖单 老板乱动','私聊客服','SP010')">立即下单购买</button>
+    </div>
+
+    <!-- 订单11 -->
+    <div class="goods-item">
+        <h4>指定改装单 老板改</h4>
+        <div class="goods-price">售价：私聊客服</div>
+        <div class="goods-desc">按老板需求定制改装任意枪械，支持满改、半改、特殊配置方案</div>
+        <div class="goods-code">商品编号：SP011</div>
+        <button class="btn-blue" onclick="selectGoods('指定改装单 老板改','私聊客服','SP011')">立即下单购买</button>
+    </div>
+
+    <!-- 订单12 -->
+    <div class="goods-item">
+        <h4>机密单 机密文件</h4>
+        <div class="goods-price">售价：1088 元</div>
+        <div class="goods-desc">出了机密文件保底8000w，不出保底1个亿物资，全程高级地图机密路线</div>
+        <div class="goods-code">商品编号：SP012</div>
+        <button class="btn-blue" onclick="selectGoods('机密单 机密文件','1088 元','SP012')">立即下单购买</button>
+    </div>
+
+    <!-- 订单13 -->
+    <div class="goods-item">
+        <h4>大金单 必出5大金</h4>
+        <div class="goods-price">售价：139.99 元</div>
+        <div class="goods-desc">累计带出5个检视大金，T7也算大金，累计保底1000w物资</div>
+        <div class="goods-code">商品编号：SP013</div>
+        <button class="btn-blue" onclick="selectGoods('大金单 必出5大金','139.99 元','SP013')">立即下单购买</button>
+    </div>
+
+    <!-- 订单14 -->
+    <div class="goods-item">
+        <h4>钥匙单 2把钥匙</h4>
+        <div class="goods-price">售价：209.99 元</div>
+        <div class="goods-desc">累计带出2把红色品质钥匙，为防止运气不好秒出，累计保底500w物资</div>
+        <div class="goods-code">商品编号：SP014</div>
+        <button class="btn-blue" onclick="selectGoods('钥匙单 2把钥匙','209.99 元','SP014')">立即下单购买</button>
+    </div>
+
+    <!-- 订单15 -->
+    <div class="goods-item">
+        <h4>大金单 1大金</h4>
+        <div class="goods-price">售价：34.99 元</div>
+        <div class="goods-desc">累计带出1个检视大金，T7也算大金，为防止运气不好秒出，累计保底500w物资</div>
+        <div class="goods-code">商品编号：SP015</div>
+        <button class="btn-blue" onclick="selectGoods('大金单 1大金','34.99 元','SP015')">立即下单购买</button>
+    </div>
+</div>
+
+<div class="card hidden-panel" id="orderFormBox">
+    <h3 id="formTitle">填写下单信息</h3>
+    <div class="goods-price" id="formPrice"></div>
+    <input placeholder="请填写你的暗区突围游戏ID" id="userGameId">
+    <input placeholder="请填写对应商品编号" id="userGoodsCode">
+    <textarea rows="4" placeholder="备注：上线时间、需求说明、特殊要求" id="userRemark"></textarea>
+    <button class="btn-green" onclick="submitNewOrder()">确认提交订单</button>
+</div>
+
+<div class="nav-group">
+    <button class="btn-dark" onclick="showAdminLogin()">🔐 管理员后台登录</button>
+</div>
+
+<div class="hidden-panel" id="adminLoginBox">
     <div class="card">
-        <h3>订单查询验证</h3>
-        <input placeholder="请输入订单编号" id="queryOrderId">
-        <input placeholder="请输入暗区游戏ID" id="queryGameId">
-        <input placeholder="请输入商品编号" id="queryGoodsId">
-        <button class="btn-blue" onclick="checkOrder()">立即查询订单</button>
-        <div id="queryResult"></div>
+        <h3>管理员登录界面</h3>
+        <input type="password" placeholder="请输入管理员密码" id="adminPwd">
+        <button class="btn-green" onclick="verifyAdmin()">进入管理后台</button>
+        <button class="btn-dark" onclick="hideAllPage()">返回首页</button>
     </div>
+</div>
 
+<div class="hidden-panel" id="adminMainBox">
     <div class="card">
-        <h3>护航服务列表</h3>
-
-        <div class="goods-item">
-            <h4>体验单 100w</h4>
-            <div class="goods-price">售价：13.99 元</div>
-            <div class="goods-desc">每日限1单，包100w物资，不支持指定打手</div>
-            <div class="goods-code">商品编号：SP001</div>
-            <button class="btn-blue" onclick="selectGoods('体验单 100w','13.99元','SP001')">立即下单</button>
-        </div>
-
-        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
-
-        <div class="goods-item">
-            <h4>T7套装单 保底1大金</h4>
-            <div class="goods-price">售价：43.99 元</div>
-            <div class="goods-desc">含T7热成像、全新六头六甲GS2耳机，任选一满改枪</div>
-            <div class="goods-code">商品编号：SP002</div>
-            <button class="btn-blue" onclick="selectGoods('T7套装单 保底1大金','43.99元','SP002')">立即下单</button>
-        </div>
-
-        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
-
-        <div class="goods-item">
-            <h4>机密单 保5大金</h4>
-            <div class="goods-price">售价：139.99 元</div>
-            <div class="goods-desc">累计带出5个检视大金，T7也算大金，累计保底1000w</div>
-            <div class="goods-code">SP003</div>
-            <button class="btn-blue" onclick="selectGoods('机密单 保5大金','139.99元','SP003')">立即下单</button>
-        </div>
+        <h3>📋 全部用户订单管理</h3>
+        <div id="adminOrderList"></div>
     </div>
-
-    <div class="card hidden-panel" id="orderFormBox">
-        <h3 id="formTitle">下单信息填写</h3>
-        <div class="goods-price" id="formPrice"></div>
-        <input placeholder="请输入你的暗区游戏ID" id="userGameId">
-        <input placeholder="请输入对应商品编号" id="userGoodsCode">
-        <textarea rows="4" placeholder="备注说明 / 上线时间 / 特殊需求" id="userRemark"></textarea>
-        <button class="btn-green" onclick="submitNewOrder()">确认提交订单</button>
-        <div class="success-modal" id="successModal" style="display:none;margin-top:16px;padding:20px;border:1px solid #fff;border-radius:12px;text-align:center;">
-            <div>🎉 订单提交成功</div>
-            <div style="font-size:22px;color:#fff;font-weight:bold;margin:10px 0;" id="finalOrderId"></div>
-            <div>请加入QQ群联系管理员对接付款</div>
-        </div>
-    </div>
-
-    <div class="nav-group">
-        <button class="btn-dark" onclick="showAdminLogin()">管理员后台</button>
-    </div>
-
-    <div class="hidden-panel" id="adminLoginBox">
-        <div class="card">
-            <h3>管理员登录</h3>
-            <input type="password" placeholder="管理员密码" id="adminPwd">
-            <button class="btn-green" onclick="verifyAdmin()">进入后台</button>
-            <button class="btn-dark" onclick="hideAllPage()">返回</button>
-        </div>
-    </div>
-
-    <div class="hidden-panel" id="adminMainBox">
-        <div class="card">
-            <h3>全部订单管理</h3>
-            <div id="adminOrderList"></div>
-        </div>
-        <button class="btn-dark" onclick="hideAllPage()">退出后台</button>
-    </div>
+    <button class="btn-dark" onclick="hideAllPage()">退出管理后台</button>
+</div>
 
 <script>
 // 全局配置
-const ADMIN_PWD = "13467925QQ";
-const MAIL_TO = "3428979006@qq.com";
-let nowOrderData = null;
+var ADMIN_PWD = "13467925QQ";
+var MAIL_TO = "3428979006@qq.com";
+var QQ_GROUP_NUMBER = "1101681704";
+var nowOrderData = null;
 
-// 本地存储初始化
+// 本地存储容错初始化
 function initData(){
-    if(!localStorage.getItem('orderDataList')) localStorage.setItem('orderDataList',JSON.stringify([]));
+    if(!localStorage.getItem('orderDataList')){
+        localStorage.setItem('orderDataList',JSON.stringify([]));
+    }
 }
 initData();
+function getOrderData(){
+    var data = localStorage.getItem('orderDataList');
+    try{return JSON.parse(data);}catch(e){return [];}
+}
+function saveOrderData(d){
+    localStorage.setItem('orderDataList',JSON.stringify(d));
+}
 
-function getOrderData(){return JSON.parse(localStorage.getItem('orderDataList'));}
-function saveOrderData(d){localStorage.setItem('orderDataList',JSON.stringify(d));}
-
-let nowGoodsName = "",nowGoodsPrice = "",nowGoodsCode = "";
+var nowGoodsName = "",nowGoodsPrice = "",nowGoodsCode = "";
 
 function selectGoods(name,price,code){
     nowGoodsName = name;
     nowGoodsPrice = price;
     nowGoodsCode = code;
-    document.getElementById("formTitle").innerText = name;
-    document.getElementById("formPrice").innerText = "套餐价格："+price;
+    document.getElementById("formTitle").innerText = "下单项目：" + name;
+    document.getElementById("formPrice").innerText = "套餐价格：" + price;
     document.getElementById("orderFormBox").style.display = "block";
-    document.getElementById("successModal").style.display = "none";
 }
 
 function createOrderID(){
-    let d = new Date();
-    let rnd = Math.floor(Math.random()*90000+10000);
-    return "FG"+d.getFullYear().toString().slice(2)+(d.getMonth()+1)+d.getDate()+rnd;
+    var d = new Date();
+    var rnd = Math.floor(Math.random()*90000+10000);
+    return "FG" + d.getFullYear().toString().slice(2) + (d.getMonth()+1) + d.getDate() + rnd;
 }
 
+// 提交订单终极校验
 function submitNewOrder(){
-    let gameId = document.getElementById("userGameId").value.trim();
-    let goodsCode = document.getElementById("userGoodsCode").value.trim();
-    let remark = document.getElementById("userRemark").value.trim();
-    if(!gameId||!goodsCode){alert("请填写完整信息");return;}
-    if(goodsCode !== nowGoodsCode){alert("商品编号错误");return;}
+    var gameId = document.getElementById("userGameId").value.trim();
+    var goodsCode = document.getElementById("userGoodsCode").value.trim();
+    var remark = document.getElementById("userRemark").value.trim();
 
-    let orderId = createOrderID();
-    let order = {
-        id:orderId,name:nowGoodsName,price:nowGoodsPrice,
-        goodsCode:nowGoodsCode,gameId:gameId,remark:remark,
-        time:new Date().toLocaleString(),status:"待付款"
+    if(!gameId){alert("请填写你的游戏ID！");return;}
+    if(!goodsCode){alert("请填写商品编号！");return;}
+    if(goodsCode !== nowGoodsCode){alert("商品编号填写错误，请核对！");return;}
+
+    var orderId = createOrderID();
+    var order = {
+        id:orderId,
+        name:nowGoodsName,
+        price:nowGoodsPrice,
+        goodsCode:nowGoodsCode,
+        gameId:gameId,
+        remark:remark,
+        time:new Date().toLocaleString(),
+        status:"待付款"
     };
-    let arr = getOrderData();
+    var arr = getOrderData();
     arr.push(order);
     saveOrderData(arr);
 
-    document.getElementById("finalOrderId").innerText = "订单编号："+orderId;
-    document.getElementById("successModal").style.display = "block";
+    document.getElementById("qqModal").style.display = "flex";
 }
 
-// 查询订单
+// QQ加群跳转完美适配
+function joinQQGroup(){
+    window.location.href = "mqqapi://card/show_pslcard?src_type=internal&version=1&uin="+QQ_GROUP_NUMBER+"&card_type=group&source=qrcode";
+}
+function closeQQModal(){document.getElementById("qqModal").style.display = "none";}
+
+// 订单查询
 function checkOrder(){
-    let oid = document.getElementById("queryOrderId").value.trim();
-    let gid = document.getElementById("queryGameId").value.trim();
-    let cid = document.getElementById("queryGoodsId").value.trim();
-    let list = getOrderData();
-    let res = list.find(x=>x.id===oid && x.gameId===gid && x.goodsCode===cid);
+    var oid = document.getElementById("queryOrderId").value.trim();
+    var gid = document.getElementById("queryGameId").value.trim();
+    var cid = document.getElementById("queryGoodsId").value.trim();
+
+    if(!oid || !gid || !cid){
+        document.getElementById("queryResult").innerHTML = '<span class="text-red">请填写全部查询信息</span>';
+        return;
+    }
+
+    var list = getOrderData();
+    var res = null;
+    for(var i=0;i<list.length;i++){
+        var item = list[i];
+        if(item.id === oid && item.gameId === gid && item.goodsCode === cid){
+            res = item;break;
+        }
+    }
 
     if(res){
-        document.getElementById("queryResult").innerHTML = `<span class="text-green">✅ 查询成功，订单信息已核对</span>`;
+        document.getElementById("queryResult").innerHTML = '<span class="text-green">✅ 订单查询成功，信息已核对</span>';
         nowOrderData = res;
         openMailModal(res);
     }else{
-        document.getElementById("queryResult").innerHTML = `<span class="text-red">❌ 订单信息不匹配</span>`;
+        document.getElementById("queryResult").innerHTML = '<span class="text-red">❌ 订单信息不匹配，请检查</span>';
     }
 }
 
-// 打开邮件确认弹窗
+// 邮件弹窗排版优化
 function openMailModal(data){
-    let info = `
-收件人：${MAIL_TO}
-订单编号：${data.id}
-套餐名称：${data.name}
-商品编号：${data.goodsCode}
-游戏ID：${data.gameId}
-订单状态：${data.status}
-下单时间：${data.time}
-用户备注：${data.remark||"无"}
-    `;
+    var info =
+    "收件邮箱：" + MAIL_TO + "\n\n" +
+    "订单编号：" + data.id + "\n" +
+    "套餐名称：" + data.name + "\n" +
+    "商品编号：" + data.goodsCode + "\n" +
+    "下单游戏ID：" + data.gameId + "\n" +
+    "订单价格：" + data.price + "\n" +
+    "订单状态：" + data.status + "\n" +
+    "下单时间：" + data.time + "\n" +
+    "用户备注：" + (data.remark || "无备注");
+
     document.getElementById("mailInfoBox").innerText = info;
     document.getElementById("mailModal").style.display = "flex";
 }
+function closeMailModal(){document.getElementById("mailModal").style.display = "none";}
 
-function closeMailModal(){
-    document.getElementById("mailModal").style.display = "none";
-}
-
-// 跳转邮件、自动填充内容 保证可发送
+// 邮件发送 中文不乱码
 function goSendMail(){
     if(!nowOrderData) return;
-    let sub = "FG俱乐部新订单通知——"+nowOrderData.id;
-    let body = `
-【FG俱乐部订单通知】
-订单编号：${nowOrderData.id}
-套餐名称：${nowOrderData.name}
-商品编号：${nowOrderData.goodsCode}
-游戏玩家ID：${nowOrderData.gameId}
-订单价格：${nowOrderData.price}
-订单状态：${nowOrderData.status}
-下单时间：${nowOrderData.time}
-用户备注：${nowOrderData.remark||"无"}
-    `;
-    // 邮件协议，所有手机/电脑通用，必能唤起邮件APP
-    let url = `mailto:${MAIL_TO}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
-    window.location.href = url;
+    var sub = "FG俱乐部新订单通知 — " + nowOrderData.id;
+    var body = "【FG俱乐部订单自动通知】\n\n" +
+              "订单编号：" + nowOrderData.id + "\n" +
+              "套餐项目：" + nowOrderData.name + "\n" +
+              "商品编号：" + nowOrderData.goodsCode + "\n" +
+              "游戏玩家ID：" + nowOrderData.gameId + "\n" +
+              "订单金额：" + nowOrderData.price + "\n" +
+              "当前状态：" + nowOrderData.status + "\n" +
+              "提交时间：" + nowOrderData.time + "\n" +
+              "用户备注：" + (nowOrderData.remark || "无");
+
+    var mailUrl = "mailto:" + MAIL_TO +
+                 "?subject=" + encodeURIComponent(sub) +
+                 "&body=" + encodeURIComponent(body);
+    window.location.href = mailUrl;
     closeMailModal();
 }
 
-// 后台相关
+// 后台系统
 function hideAllPage(){
-    document.querySelectorAll('.hidden-panel').forEach(el=>el.style.display="none");
+    var panels = document.querySelectorAll('.hidden-panel');
+    for(var i=0;i<panels.length;i++) panels[i].style.display="none";
 }
 function showAdminLogin(){hideAllPage();document.getElementById("adminLoginBox").style.display="block";}
 function verifyAdmin(){
-    let pwd = document.getElementById("adminPwd").value.trim();
+    var pwd = document.getElementById("adminPwd").value.trim();
     if(pwd === ADMIN_PWD){
         hideAllPage();
         document.getElementById("adminMainBox").style.display="block";
         renderAdminOrders();
     }else{
-        alert("密码错误");
+        alert("管理员密码错误！");
     }
 }
 function renderAdminOrders(){
-    let list = getOrderData();
-    let html = "";
-    if(list.length===0){html="<p style='text-align:center;opacity:0.7;'>暂无订单</p>";}
-    else{
-        list.forEach((o,i)=>{
-            html += `
-            <div class="order-item">
-                <p>订单号：${o.id}</p>
-                <p>套餐：${o.name}</p>
-                <p>游戏ID：${o.gameId}</p>
-                <p>状态：${o.status}</p>
-                <button class="btn-green" onclick="changeStatus(${i},'已付款')">标记已付款</button>
-                <button class="btn-red" onclick="changeStatus(${i},'已退款')">标记退款</button>
-            </div>
-            `;
-        });
+    var list = getOrderData();
+    var html = "";
+    if(list.length === 0){
+        html = '<p style="text-align:center;opacity:0.7;font-size:15px;">暂无任何用户订单</p>';
+    }else{
+        for(var i=0;i<list.length;i++){
+            var o = list[i];
+            var statusText = "";
+            if(o.status === "待付款") statusText = '<span class="status-wait">待付款</span>';
+            else if(o.status === "已付款") statusText = '<span class="status-ok">已付款</span>';
+            else statusText = '<span class="status-refund">已退款</span>';
+
+            html +=
+            '<div class="order-item">'+
+                '<p>订单编号：'+o.id+'</p>'+
+                '<p>购买套餐：'+o.name+'</p>'+
+                '<p>游戏用户ID：'+o.gameId+'</p>'+
+                '<p>订单价格：'+o.price+'</p>'+
+                '<p>订单状态：'+statusText+'</p>'+
+                '<p>下单时间：'+o.time+'</p>'+
+                '<button class="btn-green" onclick="changeStatus('+i+',\'已付款\')">标记已付款</button>'+
+                '<button class="btn-red" onclick="changeStatus('+i+',\'已退款\')">标记已退款</button>'+
+            '</div>';
+        }
     }
     document.getElementById("adminOrderList").innerHTML = html;
 }
 function changeStatus(i,txt){
-    let arr = getOrderData();
+    var arr = getOrderData();
     arr[i].status = txt;
     saveOrderData(arr);
     renderAdminOrders();
