@@ -21,6 +21,18 @@
             position: relative;
         }
 
+        /* 雪花样式 */
+        .snow {
+            position: fixed;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        body > div:not(.snow) {
+            position: relative;
+            z-index: 2;
+        }
+
         .header {
             text-align: center;
             padding: 25px 0;
@@ -230,35 +242,42 @@
         .status-ok{color:#4ade80;font-weight:bold;}
         .status-refund{color:#ff6b6b;font-weight:bold;}
 
-
-        /* ========== 雪花特效 百分百可用 ========== */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0.4;
-            pointer-events: none;
-            z-index: 1;
-        }
-        @keyframes snowFall {
-            0% {transform: translateY(0) rotate(0deg);opacity:0;}
-            20% {opacity:0.6;}
-            100% {transform: translateY(100vh) rotate(360deg);opacity:0;}
-        }
-        @keyframes snowSwing {
-            0% {transform: translateX(-10px);}
-            100% {transform: translateX(10px);}
-        }
-        body>div:not(.snowflake){position:relative;z-index:2;}
     </style>
 </head>
 <body>
 
-<!-- 雪花JS 直接生效 -->
+<!-- 最简单原生雪花，手机必显示 -->
 <script>
-function createSnow(){let e=document.createElement("div");e.className="snowflake";let t=5*Math.random()+2;e.style.width=t+"px",e.style.height=t+"px",e.style.left=100*Math.random()+"vw";let n=7*Math.random()+4,o=4*Math.random()+2;e.style.animation="snowFall "+n+"s linear infinite,snowSwing "+o+"s ease-in-out infinite alternate",document.body.appendChild(e)}
-for(let i=0;i<200;i++)createSnow();
+// 创建雪花
+var snowArr = [];
+for(var i = 0; i < 60; i++){
+    var s = document.createElement('div');
+    s.className = 'snow';
+    var size = Math.random() * 4 + 2;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * -500 + 'px';
+    s.style.opacity = Math.random() * 0.6 + 0.2;
+    document.body.appendChild(s);
+    snowArr.push({
+        dom:s,
+        speed:Math.random()*1+0.5
+    });
+}
+// 下落动画
+setInterval(function(){
+    for(var i=0;i<snowArr.length;i++){
+        var obj = snowArr[i];
+        var top = parseFloat(obj.dom.style.top);
+        top += obj.speed;
+        obj.dom.style.top = top + 'px';
+        if(top > window.innerHeight){
+            obj.dom.style.top = '-10px';
+            obj.dom.style.left = Math.random()*100+'%';
+        }
+    }
+},30);
 </script>
 
 <!-- 邮件弹窗 -->
@@ -699,8 +718,3 @@ function clearAllOrder(){
 
 </body>
 </html>
-
-
-
-
-
