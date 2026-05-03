@@ -21,31 +21,6 @@
             position: relative;
         }
 
-        /* 终极雪花特效（恢复！） */
-        .snowflake {
-            position: fixed;
-            top: -20px;
-            background: #ffffff;
-            border-radius: 50%;
-            opacity: 0.35;
-            pointer-events: none;
-            z-index: 1; /* 最低层级，不遮挡内容 */
-        }
-        @keyframes snowFall {
-            0% {transform: translateY(0) rotate(0deg); opacity: 0;}
-            15% {opacity: 0.7;}
-            100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
-        }
-        @keyframes snowSwing {
-            0% {transform: translateX(-15px);}
-            100% {transform: translateX(15px);}
-        }
-
-        body > div:not(.snowflake) {
-            position: relative;
-            z-index: 2; /* 内容在雪花上方 */
-        }
-
         .header {
             text-align: center;
             padding: 25px 0;
@@ -201,7 +176,6 @@
 
         .hidden-panel {display: none;}
 
-        /* 邮件弹窗 终极美化 */
         .mail-modal {
             position: fixed;
             top: 0;left: 0;width: 100%;height: 100%;
@@ -228,10 +202,9 @@
         .btn-row {display: flex;gap: 12px;}
         .btn-row button {flex:1;}
 
-        /* QQ加群弹窗 终极美化 */
         .qq-group-modal {
             position: fixed;top: 0;left: 0;width: 100%;height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0.85);
             z-index: 1000;display: none;
             align-items: center;justify-content: center;padding: 20px;
         }
@@ -256,25 +229,36 @@
         .status-wait{color:#ffc145;font-weight:bold;}
         .status-ok{color:#4ade80;font-weight:bold;}
         .status-refund{color:#ff6b6b;font-weight:bold;}
+
+
+        /* ========== 雪花特效 百分百可用 ========== */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes snowFall {
+            0% {transform: translateY(0) rotate(0deg);opacity:0;}
+            20% {opacity:0.6;}
+            100% {transform: translateY(100vh) rotate(360deg);opacity:0;}
+        }
+        @keyframes snowSwing {
+            0% {transform: translateX(-10px);}
+            100% {transform: translateX(10px);}
+        }
+        body>div:not(.snowflake){position:relative;z-index:2;}
     </style>
 </head>
 <body>
 
-<!-- 终极密集自然雪花（恢复！320片，自然飘落） -->
+<!-- 雪花JS 直接生效 -->
 <script>
-function createSnowflake(){
-    var snow = document.createElement("div");
-    snow.className = "snowflake";
-    var size = Math.random() * 4 + 1.5; // 雪花大小1.5-5.5px
-    snow.style.width = size + "px";
-    snow.style.height = size + "px";
-    snow.style.left = Math.random() * 100 + "vw"; // 随机水平位置
-    var fallTime = Math.random() * 8 + 5; // 下落时间5-13秒
-    var swingTime = Math.random() * 4 + 2; // 摆动时间2-6秒
-    snow.style.animation = "snowFall "+fallTime+"s linear infinite, snowSwing "+swingTime+"s ease-in-out infinite alternate";
-    document.body.appendChild(snow);
-}
-for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
+function createSnow(){let e=document.createElement("div");e.className="snowflake";let t=5*Math.random()+2;e.style.width=t+"px",e.style.height=t+"px",e.style.left=100*Math.random()+"vw";let n=7*Math.random()+4,o=4*Math.random()+2;e.style.animation="snowFall "+n+"s linear infinite,snowSwing "+o+"s ease-in-out infinite alternate",document.body.appendChild(e)}
+for(let i=0;i<200;i++)createSnow();
 </script>
 
 <!-- 邮件弹窗 -->
@@ -322,7 +306,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
 <div class="card">
     <h3>📦 全部护航商品</h3>
 
-    <!-- 订单1 -->
     <div class="goods-item">
         <h4>体验单 100W</h4>
         <div class="goods-price">售价：13.99 元</div>
@@ -331,7 +314,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('体验单 100W','13.99 元','SP001')">立即下单购买</button>
     </div>
 
-    <!-- 订单2（已修正：8.99元，不含大金） -->
     <div class="goods-item">
         <h4>T7套装单 不含大金</h4>
         <div class="goods-price">售价：8.99 元</div>
@@ -340,7 +322,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('T7套装单 不含大金','8.99 元','SP002')">立即下单购买</button>
     </div>
 
-    <!-- 订单3 -->
     <div class="goods-item">
         <h4>保底单 340W</h4>
         <div class="goods-price">售价：43.99 元</div>
@@ -349,7 +330,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('保底单 340W','43.99 元','SP003')">立即下单购买</button>
     </div>
 
-    <!-- 订单4 -->
     <div class="goods-item">
         <h4>保底单 1000W</h4>
         <div class="goods-price">售价：私聊客服</div>
@@ -358,7 +338,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('保底单 1000W','私聊客服','SP004')">立即下单购买</button>
     </div>
 
-    <!-- 订单5 -->
     <div class="goods-item">
         <h4>单局单 单局500W</h4>
         <div class="goods-price">售价：私聊客服</div>
@@ -367,7 +346,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('单局单 单局500W','私聊客服','SP005')">立即下单购买</button>
     </div>
 
-    <!-- 订单6 -->
     <div class="goods-item">
         <h4>单局单 单局300W</h4>
         <div class="goods-price">售价：119.99 元</div>
@@ -376,7 +354,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('单局单 单局300W','119.99 元','SP006')">立即下单购买</button>
     </div>
 
-    <!-- 订单7 -->
     <div class="goods-item">
         <h4>战地指挥官 指哪打哪</h4>
         <div class="goods-price">售价：79.99 元</div>
@@ -385,7 +362,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('战地指挥官 指哪打哪','79.99 元','SP007')">立即下单购买</button>
     </div>
 
-    <!-- 订单8 -->
     <div class="goods-item">
         <h4>三金单 单局三金</h4>
         <div class="goods-price">售价：259.99 元</div>
@@ -394,7 +370,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('三金单 单局三金','259.99 元','SP008')">立即下单购买</button>
     </div>
 
-    <!-- 订单9 -->
     <div class="goods-item">
         <h4>双金单 单局双金</h4>
         <div class="goods-price">售价：139.99 元</div>
@@ -403,7 +378,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('双金单 单局双金','139.99 元','SP009')">立即下单购买</button>
     </div>
 
-    <!-- 订单10 -->
     <div class="goods-item">
         <h4>移动保镖单 老板乱动</h4>
         <div class="goods-price">售价：私聊客服</div>
@@ -412,7 +386,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('移动保镖单 老板乱动','私聊客服','SP010')">立即下单购买</button>
     </div>
 
-    <!-- 订单11 -->
     <div class="goods-item">
         <h4>指定改装单 老板改</h4>
         <div class="goods-price">售价：私聊客服</div>
@@ -421,7 +394,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('指定改装单 老板改','私聊客服','SP011')">立即下单购买</button>
     </div>
 
-    <!-- 订单12 -->
     <div class="goods-item">
         <h4>机密单 机密文件</h4>
         <div class="goods-price">售价：1088 元</div>
@@ -430,7 +402,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('机密单 机密文件','1088 元','SP012')">立即下单购买</button>
     </div>
 
-    <!-- 订单13 -->
     <div class="goods-item">
         <h4>大金单 必出5大金</h4>
         <div class="goods-price">售价：139.99 元</div>
@@ -439,7 +410,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('大金单 必出5大金','139.99 元','SP013')">立即下单购买</button>
     </div>
 
-    <!-- 订单14 -->
     <div class="goods-item">
         <h4>钥匙单 2把钥匙</h4>
         <div class="goods-price">售价：209.99 元</div>
@@ -448,7 +418,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
         <button class="btn-blue" onclick="selectGoods('钥匙单 2把钥匙','209.99 元','SP014')">立即下单购买</button>
     </div>
 
-    <!-- 订单15 -->
     <div class="goods-item">
         <h4>大金单 1大金</h4>
         <div class="goods-price">售价：34.99 元</div>
@@ -472,7 +441,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
     <button class="btn-dark" onclick="showAdminLogin2()">📁 订单管理后台</button>
 </div>
 
-<!-- 管理员登录 -->
 <div class="hidden-panel" id="adminLoginBox">
     <div class="card">
         <h3>管理员登录界面</h3>
@@ -482,7 +450,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
     </div>
 </div>
 
-<!-- 第一个后台：订单状态管理 -->
 <div class="hidden-panel" id="adminMainBox">
     <div class="card">
         <h3>📋 订单状态管理后台</h3>
@@ -491,7 +458,6 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
     <button class="btn-dark" onclick="hideAllPage()">退出管理后台</button>
 </div>
 
-<!-- 第二个后台：订单删除管理 -->
 <div class="hidden-panel" id="adminMainBox2">
     <div class="card">
         <h3>🗑️ 订单删除管理后台</h3>
@@ -503,13 +469,11 @@ for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
 </div>
 
 <script>
-// 全局配置
 var ADMIN_PWD = "13467925QQ";
 var MAIL_TO = "3428979006@qq.com";
 var QQ_GROUP_NUMBER = "1101681704";
 var nowOrderData = null;
 
-// 本地存储容错初始化
 function initData(){
     if(!localStorage.getItem('orderDataList')){
         localStorage.setItem('orderDataList',JSON.stringify([]));
@@ -541,7 +505,6 @@ function createOrderID(){
     return "FG" + d.getFullYear().toString().slice(2) + (d.getMonth()+1) + d.getDate() + rnd;
 }
 
-// 提交订单终极校验
 function submitNewOrder(){
     var gameId = document.getElementById("userGameId").value.trim();
     var goodsCode = document.getElementById("userGoodsCode").value.trim();
@@ -566,18 +529,15 @@ function submitNewOrder(){
     arr.push(order);
     saveOrderData(arr);
 
-    // 显示订单号到QQ弹窗
     document.getElementById("qqModalOrderId").innerText = "你的订单编号：" + orderId;
     document.getElementById("qqModal").style.display = "flex";
 }
 
-// QQ加群跳转完美适配
 function joinQQGroup(){
     window.location.href = "mqqapi://card/show_pslcard?src_type=internal&version=1&uin="+QQ_GROUP_NUMBER+"&card_type=group&source=qrcode";
 }
 function closeQQModal(){document.getElementById("qqModal").style.display = "none";}
 
-// 订单查询
 function checkOrder(){
     var oid = document.getElementById("queryOrderId").value.trim();
     var gid = document.getElementById("queryGameId").value.trim();
@@ -606,7 +566,6 @@ function checkOrder(){
     }
 }
 
-// 邮件弹窗排版优化
 function openMailModal(data){
     var info =
     "收件邮箱：" + MAIL_TO + "\n\n" +
@@ -624,7 +583,6 @@ function openMailModal(data){
 }
 function closeMailModal(){document.getElementById("mailModal").style.display = "none";}
 
-// 邮件发送 中文不乱码
 function goSendMail(){
     if(!nowOrderData) return;
     var sub = "FG俱乐部新订单通知 — " + nowOrderData.id;
@@ -645,7 +603,6 @@ function goSendMail(){
     closeMailModal();
 }
 
-// 后台公共方法
 function hideAllPage(){
     var panels = document.querySelectorAll('.hidden-panel');
     for(var i=0;i<panels.length;i++) panels[i].style.display="none";
@@ -670,7 +627,6 @@ function verifyAdmin(){
     }
 }
 
-// 后台1：状态管理
 function renderAdminOrders(){
     var list = getOrderData();
     var html = "";
@@ -706,7 +662,6 @@ function changeStatus(i,txt){
     renderAdminOrders();
 }
 
-// 后台2：删除管理
 function renderAdminOrders2(){
     var list = getOrderData();
     var html = "";
@@ -727,7 +682,6 @@ function renderAdminOrders2(){
     document.getElementById("adminOrderList2").innerHTML = html;
 }
 
-// 删除单个订单
 function delSingleOrder(index){
     if(!confirm("确定要删除这条订单吗？删除后无法恢复！"))return;
     var arr = getOrderData();
@@ -736,7 +690,6 @@ function delSingleOrder(index){
     renderAdminOrders2();
 }
 
-// 清空全部订单
 function clearAllOrder(){
     if(!confirm("⚠️ 确定清空所有订单？一旦清空无法找回！"))return;
     saveOrderData([]);
@@ -746,6 +699,7 @@ function clearAllOrder(){
 
 </body>
 </html>
+
 
 
 
