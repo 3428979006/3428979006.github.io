@@ -354,7 +354,7 @@
 </div>
 
 <!-- 订单查询 -->
-<div class="glass-card">
+<div class="glass-card" id="card_query">
     <h3 class="card-title">🔍 FG俱乐部 订单快速查询</h3>
     <input class="input-item" placeholder="输入订单编号" id="queryOrderId">
     <input class="input-item" placeholder="输入游戏ID" id="queryGameId">
@@ -364,7 +364,7 @@
 </div>
 
 <!-- 商品列表 -->
-<div class="glass-card">
+<div class="glass-card" id="card_goods">
     <h3 class="card-title">📦 FG俱乐部 精品护航套餐</h3>
 
     <div class="goods-item">
@@ -592,19 +592,33 @@
         closeMailModal();
     }
 
-    // 管理员相关
+    // 管理员按钮
     function showAdmin() {
-        hideAll();
+        hideAdminOnly();
         adminType = 1;
         document.getElementById('adminLogin').classList.remove('hidden');
     }
     function showOrderManage() {
-        hideAll();
+        hideAdminOnly();
         adminType = 2;
         document.getElementById('adminLogin').classList.remove('hidden');
     }
+
+    // 只隐藏后台面板，不隐藏首页【查询、商品】
+    function hideAdminOnly() {
+        // 隐藏后台相关
+        document.getElementById('adminLogin').classList.add('hidden');
+        document.getElementById('adminMain').classList.add('hidden');
+        document.getElementById('orderDelManage').classList.add('hidden');
+    }
+
+    // 返回首页：关闭所有后台，显示查询、商品
     function hideAll() {
-        document.querySelectorAll('.glass-card').forEach(item => item.classList.add('hidden'));
+        // 隐藏所有后台
+        hideAdminOnly();
+        // 首页模块强制显示
+        document.getElementById('card_query').classList.remove('hidden');
+        document.getElementById('card_goods').classList.remove('hidden');
         adminType = 0;
     }
 
@@ -612,7 +626,7 @@
         const pwd = document.getElementById('adminPwd').value.trim();
         if(pwd !== CONFIG.adminPwd) return alert('FG俱乐部 管理员密码错误！');
 
-        hideAll();
+        hideAdminOnly();
         if(adminType === 1) {
             document.getElementById('adminMain').classList.remove('hidden');
             renderOrderList();
