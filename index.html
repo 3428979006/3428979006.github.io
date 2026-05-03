@@ -3,648 +3,605 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FG俱乐部 终极综合管理系统</title>
+    <title>FG俱乐部 | 暗区突围护航平台</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#11151c;color:#fff;padding:20px;font-family:sans-serif;overflow-x: hidden;}
-        .title{text-align:center;font-size:26px;color:#ffd700;font-weight:bold;margin-bottom:15px;}
-        .tips{background:#ff3333;padding:10px;border-radius:8px;text-align:center;font-size:14px;margin-bottom:20px;}
-        .box{background:#1e2530;padding:15px;border-radius:12px;margin-bottom:15px;}
-        .box h3{font-size:17px;margin-bottom:5px;}
-        .price{color:#ff5050;margin:8px 0;font-weight:bold;}
-        .desc{color:#aaa;font-size:14px;line-height:1.6;}
-        button{width:100%;padding:11px;border-radius:8px;border:0;margin-top:10px;font-size:15px;cursor:pointer;}
-        .btn1{background:#0066ff;color:#fff;}
-        .info-box{margin-top:20px;padding:20px;background:#253040;border-radius:12px;text-align:center;display:none;border:1px solid #ffd700;}
-        .order-id{font-size:20px;color:#ffd700;font-weight:bold;margin:10px 0;}
-        .qun-num{font-size:24px;color:#ffd700;font-weight:bold;margin:15px 0;}
-        .text-tip{font-size:15px;line-height:1.8;color:#eee;}
-        input,textarea{width:100%;padding:12px;margin:8px 0;background:#272e3a;border:0;border-radius:8px;color:#fff;}
-        .entry-group{margin-top:30px;text-align:center;}
-        .entry-group button{background:#444;color:#ccc;font-size:14px;padding:8px;width:auto;margin:5px;}
-        .back-btn{background:#555;margin-top:15px;}
-        .order-item{background:#1e2530;padding:15px;border-radius:10px;margin:10px 0;border-left:4px solid #ffd700;}
-        .ks-item{background:#1a202c;padding:12px;border-radius:8px;margin:8px 0;}
-        .sp-notice{color:#ffd700;font-size:14px;}
-        .wait-pay{color:#ff6666;font-weight:bold;}
-        .ok-pay{color:#39ff66;font-weight:bold;}
-        .refund-pay{color:#ff9900;font-weight:bold;}
-        .board-apply{background:#2a3240;padding:10px;border-radius:6px;margin:8px 0;}
-        .yes-btn{background:#28a745;padding:4px 8px;border:none;border-radius:4px;color:#fff;}
-        .no-btn{background:#dc3545;padding:4px 8px;border:none;border-radius:4px;color:#fff;margin-left:5px;}
-        .query-box{background:#1e2530;padding:15px;border-radius:12px;margin-bottom:20px;}
-        .ks-wait{color:#ffaa00;font-weight:bold;}
-        .ks-pass{color:#39ff66;font-weight:bold;}
-        .ks-fail{color:#ff4444;font-weight:bold;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
+        }
+
+        /* 全局背景 - 雪花电竞风 */
+        body {
+            background: linear-gradient(135deg, #0f1729 0%, #1a2744 50%, #0b1326 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 16px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 真实雪花飘落核心效果 */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: #ffffff;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        /* 头部标题 */
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        .header h1 {
+            font-size: 30px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            margin-bottom: 6px;
+        }
+        .header p {
+            color: #a0b4d8;
+            font-size: 14px;
+        }
+
+        /* 公告栏 - 毛玻璃效果 */
+        .notice {
+            background: rgba(255, 60, 60, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 80, 80, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #ffcaca;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 通用卡片 - 毛玻璃+发光边框 */
+        .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .card h3 {
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* 输入框 */
+        input, textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 8px 0;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* 按钮样式 */
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            z-index: 2;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .btn-blue {
+            background: linear-gradient(90deg, #3a86ff, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(58,134,255,0.3);
+        }
+        .btn-blue:hover {
+            background: linear-gradient(90deg, #4d94ff, #3b82f6);
+        }
+        .btn-green {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: #fff;
+        }
+        .btn-red {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            color: #fff;
+        }
+        .btn-dark {
+            background: rgba(255,255,255,0.1);
+            color: #d1d9e8;
+        }
+
+        /* 商品信息 */
+        .goods-price {
+            color: #ff6b6b;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .goods-desc {
+            color: #b4c2d8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .goods-code {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 6px;
+            opacity: 0.8;
+        }
+
+        /* 成功弹窗 */
+        .success-modal {
+            display: none;
+            margin-top: 16px;
+            padding: 22px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            text-align: center;
+        }
+        .order-id {
+            font-size: 22px;
+            color: #fff;
+            font-weight: bold;
+            margin: 14px 0;
+        }
+        .qq-group {
+            font-size: 26px;
+            color: #4ade80;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        /* 订单列表项 */
+        .order-item {
+            background: rgba(255,255,255,0.06);
+            border-left: 3px solid #fff;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+        .status-wait { color: #ff6b6b; font-weight: bold; }
+        .status-ok { color: #4ade80; font-weight: bold; }
+        .status-refund { color: #ffb84d; font-weight: bold; }
+
+        /* 导航按钮组 */
+        .nav-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 25px 0;
+            position: relative;
+            z-index: 2;
+        }
+        .nav-group button {
+            width: auto;
+            padding: 11px 18px;
+        }
+
+        /* 隐藏面板 */
+        .hidden-panel {
+            display: none;
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
-
-    <div class="tips">⚠️未成年人禁止下单 | FG俱乐部 全天接单<br>下单后请进群联系管理员付款，未付款/已退款订单一律不予打单</div>
-    <div class="title">FG俱乐部<br>护航下单综合系统</div>
-
-    <!-- 订单查询区域 订单编号+商品编号 双重验证 -->
-<form method="POST" data-netlify="true" name="order-form">
-    <div class="query-box">
-        <h3 style="text-align:center;color:#ffd700;margin-bottom:10px;">订单查询验证</h3>
-        <input type="text" name="order_id" placeholder="请输入订单编号" id="queryOrderId">
-        <input type="text" name="product_id" placeholder="请输入商品编号" id="queryShopCode">
-        <button type="submit" class="btn1">立即查询订单</button>
-        <div id="queryResult" style="margin-top:10px;text-align:center;"></div>
-    </div>
-</form>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>订单管理后台</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .login-form { text-align: center; margin-top: 100px; }
-        .orders { display: none; margin-top: 30px; }
-        .order-card { border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
-        .btn { background: #009688; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-        .btn:hover { background: #00796b; }
-    </style>
-</head>
-<body>
-    <div class="login-form" id="loginForm">
-        <h2>管理员登录</h2>
-        <input type="password" id="password" placeholder="请输入管理员密码" style="padding: 10px; width: 250px; margin: 10px 0;">
-        <br>
-        <button class="btn" onclick="login()">登录</button>
-    </div>
-
-    <div class="orders" id="ordersList">
-        <h2>所有订单申请</h2>
-        <div id="ordersContainer"></div>
-    </div>
-
+    <!-- 真实雪花飘落特效（已修复：数量多、体积小、覆盖全屏） -->
     <script>
-        const CONFIG = {
-            adminPassword: "13467925QQ",
-            netlifyToken: "nfp_spnqrrh4336qWqcAayugSZcEa6",
-            siteId: "c23e1d4b-df20-4bd5-a345-16823c15f438",
-            formName: "order-form"
-        };
-
-        function login() {
-            const pwd = document.getElementById('password').value;
-            if (pwd === CONFIG.adminPassword) {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('ordersList').style.display = 'block';
-                fetchOrders();
-            } else {
-                alert('密码错误！');
-            }
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '•';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.fontSize = Math.random() * 4 + 4 + 'px';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            snowflake.style.animationDuration = Math.random() * 5 + 5 + 's';
+            snowflake.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite, swing ${Math.random() * 2 + 1}s ease-in-out infinite alternate`;
+            document.body.appendChild(snowflake);
         }
-
-        async function fetchOrders() {
-            try {
-                const response = await fetch(
-                    `https://api.netlify.com/api/v1/sites/${CONFIG.siteId}/forms/${CONFIG.formName}/submissions`,
-                    { headers: { 'Authorization': `Bearer ${CONFIG.netlifyToken}` } }
-                );
-                const orders = await response.json();
-                const container = document.getElementById('ordersContainer');
-
-                if (orders.length === 0) {
-                    container.innerHTML = '<p>暂无订单申请</p>';
-                    return;
-                }
-
-                orders.forEach(order => {
-                    const card = document.createElement('div');
-                    card.className = 'order-card';
-                    card.innerHTML = `
-                        <p><strong>提交时间：</strong>${new Date(order.created_at).toLocaleString()}</p>
-                        <p><strong>订单号：</strong>${order.data.order_id || '无'}</p>
-                        <p><strong>商品编号：</strong>${order.data.product_id || '无'}</p>
-                        <hr>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('加载订单失败:', error);
-                alert('加载失败，请检查配置！');
-            }
+        for (let i = 0; i < 150; i++) {
+            createSnowflake();
         }
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                0% { transform: translateY(-10px); }
+                100% { transform: translateY(100vh); }
+            }
+            @keyframes swing {
+                0% { transform: translateX(-5px); }
+                100% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
-</body>
-</html>
 
-
-    <!-- 商品套餐 -->
-    <div class="box">
-        <h3>200万保底护航</h3>
-        <div class="price">售价：20元</div>
-        <div class="desc">保底200万物资，性价比套餐</div>
-        <div class="sp-notice">商品编号：SP001</div>
-        <button class="btn1" onclick="order1()">立即下单</button>
+    <!-- 头部标题 -->
+    <div class="header">
+        <h1>FG 俱乐部</h1>
+        <p>暗区突围 · 专业护航一站式服务平台</p>
     </div>
 
-    <div class="box">
-        <h3>340万护航</h3>
-        <div class="price">售价：34.99元</div>
-        <div class="desc">稳定护航 340万物资保底</div>
-        <div class="sp-notice">商品编号：SP002</div>
-        <button class="btn1" onclick="order2()">立即下单</button>
+    <!-- 公告栏 -->
+    <div class="notice">
+        ⚠️ 未成年人禁止下单 | 平台全天稳定接单<br>
+        下单请务必加入QQ群联系管理员付款，未付款订单一律不安排服务
     </div>
 
-    <div class="box">
-        <h3>大金单</h3>
-        <div class="price">售价：33.33元</div>
-        <div class="desc">保底350万，出一大金减60万保底</div>
-        <div class="sp-notice">商品编号：SP003</div>
-        <button class="btn1" onclick="order3()">立即下单</button>
+    <!-- 订单查询区域（三重验证） -->
+    <div class="card">
+        <h3>订单查询验证</h3>
+        <input placeholder="请输入订单编号" id="queryOrderId">
+        <input placeholder="请输入暗区游戏ID" id="queryGameId">
+        <input placeholder="请输入商品编号" id="queryGoodsId">
+        <button class="btn-blue" onclick="checkOrder()">立即查询订单</button>
+        <div id="queryResult" style="margin-top:12px;text-align:center;"></div>
     </div>
 
-    <div class="box">
-        <h3>机密单</h3>
-        <div class="price">私聊管理员</div>
-        <div class="desc">不出机密保底1000万物资</div>
-        <div class="sp-notice">商品编号：SP004</div>
-        <button class="btn1" onclick="order4()">立即下单</button>
-    </div>
+    <!-- 商品服务区（已添加你所有图片里的订单） -->
+    <div class="card">
+        <h3>护航服务列表</h3>
 
-    <!-- 下单表单 -->
-    <div class="box" id="form" style="display:none;">
-        <h3 id="serviceName"></h3>
-        <div class="price" id="servicePrice"></div>
-        <input placeholder="请输入对应商品编号" id="shopCode">
-        <input placeholder="请输入暗区突围游戏ID" id="gameId">
-        <textarea placeholder="备注 / 上线时间 / 个人需求" id="remark"></textarea>
-        <button class="btn1" onclick="submitOrder()">提交订单</button>
-        <div class="info-box" id="infoBox">
-            <div class="text-tip">订单提交成功！</div>
-            <div class="order-id">订单编号：<span id="ordNum"></span></div>
-            <div class="text-tip">请手动前往QQ搜索以下群号加入群聊</div>
-            <div class="qun-num">1101681704</div>
-            <div class="text-tip">进群后自行添加管理员微信进行付款<br>
-                <span style="color:red;">⚠️必须等待管理员后台确认付款后才可打单</span>
-            </div>
+        <div class="goods-item">
+            <h4>体验单 100w</h4>
+            <div class="goods-price">售价：13.99 元</div>
+            <div class="goods-desc">每日限1单，包100w物资，不支持指定打手</div>
+            <div class="goods-code">商品编号：SP001</div>
+            <button class="btn-blue" onclick="selectGoods('体验单 100w','13.99元','SP001')">立即下单</button>
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
+
+        <div class="goods-item">
+            <h4>T7套装单 保底1大金</h4>
+            <div class="goods-price">售价：43.99 元</div>
+            <div class="goods-desc">含T7热成像、全新六头六甲GS2耳机，任选一满改枪</div>
+            <div class="goods-code">商品编号：SP002</div>
+            <button class="btn-blue" onclick="selectGoods('T7套装单 保底1大金','43.99元','SP002')">立即下单</button>
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
+
+        <div class="goods-item">
+            <h4>机密单 保5大金</h4>
+            <div class="goods-price">售价：139.99 元</div>
+            <div class="goods-desc">累计带出5个检视大金，T7也算大金，累计保底1000w</div>
+            <div class="goods-code">商品编号：SP003</div>
+            <button class="btn-blue" onclick="selectGoods('机密单 保5大金','139.99元','SP003')">立即下单</button>
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
+
+        <div class="goods-item">
+            <h4>大金单 15大金</h4>
+            <div class="goods-price">售价：59.99 元</div>
+            <div class="goods-desc">单局带出2个检视大金，T7也算大金，防止运气不好秒出</div>
+            <div class="goods-code">商品编号：SP004</div>
+            <button class="btn-blue" onclick="selectGoods('大金单 15大金','59.99元','SP004')">立即下单</button>
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
+
+        <div class="goods-item">
+            <h4>三局单 3790w</h4>
+            <div class="goods-price">售价：私聊管理员</div>
+            <div class="goods-desc">三局累计带出3790w物资，全程安全护航</div>
+            <div class="goods-code">商品编号：SP005</div>
+            <button class="btn-blue" onclick="selectGoods('三局单 3790w','私聊管理员','SP005')">立即下单</button>
+        </div>
+
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:15px 0;"></div>
+
+        <div class="goods-item">
+            <h4>指定改装单 老板改</h4>
+            <div class="goods-price">售价：私聊管理员</div>
+            <div class="goods-desc">按老板需求改装武器，支持任意枪械定制方案</div>
+            <div class="goods-code">商品编号：SP006</div>
+            <button class="btn-blue" onclick="selectGoods('指定改装单 老板改','私聊管理员','SP006')">立即下单</button>
         </div>
     </div>
 
-    <!-- 功能入口 -->
-    <div class="entry-group">
-        <button onclick="showAdminLogin()">管理员后台</button>
-        <button onclick="showKS()">考核记录管理</button>
-        <button onclick="showBoardView()">进入董事会（公开）</button>
-        <button onclick="showBoardLogin()">董事会管理后台</button>
+    <!-- 下单表单区域 -->
+    <div class="card hidden-panel" id="orderFormBox">
+        <h3 id="formTitle">下单信息填写</h3>
+        <div class="goods-price" id="formPrice"></div>
+        <input placeholder="请输入你的暗区游戏ID" id="userGameId">
+        <input placeholder="请输入对应商品编号" id="userGoodsCode">
+        <textarea rows="4" placeholder="备注说明 / 上线时间 / 特殊需求" id="userRemark"></textarea>
+        <button class="btn-green" onclick="submitNewOrder()">确认提交订单</button>
+
+        <div class="success-modal" id="successModal">
+            <div>🎉 订单提交成功，请妥善保存信息</div>
+            <div class="order-id">订单编号：<span id="finalOrderId"></span></div>
+            <div>请加入下方QQ群联系管理员付款对接</div>
+            <div class="qq-group">1101681704</div>
+            <div style="color:#ff6b6b;margin-top:10px;">未付款订单一律不安排护航服务</div>
+        </div>
+    </div>
+
+    <!-- 导航功能入口 -->
+    <div class="nav-group">
+        <button class="btn-dark" onclick="showAdminLogin()">管理员后台</button>
+        <button class="btn-dark" onclick="showCheckPage()">考核记录中心</button>
+        <button class="btn-dark" onclick="showBoardPublic()">董事会公开浏览</button>
+        <button class="btn-dark" onclick="showBoardLogin()">董事会管理后台</button>
     </div>
 
     <!-- 管理员登录 -->
-    <div class="admin-login" id="adminLogin" style="display:none;">
-        <input type="password" id="adminPwd" placeholder="请输入管理员密码">
-        <button onclick="checkAdminPwd()">进入后台</button>
-        <button class="back-btn" onclick="hideAll()">返回</button>
-    </div>
-    <div class="admin-order-list" id="adminList" style="display:none;">
-        <h2 style="text-align:center;color:#ffd700;">全部订单管理（含退款单）</h2>
-        <div id="orderAllList"></div>
-
-        <h2 style="text-align:center;color:#ffd700;margin-top:30px;">考核审核管理</h2>
-        <div id="adminKSList"></div>
-
-        <button class="back-btn" onclick="hideAll()">退出</button>
-    </div>
-
-    <!-- 考核 无密码 仅添加记录 不能审核 -->
-    <div class="admin-order-list" id="ksList" style="display:none;">
-        <h2 style="text-align:center;color:#ffd700;">成员考核记录（仅查看/添加）</h2>
-        <div>
-            <input placeholder="考核成员游戏昵称" id="ksName">
-            <input placeholder="考核项目内容" id="ksContent">
-            <button style="background:#0066ff;" onclick="addKS()">添加考核记录</button>
+    <div class="hidden-panel" id="adminLoginBox">
+        <div class="card">
+            <h3>管理员登录</h3>
+            <input type="password" placeholder="请输入管理员密码" id="adminPwd">
+            <button class="btn-green" onclick="verifyAdmin()">进入管理后台</button>
+            <button class="btn-dark" onclick="hideAllPage()">返回首页</button>
         </div>
-        <div id="ksAllList"></div>
-        <p style="text-align:center;color:#ccc;margin-top:15px;">考核结果仅管理员可审核判定</p>
-        <button class="back-btn" onclick="hideAll()">返回</button>
     </div>
 
-    <!-- 董事会 公开浏览页面 无密码 -->
-    <div class="admin-order-list" id="boardView" style="display:none;">
-        <h2 style="text-align:center;color:#ffd700;">董事会 公开浏览页面</h2>
-
-        <h3 style="color:#ffd700;margin-top:15px;">订单总览（不展示退款订单）</h3>
-        <div id="boardViewOrderList"></div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">考核总览（仅查看状态）</h3>
-        <div id="boardViewKSList"></div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">申请加入董事会</h3>
-        <div style="display:flex;gap:5px;">
-            <input placeholder="申请加入董事会昵称" id="boardApplyName" style="flex:1;">
-            <button style="background:#0066ff;" onclick="submitBoardApply()">提交入团申请</button>
+    <!-- 管理员后台（核心修复：数据本地永久存储，刷新也不会丢） -->
+    <div class="hidden-panel" id="adminMainBox">
+        <div class="card">
+            <h3>全部订单管理中心</h3>
+            <div id="adminOrderList"></div>
         </div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">正式董事会成员</h3>
-        <div id="boardViewMemList"></div>
-
-        <button class="back-btn" onclick="hideAll()">返回</button>
+        <div class="card">
+            <h3>考核审核管理</h3>
+            <div id="adminCheckList"></div>
+        </div>
+        <button class="btn-dark" onclick="hideAllPage()">退出后台</button>
     </div>
 
-    <!-- 董事会管理后台 登录 -->
-    <div class="admin-login" id="boardLogin" style="display:none;">
-        <input type="password" id="boardPwd" placeholder="请输入董事会管理密码">
-        <button onclick="checkBoardPwd()">进入管理后台</button>
-        <button class="back-btn" onclick="hideAll()">返回</button>
-    </div>
-    <div class="admin-order-list" id="boardList" style="display:none;">
-        <h2 style="text-align:center;color:#ffd700;">董事会 管理后台</h2>
-
-        <h3 style="color:#ffd700;margin-top:15px;">订单总览（不展示退款订单）</h3>
-        <div id="boardOrderList"></div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">考核总览（仅查看状态）</h3>
-        <div id="boardKSList"></div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">董事会入团申请审核</h3>
-        <div id="boardApplyList"></div>
-
-        <h3 style="color:#ffd700;margin-top:20px;border-top:1px solid #444;padding-top:15px;">正式董事会成员管理</h3>
-        <div id="boardMemList"></div>
-
-        <button class="back-btn" onclick="hideAll()">退出</button>
+    <!-- 其他页面（考核、董事会） -->
+    <div class="hidden-panel" id="checkPageBox">
+        <div class="card">
+            <h3>成员考核记录中心</h3>
+            <input placeholder="考核成员游戏昵称" id="checkUserName">
+            <input placeholder="考核项目内容" id="checkContent">
+            <button class="btn-blue" onclick="addCheckRecord()">添加考核记录</button>
+            <div id="checkAllList" style="margin-top:15px;"></div>
+        </div>
+        <button class="btn-dark" onclick="hideAllPage()">返回首页</button>
     </div>
 
+    <div class="hidden-panel" id="boardPublicBox">
+        <div class="card">
+            <h3>董事会公开浏览</h3>
+            <div id="boardPublicContent"></div>
+        </div>
+        <button class="btn-dark" onclick="hideAllPage()">返回首页</button>
+    </div>
+
+    <div class="hidden-panel" id="boardLoginBox">
+        <div class="card">
+            <h3>董事会登录</h3>
+            <input type="password" placeholder="请输入董事会密码" id="boardPwd">
+            <button class="btn-green" onclick="verifyBoard()">进入后台</button>
+            <button class="btn-dark" onclick="hideAllPage()">返回首页</button>
+        </div>
+    </div>
+
+    <div class="hidden-panel" id="boardMainBox">
+        <div class="card">
+            <h3>董事会管理后台</h3>
+            <div id="boardMainContent"></div>
+        </div>
+        <button class="btn-dark" onclick="hideAllPage()">退出后台</button>
+    </div>
 
 <script>
-// 密码设置
-const ADMIN_PASSWORD = "13467925QQ";
-const BOARD_PASSWORD = "13467925AA";
+    // 密码配置
+    const ADMIN_PWD = "13467925QQ";
+    const BOARD_PWD = "13467925AA";
 
-// 全局公共数据存储（解决不同手机看不到数据的问题）
-// 所有人共用这一组数据，提交的申请、订单、全部人可见
-if(!window.globalOrderData) window.globalOrderData = [];
-if(!window.globalKsData) window.globalKsData = [];
-if(!window.globalBoardApply) window.globalBoardApply = [];
-if(!window.globalBoardMember) window.globalBoardMember = [];
+    // 核心修复：数据本地永久存储（localStorage）
+    function initData() {
+        if (!localStorage.getItem('orderDataList')) localStorage.setItem('orderDataList', JSON.stringify([]));
+        if (!localStorage.getItem('checkDataList')) localStorage.setItem('checkDataList', JSON.stringify([]));
+        if (!localStorage.getItem('boardApplyList')) localStorage.setItem('boardApplyList', JSON.stringify([]));
+        if (!localStorage.getItem('boardMemberList')) localStorage.setItem('boardMemberList', JSON.stringify([]));
+    }
+    initData();
 
-// 商品编号
-let curName = "";
-let curPrice = "";
-let curShopCode = "";
-let orderNo = "";
+    // 读取数据
+    function getOrderData() { return JSON.parse(localStorage.getItem('orderDataList')); }
+    function saveOrderData(data) { localStorage.setItem('orderDataList', JSON.stringify(data)); }
 
-function order1(){curName="200万保底护航";curPrice="20元";curShopCode="SP001";showForm();}
-function order2(){curName="340万护航";curPrice="34.99元";curShopCode="SP002";showForm();}
-function order3(){curName="大金单";curPrice="33.33元";curShopCode="SP003";showForm();}
-function order4(){curName="机密单（保底1000万）";curPrice="私聊管理员";curShopCode="SP004";showForm();}
+    let nowGoodsName = "";
+    let nowGoodsPrice = "";
+    let nowGoodsCode = "";
 
-function showForm(){
-    document.getElementById("serviceName").innerText = curName;
-    document.getElementById("servicePrice").innerText = "价格：" + curPrice;
-    document.getElementById("form").style.display = "block";
-    document.getElementById("infoBox").style.display = "none";
-}
-
-// 订单编号生成
-function getOrderNum(){
-    let d = new Date();
-    let prefix = "FG";
-    let ran = Math.floor(Math.random()*90000+10000);
-    return prefix + d.getFullYear().toString().slice(2) + (d.getMonth()+1) + d.getDate() + ran;
-}
-
-// 提交订单 使用全局公共数据
-function submitOrder(){
-    let inCode = document.getElementById("shopCode").value.trim();
-    let gid = document.getElementById("gameId").value.trim();
-    let rem = document.getElementById("remark").value.trim();
-
-    if(inCode !== curShopCode){alert("商品编号输入错误！无法提交订单");return;}
-    if(!gid){alert("请填写游戏ID");return;}
-
-    orderNo = getOrderNum();
-    document.getElementById("ordNum").innerText = orderNo;
-
-    window.globalOrderData.push({
-        orderId:orderNo,
-        service:curName,
-        price:curPrice,
-        shopCode:curShopCode,
-        gameId:gid,
-        remark:rem,
-        time:new Date().toLocaleString(),
-        payStatus:"unpaid"
-    });
-    alert("订单提交成功，请牢记订单编号与商品编号！");
-    document.getElementById("infoBox").style.display = "block";
-}
-
-// 订单查询
-function queryOrder(){
-    let oid = document.getElementById("queryOrderId").value.trim();
-    let scd = document.getElementById("queryShopCode").value.trim();
-    let resDom = document.getElementById("queryResult");
-
-    if(!oid || !scd){
-        resDom.innerHTML = "<span style='color:red'>请填写订单编号和商品编号</span>";
-        return;
+    // 选择商品
+    function selectGoods(name, price, code) {
+        nowGoodsName = name;
+        nowGoodsPrice = price;
+        nowGoodsCode = code;
+        document.getElementById("formTitle").innerText = nowGoodsName;
+        document.getElementById("formPrice").innerText = "套餐价格：" + nowGoodsPrice;
+        document.getElementById("orderFormBox").style.display = "block";
+        document.getElementById("successModal").style.display = "none";
     }
 
-    let find = window.globalOrderData.find(item => item.orderId == oid && item.shopCode == scd);
-
-    if(!find){
-        resDom.innerHTML = "<span style='color:red'>未查询到对应订单，编号不匹配</span>";
-    }else{
-        let statStr = "";
-        if(find.payStatus=="unpaid") statStr = "待付款";
-        else if(find.payStatus=="paid") statStr = "已付款";
-        else statStr = "已退款";
-
-        resDom.innerHTML = `
-        <span style="color:#39ff66">查询成功！订单存在</span><br>
-        套餐：${find.service}<br>
-        状态：${statStr}
-        `;
+    // 生成订单号
+    function createOrderID() {
+        const d = new Date();
+        const rnd = Math.floor(Math.random() * 90000 + 10000);
+        return "FG" + d.getFullYear().toString().slice(2) + (d.getMonth() + 1) + d.getDate() + rnd;
     }
-}
 
-// 隐藏所有面板
-function hideAll(){
-    document.getElementById("adminLogin").style.display="none";
-    document.getElementById("adminList").style.display="none";
-    document.getElementById("ksList").style.display="none";
-    document.getElementById("boardView").style.display="none";
-    document.getElementById("boardLogin").style.display="none";
-    document.getElementById("boardList").style.display="none";
-}
+    // 提交订单（核心：保存到localStorage）
+    function submitNewOrder() {
+        const gameId = document.getElementById("userGameId").value.trim();
+        const goodsCode = document.getElementById("userGoodsCode").value.trim();
+        const remark = document.getElementById("userRemark").value.trim();
 
-// ========== 管理员后台 ==========
-function showAdminLogin(){hideAll();document.getElementById("adminLogin").style.display="block";}
-function checkAdminPwd(){
-    let p = document.getElementById("adminPwd").value.trim();
-    if(p===ADMIN_PASSWORD){
-        hideAll();
-        document.getElementById("adminList").style.display="block";
-        showAdminOrder();
-        showAdminKS();
-    }else alert("密码错误");
-}
+        if (!gameId || !goodsCode) {
+            alert("请填写完整游戏ID和商品编号");
+            return;
+        }
+        if (goodsCode !== nowGoodsCode) {
+            alert("商品编号错误，请重新输入");
+            return;
+        }
 
-// 管理员查看全部订单
-function showAdminOrder(){
-    let list = window.globalOrderData;
-    let html = "";
-    if(list.length<1){html="<p style='text-align:center'>暂无订单</p>";}
-    else{
-        for(let i=0;i<list.length;i++){
-            let d = list[i];
-            let statusText = "";
-            let btnHtml = "";
+        const orderId = createOrderID();
+        const order = {
+            id: orderId,
+            name: nowGoodsName,
+            price: nowGoodsPrice,
+            goodsCode: nowGoodsCode,
+            gameId: gameId,
+            remark: remark,
+            time: new Date().toLocaleString(),
+            status: "待付款"
+        };
 
-            if(d.payStatus == "unpaid"){
-                statusText = "<span class='wait-pay'>待付款 ⚠️禁止打单</span>";
-                btnHtml = `<button class="yes-btn" onclick="setPay(${i})">标记已付款</button>
-                           <button class="no-btn" onclick="setRefund(${i})">标记退款</button>`;
-            }else if(d.payStatus == "paid"){
-                statusText = "<span class='ok-pay'>已付款 ✅允许打单</span>";
-                btnHtml = `<button class="no-btn" onclick="setRefund(${i})">标记退款</button>`;
-            }else{
-                statusText = "<span class='refund-pay'>已退款 🈲作废</span>";
-            }
+        // 保存到本地存储
+        const orders = getOrderData();
+        orders.push(order);
+        saveOrderData(orders);
 
-            html += `
-            <div class="order-item">
-                <p>订单编号：${d.orderId}</p>
-                <p>套餐：${d.service}</p>
-                <p>商品编号：${d.shopCode}</p>
-                <p>价格：${d.price}</p>
-                <p>游戏ID：${d.gameId}</p>
-                <p>备注：${d.remark||"无"}</p>
-                <p>下单时间：${d.time}</p>
-                <p>状态：${statusText}</p>
-                ${btnHtml}
-            </div>`;
+        document.getElementById("finalOrderId").innerText = orderId;
+        document.getElementById("successModal").style.display = "block";
+    }
+
+    // 订单查询（三重验证）
+    function checkOrder() {
+        const orderId = document.getElementById("queryOrderId").value.trim();
+        const gameId = document.getElementById("queryGameId").value.trim();
+        const goodsId = document.getElementById("queryGoodsId").value.trim();
+        const orders = getOrderData();
+        const res = orders.find(o => o.id === orderId && o.gameId === gameId && o.goodsCode === goodsId);
+
+        if (res) {
+            document.getElementById("queryResult").innerHTML = `
+                <span style="color:#4ade80;">✅ 查询成功！</span><br>
+                套餐：${res.name}<br>
+                状态：${res.status}
+            `;
+        } else {
+            document.getElementById("queryResult").innerHTML = `<span style="color:#ff6b6b;">❌ 订单信息不匹配</span>`;
         }
     }
-    document.getElementById("orderAllList").innerHTML = html;
-}
 
-function setPay(idx){
-    window.globalOrderData[idx].payStatus = "paid";
-    alert("已改为：已付款");
-    showAdminOrder();
-}
-function setRefund(idx){
-    window.globalOrderData[idx].payStatus = "refund";
-    alert("已改为：已退款");
-    showAdminOrder();
-}
-
-// ========== 考核系统 普通页面 ==========
-function showKS(){
-    hideAll();
-    document.getElementById("ksList").style.display="block";
-    showKSList();
-}
-function addKS(){
-    let name = document.getElementById("ksName").value.trim();
-    let con = document.getElementById("ksContent").value.trim();
-    if(!name||!con){alert("请填写完整");return;}
-    window.globalKsData.push({name:name,content:con,time:new Date().toLocaleString(),ksStatus:"wait"});
-    showKSList();
-    alert("考核记录添加成功，等待管理员审核！");
-    document.getElementById("ksName").value="";
-    document.getElementById("ksContent").value="";
-}
-function showKSList(){
-    let ks = window.globalKsData;
-    let html = ks.length<1 ? "<p style='text-align:center'>暂无记录</p>" : "";
-    for(let d of ks){
-        let stTxt = d.ksStatus=="wait" ? "<span class='ks-wait'>考核中</span>"
-                   : d.ksStatus=="pass" ? "<span class='ks-pass'>考核通过</span>"
-                   : "<span class='ks-fail'>考核失败</span>";
-        html += `
-        <div class="ks-item">
-            <p>成员：${d.name}</p>
-            <p>项目：${d.content}</p>
-            <p>时间：${d.time}</p>
-            <p>状态：${stTxt}</p>
-        </div>`;
+    // 显示/隐藏面板
+    function hideAllPage() {
+        document.querySelectorAll('.hidden-panel').forEach(el => el.style.display = 'none');
     }
-    document.getElementById("ksAllList").innerHTML = html;
-}
-
-// 管理员考核审核
-function showAdminKS(){
-    let ks = window.globalKsData;
-    let html = ks.length<1 ? "<p style='text-align:center'>暂无考核记录</p>" : "";
-    for(let i=0;i<ks.length;i++){
-        let d = ks[i];
-        let stTxt = d.ksStatus=="wait" ? "<span class='ks-wait'>考核中</span>"
-                   : d.ksStatus=="pass" ? "<span class='ks-pass'>考核通过</span>"
-                   : "<span class='ks-fail'>考核失败</span>";
-
-        html += `
-        <div class="ks-item">
-            <p>成员：${d.name}｜项目：${d.content}</p>
-            <p>当前状态：${stTxt}</p>
-            ${d.ksStatus=="wait"
-                ? `<button class="yes-btn" onclick="ksPass(${i})">考核通过</button>
-                   <button class="no-btn" onclick="ksFail(${i})">考核失败</button>`
-                : ""
-            }
-        </div>`;
+    function showAdminLogin() { hideAllPage(); document.getElementById("adminLoginBox").style.display = 'block'; }
+    function verifyAdmin() {
+        const pwd = document.getElementById("adminPwd").value.trim();
+        if (pwd === ADMIN_PWD) {
+            hideAllPage();
+            document.getElementById("adminMainBox").style.display = 'block';
+            renderAdminOrders();
+        } else {
+            alert("密码错误");
+        }
     }
-    document.getElementById("adminKSList").innerHTML = html;
-}
-function ksPass(idx){
-    window.globalKsData[idx].ksStatus = "pass";
-    showAdminKS();
-    alert("已设置为：考核通过");
-}
-function ksFail(idx){
-    window.globalKsData[idx].ksStatus = "fail";
-    showAdminKS();
-    alert("已设置为：考核失败");
-}
 
-// ========== 董事会 公开浏览页面 ==========
-function showBoardView(){
-    hideAll();
-    document.getElementById("boardView").style.display="block";
-    loadBoardViewData();
-}
-function loadBoardViewData(){
-    // 订单 过滤退款
-    let oList = window.globalOrderData;
-    let oHtml = "";
-    let hasOrder = false;
-    for(let d of oList){
-        if(d.payStatus == "refund") continue;
-        hasOrder = true;
-        let st = d.payStatus=="unpaid" ? "待付款" : "已付款";
-        oHtml += `<div class="order-item"><p>${d.orderId} | ${d.service} | ${st}</p></div>`;
+    // 渲染管理员订单列表（从localStorage读取，永远不会丢）
+    function renderAdminOrders() {
+        const orders = getOrderData();
+        let html = "";
+        if (orders.length === 0) {
+            html = "<p style='text-align:center;opacity:0.7;'>暂无订单数据</p>";
+        } else {
+            orders.forEach((o, i) => {
+                let statusClass = "status-wait";
+                if (o.status === "已付款") statusClass = "status-ok";
+                if (o.status === "已退款") statusClass = "status-refund";
+
+                html += `
+                    <div class="order-item">
+                        <p>订单编号：${o.id}</p>
+                        <p>套餐：${o.name}</p>
+                        <p>游戏ID：${o.gameId}</p>
+                        <p>备注：${o.remark || "无"}</p>
+                        <p>下单时间：${o.time}</p>
+                        <p class="${statusClass}">状态：${o.status}</p>
+                        <button class="btn-green" onclick="changeOrderStatus(${i}, '已付款')">标记已付款</button>
+                        <button class="btn-red" onclick="changeOrderStatus(${i}, '已退款')">标记退款</button>
+                    </div>
+                `;
+            });
+        }
+        document.getElementById("adminOrderList").innerHTML = html;
     }
-    if(!hasOrder) oHtml = "<p style='text-align:center'>暂无有效订单</p>";
-    document.getElementById("boardViewOrderList").innerHTML = oHtml;
 
-    // 考核
-    let kList = window.globalKsData;
-    let kHtml = kList.length<1 ? "<p style='text-align:center'>暂无考核</p>" : "";
-    for(let d of kList){
-        let stTxt = d.ksStatus=="wait" ? "考核中" : d.ksStatus=="pass" ? "考核通过" : "考核失败";
-        kHtml += `<div class="ks-item"><p>${d.name} - ${d.content} 【${stTxt}】</p></div>`;
+    // 修改订单状态（同步更新到localStorage）
+    function changeOrderStatus(index, status) {
+        const orders = getOrderData();
+        orders[index].status = status;
+        saveOrderData(orders);
+        renderAdminOrders();
     }
-    document.getElementById("boardViewKSList").innerHTML = kHtml;
 
-    // 董事会成员
-    let mem = window.globalBoardMember;
-    let mHtml = mem.length<1 ? "<p style='text-align:center'>暂无正式董事会成员</p>" : "";
-    for(let d of mem){
-        mHtml += `<div class="board-apply"><p>成员：${d.name} | 加入时间：${d.time}</p></div>`;
+    // 其他页面功能（考核、董事会）
+    function showCheckPage() { hideAllPage(); document.getElementById("checkPageBox").style.display = 'block'; }
+    function addCheckRecord() {
+        const name = document.getElementById("checkUserName").value.trim();
+        const content = document.getElementById("checkContent").value.trim();
+        if (!name || !content) { alert("请填写完整信息"); return; }
+        const list = JSON.parse(localStorage.getItem('checkDataList'));
+        list.push({ name, content, time: new Date().toLocaleString(), status: "考核中" });
+        localStorage.setItem('checkDataList', JSON.stringify(list));
+        document.getElementById("checkUserName").value = "";
+        document.getElementById("checkContent").value = "";
+        alert("考核记录已添加");
     }
-    document.getElementById("boardViewMemList").innerHTML = mHtml;
-}
 
-// ========== 董事会管理后台 ==========
-function showBoardLogin(){hideAll();document.getElementById("boardLogin").style.display="block";}
-function checkBoardPwd(){
-    let p = document.getElementById("boardPwd").value.trim();
-    if(p===BOARD_PASSWORD){
-        hideAll();
-        document.getElementById("boardList").style.display="block";
-        showBoardData();
-    }else alert("密码错误");
-}
-
-function showBoardData(){
-    // 订单
-    let oList = window.globalOrderData;
-    let oHtml = "";
-    let hasOrder = false;
-    for(let d of oList){
-        if(d.payStatus == "refund") continue;
-        hasOrder = true;
-        let st = d.payStatus=="unpaid" ? "待付款" : "已付款";
-        oHtml += `<div class="order-item"><p>${d.orderId} | ${d.service} | ${st}</p></div>`;
+    function showBoardPublic() { hideAllPage(); document.getElementById("boardPublicBox").style.display = 'block'; }
+    function showBoardLogin() { hideAllPage(); document.getElementById("boardLoginBox").style.display = 'block'; }
+    function verifyBoard() {
+        const pwd = document.getElementById("boardPwd").value.trim();
+        if (pwd === BOARD_PWD) {
+            hideAllPage();
+            document.getElementById("boardMainBox").style.display = 'block';
+        } else {
+            alert("密码错误");
+        }
     }
-    if(!hasOrder) oHtml = "<p style='text-align:center'>暂无有效订单</p>";
-    document.getElementById("boardOrderList").innerHTML = oHtml;
-
-    // 考核
-    let kList = window.globalKsData;
-    let kHtml = kList.length<1 ? "<p style='text-align:center'>暂无考核</p>" : "";
-    for(let d of kList){
-        let stTxt = d.ksStatus=="wait" ? "考核中" : d.ksStatus=="pass" ? "考核通过" : "考核失败";
-        kHtml += `<div class="ks-item"><p>${d.name} - ${d.content} 【${stTxt}】</p></div>`;
-    }
-    document.getElementById("boardKSList").innerHTML = kHtml;
-
-    showBoardApply();
-    showBoardMem();
-}
-
-// 提交入团申请（全局共用，所有人可见）
-function submitBoardApply(){
-    let name = document.getElementById("boardApplyName").value.trim();
-    if(!name){alert("请输入昵称");return;}
-    window.globalBoardApply.push({name:name,time:new Date().toLocaleString()});
-    alert("入团申请已提交，等待董事会审核！");
-    document.getElementById("boardApplyName").value="";
-    if(document.getElementById("boardView").style.display==="block") loadBoardViewData();
-    if(document.getElementById("boardList").style.display==="block") showBoardData();
-}
-
-// 董事会审核申请
-function showBoardApply(){
-    let apply = window.globalBoardApply;
-    let html = apply.length<1 ? "<p style='text-align:center'>暂无入团申请</p>" : "";
-    for(let i=0;i<apply.length;i++){
-        let d = apply[i];
-        html += `
-        <div class="board-apply">
-            <p>申请人：${d.name} | 申请时间：${d.time}</p>
-            <button class="yes-btn" onclick="agreeApply(${i})">同意加入</button>
-            <button class="no-btn" onclick="refuseApply(${i})">拒绝加入</button>
-        </div>
-        `;
-    }
-    document.getElementById("boardApplyList").innerHTML = html;
-}
-
-// 同意入团
-function agreeApply(idx){
-    let item = window.globalBoardApply[idx];
-    window.globalBoardMember.push({name:item.name,time:item.time});
-    window.globalBoardApply.splice(idx,1);
-    showBoardData();
-    alert("已同意该成员加入董事会！");
-}
-
-// 拒绝入团
-function refuseApply(idx){
-    window.globalBoardApply.splice(idx,1);
-    showBoardData();
-    alert("已拒绝该成员加入董事会");
-}
-
-// 展示董事会成员
-function showBoardMem(){
-    let mem = window.globalBoardMember;
-    let html = mem.length<1 ? "<p style='text-align:center'>暂无正式董事会成员</p>" : "";
-    for(let i=0;i<mem.length;i++){
-        let d = mem[i];
-        html += `
-        <div class="board-apply">
-            <p>成员：${d.name} | 加入时间：${d.time}</p>
-            <button class="no-btn" onclick="delBoardMem(${i})">移出董事会</button>
-        </div>
-        `;
-    }
-    document.getElementById("boardMemList").innerHTML = html;
-}
-function delBoardMem(idx){
-    window.globalBoardMember.splice(idx,1);
-    showBoardData();
-
-}
 </script>
-
 </body>
 </html>
