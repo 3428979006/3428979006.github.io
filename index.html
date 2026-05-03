@@ -21,7 +21,7 @@
             position: relative;
         }
 
-        /* 终极雪花特效 完美层级 永不遮挡 */
+        /* 终极雪花特效（恢复！） */
         .snowflake {
             position: fixed;
             top: -20px;
@@ -29,7 +29,7 @@
             border-radius: 50%;
             opacity: 0.35;
             pointer-events: none;
-            z-index: 1;
+            z-index: 1; /* 最低层级，不遮挡内容 */
         }
         @keyframes snowFall {
             0% {transform: translateY(0) rotate(0deg); opacity: 0;}
@@ -43,7 +43,7 @@
 
         body > div:not(.snowflake) {
             position: relative;
-            z-index: 2;
+            z-index: 2; /* 内容在雪花上方 */
         }
 
         .header {
@@ -260,21 +260,21 @@
 </head>
 <body>
 
-<!-- 终极密集自然雪花 -->
+<!-- 终极密集自然雪花（恢复！320片，自然飘落） -->
 <script>
 function createSnowflake(){
     var snow = document.createElement("div");
     snow.className = "snowflake";
-    var size = Math.random() * 4 + 1.5;
+    var size = Math.random() * 4 + 1.5; // 雪花大小1.5-5.5px
     snow.style.width = size + "px";
     snow.style.height = size + "px";
-    snow.style.left = Math.random() * 100 + "vw";
-    var fallTime = Math.random() * 8 + 5;
-    var swingTime = Math.random() * 4 + 2;
+    snow.style.left = Math.random() * 100 + "vw"; // 随机水平位置
+    var fallTime = Math.random() * 8 + 5; // 下落时间5-13秒
+    var swingTime = Math.random() * 4 + 2; // 摆动时间2-6秒
     snow.style.animation = "snowFall "+fallTime+"s linear infinite, snowSwing "+swingTime+"s ease-in-out infinite alternate";
     document.body.appendChild(snow);
 }
-for(var i=0;i<=320;i++){createSnowflake();}
+for(var i=0;i<=320;i++){createSnowflake();} // 生成320片雪花
 </script>
 
 <!-- 邮件弹窗 -->
@@ -331,7 +331,7 @@ for(var i=0;i<=320;i++){createSnowflake();}
         <button class="btn-blue" onclick="selectGoods('体验单 100W','13.99 元','SP001')">立即下单购买</button>
     </div>
 
-    <!-- 订单2（已修改：8.99元，不含大金） -->
+    <!-- 订单2（已修正：8.99元，不含大金） -->
     <div class="goods-item">
         <h4>T7套装单 不含大金</h4>
         <div class="goods-price">售价：8.99 元</div>
