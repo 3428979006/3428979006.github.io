@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>FG俱乐部 | 暗区突围专业护航平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -413,14 +414,12 @@
 <!-- 打手接单页面 -->
 <div class="glass-card hidden" id="workerPage">
     <h3 class="card-title">🤝 打手实时接单中心</h3>
-    <div style="color:#94A3B8;text-align:center;margin-bottom:15px;">
-        每3秒自动刷新 + 实时监听后台改动
-    </div>
+    <div style="color:#94A3B8;text-align:center;margin-bottom:15px;">每3秒自动云端刷新订单</div>
     <div id="workerOrderList"></div>
     <button class="btn btn-dark" onclick="backHome()">返回首页</button>
 </div>
 
-<!-- 以下全部是后台页面 -->
+<!-- 后台登录 -->
 <div class="glass-card hidden" id="adminLogin">
     <h3 class="card-title">FG俱乐部 管理员登录</h3>
     <input class="input-item" type="password" placeholder="输入管理员密码" id="adminPwd">
@@ -428,12 +427,14 @@
     <button class="btn btn-dark" onclick="backHome()">返回首页</button>
 </div>
 
+<!-- 订单状态管理后台 -->
 <div class="glass-card hidden" id="adminMain">
     <h3 class="card-title">📋 订单状态管理后台</h3>
     <div id="orderList"></div>
     <button class="btn btn-dark" onclick="backHome()">退出后台</button>
 </div>
 
+<!-- 订单删除管理 -->
 <div class="glass-card hidden" id="orderDelManage">
     <h3 class="card-title">🗑️ 订单删除管理</h3>
     <button class="btn btn-danger" onclick="clearAllOrder()">清空所有订单</button>
@@ -442,48 +443,34 @@
 </div>
 
 <script>
+    // 云端公共数据库接口（所有人共用一份数据）
+    const API_URL = "https://jsonbox.io/box_7698abc123def";
     const CONFIG = {
         adminPwd: '13467925QQ',
-        mailTo: '3428979006@qq.com',
-        qqGroup: '1101681704',
-        orderKey: 'fg_club_order_list',
-        notifyKey: 'fg_club_notify'
-    }
+        qqGroup: '1101681704'
+    };
 
     let currentGoods = {};
     let currentOrder = null;
     let adminType = 0;
     let workerTimer = null;
 
-    // ========== 核心：跨页面实时通知 ==========
-    function notifyOthers() {
-        localStorage.setItem(CONFIG.notifyKey, Date.now().toString());
-    }
-    // 监听其他页面改动
-    window.addEventListener('storage', function(e) {
-        if (e.key === CONFIG.notifyKey) {
-            // 只要是打手页面，立刻刷新
-            if (!document.getElementById('workerPage').classList.contains('hidden')) {
-                renderWorkerOrderList();
-            }
-            // 管理员页面也刷新
-            if (!document.getElementById('adminMain').classList.contains('hidden')) {
-                renderOrderList();
-            }
+    // ========== 云端订单操作 ==========
+    // 获取全部订单
+    async function getOrders(){
+        try {
+            let res = await axios.get(API_URL);
+            return res.data || [];
+        } catch(e) {
+            return [];
         }
-    });
-
-    // 获取所有订单
-    function getOrders(){
-        let d=localStorage.getItem(CONFIG.orderKey);
-        return d?JSON.parse(d):[];
     }
-    function saveOrders(o){
-        localStorage.setItem(CONFIG.orderKey,JSON.stringify(o));
-        notifyOthers(); // 保存时通知所有页面
+    // 保存所有订单到云端
+    async function saveOrders(list){
+        await axios.put(API_URL, list);
     }
 
-    // 用户下单相关
+    // 商品选择
     function selectGoods(name,price,code){
         currentGoods={name,price,code};
         document.getElementById("formTitle").innerText=`FG俱乐部 下单：${name}`;
@@ -492,39 +479,43 @@
         window.scrollTo(0,document.body.scrollHeight);
     }
 
+    // 生成订单号
     function createOrderNo(){
         let d=new Date();
         let r=Math.floor(Math.random()*90000+10000);
         return `FG${d.getFullYear().toString().slice(2)}${d.getMonth()+1}${d.getDate()}${r}`;
     }
 
-    function submitOrder(){
+    // 提交下单
+    async function submitOrder(){
         let gameId=document.getElementById("gameId").value.trim();
         let goodsCode=document.getElementById("goodsCode").value.trim();
         let remark=document.getElementById("userRemark").value.trim();
         if(!gameId)return alert("请填写游戏ID！");
         if(!goodsCode||goodsCode!==currentGoods.code)return alert("商品编号错误！");
-        let orderNo=createOrderNo();
-        let order={
-            orderNo,
-            goodsName:currentGoods.name,
-            price:currentGoods.price,
-            goodsCode:currentGoods.code,
-            gameId,
-            remark,
-            createTime:new Date().toLocaleString(),
-            status:"待付款"
+
+        let order = {
+            orderNo: createOrderNo(),
+            goodsName: currentGoods.name,
+            price: currentGoods.price,
+            goodsCode: currentGoods.code,
+            gameId: gameId,
+            remark: remark,
+            createTime: new Date().toLocaleString(),
+            status: "待付款"
         };
-        let arr=getOrders();
+
+        let arr = await getOrders();
         arr.push(order);
-        saveOrders(arr);
-        document.getElementById("orderIdTip").innerText=`订单编号：${orderNo}`;
+        await saveOrders(arr);
+
+        document.getElementById("orderIdTip").innerText=`订单编号：${order.orderNo}`;
         document.getElementById("qqModal").style.display="flex";
         document.getElementById("orderForm").classList.add("hidden");
     }
 
     // 订单查询
-    function checkOrder(){
+    async function checkOrder(){
         let o=document.getElementById("queryOrderId").value.trim();
         let g=document.getElementById("queryGameId").value.trim();
         let c=document.getElementById("queryGoodsId").value.trim();
@@ -532,7 +523,7 @@
             document.getElementById("queryResult").innerHTML='<span class="text-danger">请填写完整查询信息！</span>';
             return;
         }
-        let arr=getOrders();
+        let arr = await getOrders();
         let res=arr.find(x=>x.orderNo===o&&x.gameId===g&&x.goodsCode===c);
         if(res){
             currentOrder=res;
@@ -549,60 +540,38 @@
         document.getElementById("mailModal").style.display="flex";
     }
 
-    // QQ弹窗、邮件
     function joinQQ(){window.location.href=`mqqapi://card/show_pslcard?uin=${CONFIG.qqGroup}&card_type=group`;closeModal()}
     function closeModal(){document.getElementById("qqModal").style.display="none"}
     function closeMailModal(){document.getElementById("mailModal").style.display="none"}
-
-    function sendMail(){
-        if(!currentOrder)return;
-        let subj=`FG俱乐部订单通知-${currentOrder.orderNo}`;
-        let body=`订单编号：${currentOrder.orderNo}\n商品：${currentOrder.goodsName}\n价格：${currentOrder.price}\n游戏ID：${currentOrder.gameId}\n状态：${currentOrder.status}\n下单时间：${currentOrder.createTime}\n备注：${currentOrder.remark||"无"}`;
-        window.location.href=`mailto:${CONFIG.mailTo}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
-        closeMailModal();
-    }
+    function sendMail(){}
 
     // 页面切换
     function showAdmin(){
-        hideAllAdmin();
-        hideWorkerPage();
-        adminType=1;
+        hideAllAdmin();hideWorkerPage();adminType=1;
         document.getElementById("adminLogin").classList.remove("hidden");
     }
     function showOrderManage(){
-        hideAllAdmin();
-        hideWorkerPage();
-        adminType=2;
+        hideAllAdmin();hideWorkerPage();adminType=2;
         document.getElementById("adminLogin").classList.remove("hidden");
     }
-    // 打开打手接单页面
     function showWorkerPage(){
         hideAllAdmin();
         document.getElementById("workerPage").classList.remove("hidden");
-        // 立即渲染
         renderWorkerOrderList();
-        // 强制 3 秒刷新
         if(workerTimer) clearInterval(workerTimer);
         workerTimer = setInterval(renderWorkerOrderList, 3000);
     }
     function hideWorkerPage(){
         document.getElementById("workerPage").classList.add("hidden");
-        if(workerTimer){
-            clearInterval(workerTimer);
-            workerTimer = null;
-        }
+        if(workerTimer){clearInterval(workerTimer);workerTimer=null;}
     }
-
     function hideAllAdmin(){
         document.getElementById("adminLogin").classList.add("hidden");
         document.getElementById("adminMain").classList.add("hidden");
         document.getElementById("orderDelManage").classList.add("hidden");
     }
-
     function backHome(){
-        hideAllAdmin();
-        hideWorkerPage();
-        adminType=0;
+        hideAllAdmin();hideWorkerPage();adminType=0;
     }
 
     // 管理员登录
@@ -613,15 +582,18 @@
         if(adminType===1){
             document.getElementById("adminMain").classList.remove("hidden");
             renderOrderList();
+            setInterval(renderOrderList,3000);
         }else{
             document.getElementById("orderDelManage").classList.remove("hidden");
             renderDelOrderList();
+            setInterval(renderDelOrderList,3000);
         }
     }
 
     // 管理员订单列表
-    function renderOrderList(){
-        let arr=getOrders();let html="";
+    async function renderOrderList(){
+        let arr = await getOrders();
+        let html="";
         if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">暂无订单</p>';
         else{
             arr.forEach((o,i)=>{
@@ -643,13 +615,17 @@
         document.getElementById("orderList").innerHTML=html;
     }
 
-    function changeStatus(i,s){
-        let arr=getOrders();arr[i].status=s;saveOrders(arr);renderOrderList();
+    async function changeStatus(i,s){
+        let arr = await getOrders();
+        arr[i].status = s;
+        await saveOrders(arr);
+        renderOrderList();
     }
 
-    // 删除订单管理
-    function renderDelOrderList(){
-        let arr=getOrders();let html="";
+    // 删除管理
+    async function renderDelOrderList(){
+        let arr = await getOrders();
+        let html="";
         if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">暂无订单</p>';
         else{
             arr.forEach((o,i)=>{
@@ -663,26 +639,29 @@
         document.getElementById("delOrderList").innerHTML=html;
     }
 
-    function delOrder(i){
+    async function delOrder(i){
         if(!confirm("确认删除该订单？无法恢复！"))return;
-        let arr=getOrders();arr.splice(i,1);saveOrders(arr);renderDelOrderList();
+        let arr = await getOrders();
+        arr.splice(i,1);
+        await saveOrders(arr);
+        renderDelOrderList();
     }
 
-    function clearAllOrder(){
+    async function clearAllOrder(){
         if(!confirm("⚠️ 确定清空全部订单？不可恢复！"))return;
-        saveOrders([]);renderDelOrderList();
+        await saveOrders([]);
+        renderDelOrderList();
     }
 
-    // ========== 打手接单核心渲染函数 ==========
-    function renderWorkerOrderList(){
-        let arr=getOrders();
+    // 打手接单渲染
+    async function renderWorkerOrderList(){
+        let arr = await getOrders();
         let html="";
-        // 只展示 待付款 可接订单
         let waitOrder = arr.filter(item => item.status === "待付款");
         if(waitOrder.length===0){
             html = '<p style="text-align:center;color:#94A3B8;font-size:16px;">目前暂无新订单，稍后再来~</p>';
         }else{
-            waitOrder.forEach((o,i)=>{
+            waitOrder.forEach((o)=>{
                 let idx = arr.findIndex(x=>x.orderNo === o.orderNo);
                 html += `
                 <div class="order-item">
@@ -701,15 +680,16 @@
         document.getElementById("workerOrderList").innerHTML = html;
     }
 
-    // 打手接单操作
-    function workerGetOrder(index){
-        let arr = getOrders();
+    // 打手接单
+    async function workerGetOrder(index){
+        let arr = await getOrders();
         arr[index].status = "已付款";
-        saveOrders(arr);
-        alert("接单成功！订单已转为已付款状态");
+        await saveOrders(arr);
+        alert("接单成功！订单已更新");
         renderWorkerOrderList();
     }
 </script>
 
 </body>
 </html>
+
