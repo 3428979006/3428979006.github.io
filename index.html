@@ -354,7 +354,7 @@
         <div class="goods-name">T7套装单 不含大金</div>
         <div class="goods-price">¥8.99</div>
         <div class="goods-desc">含T7热成像、六头六甲、GS2耳机，满改枪械</div>
-        <div class="goods-code">商品编号：SP002</div>
+        <div class="goods-code">SP002</div>
         <button class="btn btn-primary" onclick="selectGoods('T7套装单 不含大金','8.99','SP002')">立即下单</button>
     </div>
 
@@ -362,7 +362,7 @@
         <div class="goods-name">保底单 340W</div>
         <div class="goods-price">¥43.99</div>
         <div class="goods-desc">包340w物资，可备注指定地图</div>
-        <div class="goods-code">商品编号：SP003</div>
+        <div class="goods-code">SP003</div>
         <button class="btn btn-primary" onclick="selectGoods('保底单 340W','43.99','SP003')">立即下单</button>
     </div>
 
@@ -370,7 +370,7 @@
         <div class="goods-name">保底单 1000W</div>
         <div class="goods-price">私聊客服</div>
         <div class="goods-desc">全程护航保底1000w，安全路线高爆率</div>
-        <div class="goods-code">商品编号：SP004</div>
+        <div class="goods-code">SP004</div>
         <button class="btn btn-primary" onclick="selectGoods('保底单 1000W','私聊客服','SP004')">立即下单</button>
     </div>
 
@@ -378,7 +378,7 @@
         <div class="goods-name">大金单 1大金</div>
         <div class="goods-price">¥34.99</div>
         <div class="goods-desc">累计带出1个检视大金，保底500w物资</div>
-        <div class="goods-code">商品编号：SP015</div>
+        <div class="goods-code">SP015</div>
         <button class="btn btn-primary" onclick="selectGoods('大金单 1大金','34.99','SP015')">立即下单</button>
     </div>
 
@@ -386,7 +386,7 @@
         <div class="goods-name">机密单 机密文件</div>
         <div class="goods-price">¥1088</div>
         <div class="goods-desc">出机密保底8000w，不出保底1亿物资</div>
-        <div class="goods-code">商品编号：SP012</div>
+        <div class="goods-code">SP012</div>
         <button class="btn btn-primary" onclick="selectGoods('机密单 机密文件','1088','SP012')">立即下单</button>
     </div>
 </div>
@@ -405,8 +405,17 @@
 
 <!-- 导航按钮 -->
 <div class="nav-group">
-    <button class="btn btn-dark" onclick="showAdmin()">🔐 FG俱乐部 管理员后台</button>
-    <button class="btn btn-dark" onclick="showOrderManage()">📋 FG俱乐部 订单管理</button>
+    <button class="btn btn-dark" onclick="showAdmin()">🔐 管理员后台</button>
+    <button class="btn btn-dark" onclick="showOrderManage()">📋 订单删除管理</button>
+    <button class="btn btn-dark" onclick="showWorkerPage()">🤝 打手接单中心</button>
+</div>
+
+<!-- 打手接单页面 -->
+<div class="glass-card hidden" id="workerPage">
+    <h3 class="card-title">🤝 打手实时接单中心</h3>
+    <div style="color:#94A3B8;text-align:center;margin-bottom:15px;">每3秒自动刷新最新订单</div>
+    <div id="workerOrderList"></div>
+    <button class="btn btn-dark" onclick="backHome()">返回首页</button>
 </div>
 
 <!-- 以下全部是后台页面 -->
@@ -418,13 +427,13 @@
 </div>
 
 <div class="glass-card hidden" id="adminMain">
-    <h3 class="card-title">📋 FG俱乐部 订单状态管理</h3>
+    <h3 class="card-title">📋 订单状态管理后台</h3>
     <div id="orderList"></div>
     <button class="btn btn-dark" onclick="backHome()">退出后台</button>
 </div>
 
 <div class="glass-card hidden" id="orderDelManage">
-    <h3 class="card-title">🗑️ FG俱乐部 订单删除管理</h3>
+    <h3 class="card-title">🗑️ 订单删除管理</h3>
     <button class="btn btn-danger" onclick="clearAllOrder()">清空所有订单</button>
     <div id="delOrderList" style="margin-top:20px;"></div>
     <button class="btn btn-dark" onclick="backHome()">退出后台</button>
@@ -441,10 +450,18 @@
     let currentGoods = {};
     let currentOrder = null;
     let adminType = 0;
+    let workerTimer = null;
 
-    function getOrders(){let d=localStorage.getItem(CONFIG.orderKey);return d?JSON.parse(d):[]}
-    function saveOrders(o){localStorage.setItem(CONFIG.orderKey,JSON.stringify(o))}
+    // 获取所有订单
+    function getOrders(){
+        let d=localStorage.getItem(CONFIG.orderKey);
+        return d?JSON.parse(d):[];
+    }
+    function saveOrders(o){
+        localStorage.setItem(CONFIG.orderKey,JSON.stringify(o))
+    }
 
+    // 用户下单相关
     function selectGoods(name,price,code){
         currentGoods={name,price,code};
         document.getElementById("formTitle").innerText=`FG俱乐部 下单：${name}`;
@@ -466,13 +483,25 @@
         if(!gameId)return alert("请填写游戏ID！");
         if(!goodsCode||goodsCode!==currentGoods.code)return alert("商品编号错误！");
         let orderNo=createOrderNo();
-        let order={orderNo,goodsName:currentGoods.name,price:currentGoods.price,goodsCode:currentGoods.code,gameId,remark,createTime:new Date().toLocaleString(),status:"待付款"};
-        let arr=getOrders();arr.push(order);saveOrders(arr);
-        document.getElementById("orderIdTip").innerText=`FG俱乐部 订单编号：${orderNo}`;
+        let order={
+            orderNo,
+            goodsName:currentGoods.name,
+            price:currentGoods.price,
+            goodsCode:currentGoods.code,
+            gameId,
+            remark,
+            createTime:new Date().toLocaleString(),
+            status:"待付款"
+        };
+        let arr=getOrders();
+        arr.push(order);
+        saveOrders(arr);
+        document.getElementById("orderIdTip").innerText=`订单编号：${orderNo}`;
         document.getElementById("qqModal").style.display="flex";
         document.getElementById("orderForm").classList.add("hidden");
     }
 
+    // 订单查询
     function checkOrder(){
         let o=document.getElementById("queryOrderId").value.trim();
         let g=document.getElementById("queryGameId").value.trim();
@@ -485,10 +514,10 @@
         let res=arr.find(x=>x.orderNo===o&&x.gameId===g&&x.goodsCode===c);
         if(res){
             currentOrder=res;
-            document.getElementById("queryResult").innerHTML='<span class="text-success">✅ FG俱乐部 订单查询成功</span>';
+            document.getElementById("queryResult").innerHTML='<span class="text-success">✅ 订单查询成功</span>';
             showOrderInfo(res);
         }else{
-            document.getElementById("queryResult").innerHTML='<span class="text-danger">❌ 未找到FG俱乐部对应订单</span>';
+            document.getElementById("queryResult").innerHTML='<span class="text-danger">❌ 未找到对应订单</span>';
         }
     }
 
@@ -498,6 +527,7 @@
         document.getElementById("mailModal").style.display="flex";
     }
 
+    // QQ弹窗、邮件
     function joinQQ(){window.location.href=`mqqapi://card/show_pslcard?uin=${CONFIG.qqGroup}&card_type=group`;closeModal()}
     function closeModal(){document.getElementById("qqModal").style.display="none"}
     function closeMailModal(){document.getElementById("mailModal").style.display="none"}
@@ -510,34 +540,52 @@
         closeMailModal();
     }
 
-    // 【关键】打开后台：只隐藏后台页面，首页查询+商品完全不动
+    // 页面切换
     function showAdmin(){
         hideAllAdmin();
+        hideWorkerPage();
         adminType=1;
         document.getElementById("adminLogin").classList.remove("hidden");
     }
     function showOrderManage(){
         hideAllAdmin();
+        hideWorkerPage();
         adminType=2;
         document.getElementById("adminLogin").classList.remove("hidden");
     }
+    // 打开打手接单页面
+    function showWorkerPage(){
+        hideAllAdmin();
+        document.getElementById("workerPage").classList.remove("hidden");
+        // 立即渲染 + 3秒自动刷新
+        renderWorkerOrderList();
+        if(workerTimer) clearInterval(workerTimer);
+        workerTimer = setInterval(renderWorkerOrderList,3000);
+    }
+    function hideWorkerPage(){
+        document.getElementById("workerPage").classList.add("hidden");
+        if(workerTimer){
+            clearInterval(workerTimer);
+            workerTimer = null;
+        }
+    }
 
-    // 只隐藏所有后台板块
     function hideAllAdmin(){
         document.getElementById("adminLogin").classList.add("hidden");
         document.getElementById("adminMain").classList.add("hidden");
         document.getElementById("orderDelManage").classList.add("hidden");
     }
 
-    // 返回首页
     function backHome(){
         hideAllAdmin();
+        hideWorkerPage();
         adminType=0;
     }
 
+    // 管理员登录
     function loginAdmin(){
         let pwd=document.getElementById("adminPwd").value.trim();
-        if(pwd!==CONFIG.adminPwd)return alert("FG俱乐部 管理员密码错误！");
+        if(pwd!==CONFIG.adminPwd)return alert("管理员密码错误！");
         hideAllAdmin();
         if(adminType===1){
             document.getElementById("adminMain").classList.remove("hidden");
@@ -548,15 +596,25 @@
         }
     }
 
+    // 管理员订单列表
     function renderOrderList(){
         let arr=getOrders();let html="";
-        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
+        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">暂无订单</p>';
         else{
             arr.forEach((o,i)=>{
                 let cls="text-warning";
                 if(o.status=="已付款")cls="text-success";
                 if(o.status=="已退款")cls="text-danger";
-                html+=`<div class="order-item"><p>订单号：${o.orderNo}</p><p>商品：${o.goodsName}</p><p>游戏ID：${o.gameId}</p><p>状态：<span class="${cls}">${o.status}</span></p><p>时间：${o.createTime}</p><button class="btn btn-success" onclick="changeStatus(${i},'已付款')">已付款</button><button class="btn btn-warning" onclick="changeStatus(${i},'待付款')" style="margin:10px 0;">待付款</button><button class="btn btn-danger" onclick="changeStatus(${i},'已退款')">已退款</button></div>`;
+                html+=`<div class="order-item">
+                    <p>订单号：${o.orderNo}</p>
+                    <p>商品：${o.goodsName}</p>
+                    <p>游戏ID：${o.gameId}</p>
+                    <p>状态：<span class="${cls}">${o.status}</span></p>
+                    <p>时间：${o.createTime}</p>
+                    <button class="btn btn-success" onclick="changeStatus(${i},'已付款')">设为已付款</button>
+                    <button class="btn btn-warning" onclick="changeStatus(${i},'待付款')" style="margin:10px 0;">设为待付款</button>
+                    <button class="btn btn-danger" onclick="changeStatus(${i},'已退款')">设为已退款</button>
+                </div>`;
             });
         }
         document.getElementById("orderList").innerHTML=html;
@@ -566,27 +624,70 @@
         let arr=getOrders();arr[i].status=s;saveOrders(arr);renderOrderList();
     }
 
+    // 删除订单管理
     function renderDelOrderList(){
         let arr=getOrders();let html="";
-        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">FG俱乐部 暂无订单</p>';
+        if(arr.length===0)html='<p style="text-align:center;color:#94A3B8;">暂无订单</p>';
         else{
             arr.forEach((o,i)=>{
-                html+=`<div class="order-item"><p>订单号：${o.orderNo}</p><p>商品：${o.goodsName}</p><button class="btn btn-danger" onclick="delOrder(${i})">删除订单</button></div>`;
+                html+=`<div class="order-item">
+                    <p>订单号：${o.orderNo}</p>
+                    <p>商品：${o.goodsName}</p>
+                    <button class="btn btn-danger" onclick="delOrder(${i})">删除此订单</button>
+                </div>`;
             });
         }
         document.getElementById("delOrderList").innerHTML=html;
     }
 
     function delOrder(i){
-        if(!confirm("确认删除该订单？删除后无法恢复！"))return;
+        if(!confirm("确认删除该订单？无法恢复！"))return;
         let arr=getOrders();arr.splice(i,1);saveOrders(arr);renderDelOrderList();
     }
 
     function clearAllOrder(){
-        if(!confirm("⚠️ 确认清空FG俱乐部所有订单？此操作不可恢复！"))return;
+        if(!confirm("⚠️ 确定清空全部订单？不可恢复！"))return;
         saveOrders([]);renderDelOrderList();
+    }
+
+    // ========== 打手接单核心渲染函数 ==========
+    function renderWorkerOrderList(){
+        let arr=getOrders();
+        let html="";
+        // 只展示 待付款 可接订单
+        let waitOrder = arr.filter(item => item.status === "待付款");
+        if(waitOrder.length===0){
+            html = '<p style="text-align:center;color:#94A3B8;font-size:16px;">目前暂无新订单，稍后再来~</p>';
+        }else{
+            waitOrder.forEach((o,i)=>{
+                let idx = arr.findIndex(x=>x.orderNo === o.orderNo);
+                html += `
+                <div class="order-item">
+                    <p><span class="text-warning">新订单可接</span></p>
+                    <p>订单编号：${o.orderNo}</p>
+                    <p>套餐商品：${o.goodsName}</p>
+                    <p>订单价格：${o.price}</p>
+                    <p>下单ID：${o.gameId}</p>
+                    <p>备注信息：${o.remark||"无"}</p>
+                    <p>下单时间：${o.createTime}</p>
+                    <button class="btn btn-success" onclick="workerGetOrder(${idx})">✅ 立即接单</button>
+                </div>
+                `;
+            })
+        }
+        document.getElementById("workerOrderList").innerHTML = html;
+    }
+
+    // 打手接单操作
+    function workerGetOrder(index){
+        let arr = getOrders();
+        arr[index].status = "已付款";
+        saveOrders(arr);
+        alert("接单成功！订单已转为已付款状态");
+        renderWorkerOrderList();
     }
 </script>
 
 </body>
 </html>
+
