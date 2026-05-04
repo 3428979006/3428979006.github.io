@@ -413,7 +413,9 @@
 <!-- 打手接单页面 -->
 <div class="glass-card hidden" id="workerPage">
     <h3 class="card-title">🤝 打手实时接单中心</h3>
-    <div style="color:#94A3B8;text-align:center;margin-bottom:15px;">每3秒自动刷新最新订单</div>
+    <div style="color:#94A3B8;text-align:center;margin-bottom:15px;">
+        每3秒自动刷新 + 实时监听后台改动
+    </div>
     <div id="workerOrderList"></div>
     <button class="btn btn-dark" onclick="backHome()">返回首页</button>
 </div>
@@ -444,7 +446,8 @@
         adminPwd: '13467925QQ',
         mailTo: '3428979006@qq.com',
         qqGroup: '1101681704',
-        orderKey: 'fg_club_order_list'
+        orderKey: 'fg_club_order_list',
+        notifyKey: 'fg_club_notify'
     }
 
     let currentGoods = {};
@@ -452,13 +455,32 @@
     let adminType = 0;
     let workerTimer = null;
 
+    // ========== 核心：跨页面实时通知 ==========
+    function notifyOthers() {
+        localStorage.setItem(CONFIG.notifyKey, Date.now().toString());
+    }
+    // 监听其他页面改动
+    window.addEventListener('storage', function(e) {
+        if (e.key === CONFIG.notifyKey) {
+            // 只要是打手页面，立刻刷新
+            if (!document.getElementById('workerPage').classList.contains('hidden')) {
+                renderWorkerOrderList();
+            }
+            // 管理员页面也刷新
+            if (!document.getElementById('adminMain').classList.contains('hidden')) {
+                renderOrderList();
+            }
+        }
+    });
+
     // 获取所有订单
     function getOrders(){
         let d=localStorage.getItem(CONFIG.orderKey);
         return d?JSON.parse(d):[];
     }
     function saveOrders(o){
-        localStorage.setItem(CONFIG.orderKey,JSON.stringify(o))
+        localStorage.setItem(CONFIG.orderKey,JSON.stringify(o));
+        notifyOthers(); // 保存时通知所有页面
     }
 
     // 用户下单相关
@@ -557,10 +579,11 @@
     function showWorkerPage(){
         hideAllAdmin();
         document.getElementById("workerPage").classList.remove("hidden");
-        // 立即渲染 + 3秒自动刷新
+        // 立即渲染
         renderWorkerOrderList();
+        // 强制 3 秒刷新
         if(workerTimer) clearInterval(workerTimer);
-        workerTimer = setInterval(renderWorkerOrderList,3000);
+        workerTimer = setInterval(renderWorkerOrderList, 3000);
     }
     function hideWorkerPage(){
         document.getElementById("workerPage").classList.add("hidden");
