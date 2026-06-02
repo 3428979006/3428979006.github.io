@@ -2,748 +2,1078 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暗区突围俱乐部接单平台 | 商品复刻版</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft Yahei", sans-serif;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>FG俱乐部 - 暗区突围护航</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        dark: '#0F172A',
+                        darker: '#0B1120',
+                        card: '#1E293B',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        warning: '#F59E0B'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'slide-down': 'slideDown 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.4s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                    },
+                }
+            }
         }
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        * {
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        .page {
-            display: none;
-            opacity: 0;
-            transform: translateX(30px);
-            padding: 15px;
-            padding-bottom: 90px;
-        }
-
-        .page.active {
-            display: block;
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .header {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(12px);
-            padding: 18px;
-            border-radius: 0 0 25px 25px;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            background: linear-gradient(90deg, #36d1dc, #5b86e5);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .header p {
-            color: #cccccc;
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .notice-bar {
-            background: linear-gradient(90deg,#ff6b6b,#feca57);
-            padding: 12px;
-            border-radius: 15px;
-            text-align: center;
-            color: #000;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .card-wrap {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 25px;
-        }
-
-        .fun-card {
-            background: rgba(255,255,255,0.07);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px 15px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.12);
-        }
-
-        .fun-card:active {
-            transform: scale(0.96);
-            background: rgba(255,255,255,0.15);
-        }
-
-        .fun-card i {
-            font-size: 38px;
-            margin-bottom: 12px;
-            background: linear-gradient(90deg,#36d1dc,#5b86e5);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .fun-card h3 {
-            font-size: 17px;
-            margin-bottom: 4px;
-        }
-
-        .fun-card span {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        /* 下单商品卡片 分开展示样式 */
-        .goods-card {
-            background: rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border-left: 6px solid #36d1dc;
-        }
-        .goods-card h3{
-            margin-bottom:6px;
-            font-size:18px;
-        }
-        .goods-code{
-            color:#36d1dc;
-            font-size:14px;
-            margin:4px 0;
-        }
-        .goods-price{
-            color:#ffdd57;
-            font-size:20px;
-            font-weight:bold;
-            margin:8px 0;
-        }
-        .goods-desc{
-            color:#ddd;
-            font-size:13px;
-            line-height:1.5;
-        }
-
-        .form-container {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(10px);
-            border-radius: 22px;
-            padding: 22px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .form-container h2 {
-            font-size: 19px;
-            margin-bottom: 18px;
-            border-left: 5px solid #36d1dc;
-            padding-left: 10px;
-        }
-
-        input,select,textarea {
-            width: 100%;
-            padding: 13px 16px;
-            margin: 9px 0;
-            border-radius: 12px;
-            border: none;
-            background: rgba(255,255,255,0.09);
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-
-        input:focus,select:focus,textarea:focus {
-            box-shadow: 0 0 10px #36d1dc;
-            background: rgba(255,255,255,0.13);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-
-        .btn-blue {
-            background: linear-gradient(90deg,#36d1dc,#5b86e5);
-            color: #fff;
-        }
-
-        .btn-green {
-            background: linear-gradient(90deg,#1dd1a1,#10ac84);
-            color: #fff;
-        }
-
-        .btn-red {
-            background: linear-gradient(90deg,#ee5a52,#e55039);
-            color: #fff;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .order-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 25px 0 10px;
-            padding: 8px 12px;
-            background: linear-gradient(90deg,#5b86e5,#36d1dc);
-            border-radius: 10px;
-        }
-
-        .order-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 12px;
-            border-left: 5px solid #36d1dc;
-        }
-
-        .order-price {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffdd57;
-            margin: 6px 0;
-        }
-
-        .order-item p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .nav-item {
-            color: #aaa;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .nav-item.active {
-            color: #36d1dc;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            }
+            .glass {
+                background: rgba(30, 41, 59, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .gradient-border {
+                position: relative;
+                border-radius: 0.75rem;
+            }
+            .gradient-border::before {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                border-radius: 0.85rem;
+                background: linear-gradient(45deg, #165DFF, #FF7D00, #10B981, #165DFF);
+                background-size: 300% 300%;
+                animation: gradient 3s ease infinite;
+                z-index: -1;
+            }
+            @keyframes gradient {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            .shimmer-effect {
+                background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+                background-size: 200% 100%;
+                animation: shimmer 2s infinite;
+            }
+            .safe-area-top {
+                padding-top: env(safe-area-inset-top, 0px);
+            }
+            .safe-area-bottom {
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            .touch-scale {
+                transition: transform 0.15s ease;
+            }
+            .touch-scale:active {
+                transform: scale(0.95);
+            }
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
         }
     </style>
 </head>
-<body>
-
-<!-- 首页 -->
-<div class="page active" id="pageHome">
-    <div class="header">
-        <h1>✨ 暗区突围俱乐部接单中心</h1>
-        <p>专业代练 | 极速接单 | 订单实时同步</p>
-    </div>
-
-    <div class="notice-bar">
-        🔥 平台升级：商品全部分开展示 | 价格按表填写 | 订单分类清晰
-    </div>
-
-    <div class="card-wrap">
-        <div class="fun-card" onclick="switchPage('pageOrder')">
-            <i class="fa fa-shopping-cart"></i>
-            <h3>立即下单</h3>
-            <span>商品分类一目了然</span>
-        </div>
-        <div class="fun-card" onclick="switchPage('pageSearch')">
-            <i class="fa fa-search"></i>
-            <h3>订单查询</h3>
-            <span>查询订单编号/价格</span>
-        </div>
-        <div class="fun-card" onclick="switchPage('pageAdmin')">
-            <i class="fa fa-database"></i>
-            <h3>后台管理</h3>
-            <span>分类查看全部订单</span>
-        </div>
-        <div class="fun-card" onclick="alert('欢迎加入俱乐部QQ群！')">
-            <i class="fa fa-qq"></i>
-            <h3>联系群主</h3>
-            <span>进群咨询问题</span>
-        </div>
-    </div>
-</div>
-
-<!-- 立即下单页面 —— 商品全部分开展示（已按你要求筛选+价格填写） -->
-<div class="page" id="pageOrder">
-    <div class="header">
-        <h1>📝 立即下单中心</h1>
-        <p>全部商品分开展示 | 商品编号+价格明码标价</p>
-    </div>
-
-    <!-- 1. 机密单 -->
-    <div class="goods-card">
-        <h3>📀 机密文件单</h3>
-        <div class="goods-code">商品编号：SP001</div>
-        <div class="goods-price">¥1088</div>
-        <p class="goods-desc">出了【机密文件】保底8000w，不出保底1个亿</p>
-    </div>
-
-    <!-- 2. 保5大金 -->
-    <div class="goods-card">
-        <h3>📦 必出5大金单</h3>
-        <div class="goods-code">商品编号：SP002</div>
-        <div class="goods-price">¥139.99</div>
-        <p class="goods-desc">累计带出5个【检视大金】，T7也算大金，累计保底1000w</p>
-    </div>
-
-    <!-- 3. 钥匙单 -->
-    <div class="goods-card">
-        <h3>🔑 钥匙单（2把钥匙）</h3>
-        <div class="goods-code">商品编号：SP003</div>
-        <div class="goods-price">¥209.99</div>
-        <p class="goods-desc">累计带出2把【红色品质钥匙】，为防止运气不好秒出，累计保底...</p>
-    </div>
-
-    <!-- 4. 大金1单 -->
-    <div class="goods-card">
-        <h3>💎 大金单（1大金）</h3>
-        <div class="goods-code">商品编号：SP004</div>
-        <div class="goods-price">¥34.99</div>
-        <p class="goods-desc">累计带出1个【检视大金】，T7也算大金，为防止运气不好秒出...</p>
-    </div>
-
-    <!-- 5. 体验单 -->
-    <div class="goods-card">
-        <h3>💵 体验单（100w）</h3>
-        <div class="goods-code">商品编号：SP005</div>
-        <div class="goods-price">¥13.99</div>
-        <p class="goods-desc">不要催客服！每日限1单，包100w（不能指定打手）排队比较...</p>
-    </div>
-
-    <!-- 6. T7套装单 -->
-    <div class="goods-card">
-        <h3>🎧 T7套装单</h3>
-        <div class="goods-code">商品编号：SP006</div>
-        <div class="goods-price">¥8.99</div>
-        <p class="goods-desc">此单包含T7热成像，全新六头六甲GS2耳机，任选一满改枪（带弹...</p>
-    </div>
-
-    <!-- 7. 保底340w单 -->
-    <div class="goods-card">
-        <h3>💰 保底单（340w）</h3>
-        <div class="goods-code">商品编号：SP007</div>
-        <div class="goods-price">¥43.99</div>
-        <p class="goods-desc">包340w，如果需要指定地图（要塞/电台）请备注</p>
-    </div>
-
-    <!-- 8. 保底1000w单 -->
-    <div class="goods-card">
-        <h3>💰 保底单（1000w）</h3>
-        <div class="goods-code">商品编号：SP008</div>
-        <div class="goods-price">¥（按实际填写）</div>
-        <p class="goods-desc">包1000w，为防止运气不好秒出，累计保底...</p>
-    </div>
-
-    <!-- 9. 单局500w单 -->
-    <div class="goods-card">
-        <h3>💵 单局单（单局500w）</h3>
-        <div class="goods-code">商品编号：SP009</div>
-        <div class="goods-price">¥（按实际填写）</div>
-        <p class="goods-desc">单局带出500w才结单，不然一直打，期间打手不允许不收装备就...</p>
-    </div>
-
-    <!-- 10. T7保5个T7单 -->
-    <div class="goods-card">
-        <h3>🔭 T7单（保5个T7）</h3>
-        <div class="goods-code">商品编号：SP010</div>
-        <div class="goods-price">¥129.99</div>
-        <p class="goods-desc">保底5个T7或者1000w，满足其中一个条件就结单，地图为农场或者...</p>
-    </div>
-
-    <!-- 11. T7保2个T7单 -->
-    <div class="goods-card">
-        <h3>🔭 T7单（保2个T7）</h3>
-        <div class="goods-code">商品编号：SP011</div>
-        <div class="goods-price">¥52.99</div>
-        <p class="goods-desc">保底2个T7或者400w，满足其中一个条件就结单，地图为农场或者...</p>
-    </div>
-
-    <!-- 12. 单局300w单 -->
-    <div class="goods-card">
-        <h3>💵 单局单（单局300w）</h3>
-        <div class="goods-code">商品编号：SP012</div>
-        <div class="goods-price">¥119.99</div>
-        <p class="goods-desc">单局带出300w才结单，不然一直打，期间打手不允许不收装备就...</p>
-    </div>
-
-    <!-- 13. 战地指挥官单 -->
-    <div class="goods-card">
-        <h3>🖥️ 战地指挥官（指哪打哪）</h3>
-        <div class="goods-code">商品编号：SP013</div>
-        <div class="goods-price">¥79.99</div>
-        <p class="goods-desc">初始保底300w，地图为强化要塞，老板使用终端查看附近敌人位置...</p>
-    </div>
-
-    <!-- 14. 单局三金单 -->
-    <div class="goods-card">
-        <h3>💎 三金单（单局三金）</h3>
-        <div class="goods-code">商品编号：SP014</div>
-        <div class="goods-price">¥259.99</div>
-        <p class="goods-desc">单局带出3个【检视大金】，T7也算大金，为防止运气不好秒出...</p>
-    </div>
-
-    <!-- 15. 单局双金单 -->
-    <div class="goods-card">
-        <h3>💎 双金单（单局双金）</h3>
-        <div class="goods-code">商品编号：SP015</div>
-        <div class="goods-price">¥139.99</div>
-        <p class="goods-desc">单局带出2个【检视大金】，T7也算大金，为防止运气不好秒出...</p>
-    </div>
-
-    <!-- 16. 移动保镖单 -->
-    <div class="goods-card">
-        <h3>🛡️ 移动保镖单（老板乱动）</h3>
-        <div class="goods-code">商品编号：SP016</div>
-        <div class="goods-price">¥（按实际填写）</div>
-        <p class="goods-desc">全程贴身保护，老板可自由移动，安全保障拉满</p>
-    </div>
-
-    <!-- 17. 指定改装单 -->
-    <div class="goods-card">
-        <h3>🔧 指定改装单（老板改）</h3>
-        <div class="goods-code">商品编号：SP017</div>
-        <div class="goods-price">¥（按实际填写）</div>
-        <p class="goods-desc">按老板要求改装指定枪械，配件全满，性能拉满</p>
-    </div>
-
-    <div class="form-container">
-        <h2>填写下单信息</h2>
-        <input type="text" id="userName" placeholder="请输入游戏昵称/QQ">
-        <select id="orderType">
-            <option value="机密文件单">SP001 - 机密文件单 ¥1088</option>
-            <option value="必出5大金单">SP002 - 必出5大金单 ¥139.99</option>
-            <option value="钥匙单">SP003 - 钥匙单（2把钥匙） ¥209.99</option>
-            <option value="大金1单">SP004 - 大金单（1大金） ¥34.99</option>
-            <option value="体验单">SP005 - 体验单（100w） ¥13.99</option>
-            <option value="T7套装单">SP006 - T7套装单 ¥8.99</option>
-            <option value="保底340w单">SP007 - 保底单（340w） ¥43.99</option>
-            <option value="保底1000w单">SP008 - 保底单（1000w）</option>
-            <option value="单局500w单">SP009 - 单局单（单局500w）</option>
-            <option value="T7保5个T7单">SP010 - T7单（保5个T7） ¥129.99</option>
-            <option value="T7保2个T7单">SP011 - T7单（保2个T7） ¥52.99</option>
-            <option value="单局300w单">SP012 - 单局单（单局300w） ¥119.99</option>
-            <option value="战地指挥官单">SP013 - 战地指挥官（指哪打哪） ¥79.99</option>
-            <option value="单局三金单">SP014 - 三金单（单局三金） ¥259.99</option>
-            <option value="单局双金单">SP015 - 双金单（单局双金） ¥139.99</option>
-            <option value="移动保镖单">SP016 - 移动保镖单（老板乱动）</option>
-            <option value="指定改装单">SP017 - 指定改装单（老板改）</option>
-        </select>
-        <input type="text" id="orderPrice" placeholder="填写实际成交价格（按表中价格填写）">
-        <textarea id="orderMsg" rows="4" placeholder="备注需求、区服、地图等"></textarea>
-        <button class="btn btn-blue" onclick="submitOrder()">提交订单</button>
-    </div>
-</div>
-
-<!-- 订单查询页面 -->
-<div class="page" id="pageSearch">
-    <div class="header">
-        <h1>🔍 个人订单查询</h1>
-        <p>可查看：订单编号、商品编号、价格、时间</p>
-    </div>
-    <div class="form-container">
-        <input type="text" id="searchKey" placeholder="输入昵称/QQ查询">
-        <button class="btn btn-green" onclick="searchOrder()">查询订单</button>
-        <div id="searchResult" style="margin-top:15px;"></div>
-    </div>
-</div>
-
-<!-- 后台管理页面 -->
-<div class="page" id="pageAdmin">
-    <div class="header">
-        <h1>⚙️ 后台全部订单【分类展示】</h1>
-        <p>显示订单编号、商品编号、价格全部信息</p>
-    </div>
-    <div id="adminOrderList"></div>
-    <button class="btn btn-red" onclick="clearAllOrder()">清空所有订单</button>
-</div>
-
-<!-- 底部导航 -->
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="switchPage('pageHome')">
-        <i class="fa fa-home"></i>首页
-    </div>
-    <div class="nav-item" onclick="switchPage('pageOrder')">
-        <i class="fa fa-plus-circle"></i>下单
-    </div>
-    <div class="nav-item" onclick="switchPage('pageSearch')">
-        <i class="fa fa-search"></i>查询
-    </div>
-    <div class="nav-item" onclick="switchPage('pageAdmin')">
-        <i class="fa fa-cog"></i>后台
-    </div>
-</div>
-
-<script>
-// 对应商品编号和价格
-const goodsInfo = {
-    "机密文件单": {code:"SP001",price:"¥1088"},
-    "必出5大金单": {code:"SP002",price:"¥139.99"},
-    "钥匙单": {code:"SP003",price:"¥209.99"},
-    "大金1单": {code:"SP004",price:"¥34.99"},
-    "体验单": {code:"SP005",price:"¥13.99"},
-    "T7套装单": {code:"SP006",price:"¥8.99"},
-    "保底340w单": {code:"SP007",price:"¥43.99"},
-    "保底1000w单": {code:"SP008",price:"¥（按实际填写）"},
-    "单局500w单": {code:"SP009",price:"¥（按实际填写）"},
-    "T7保5个T7单": {code:"SP010",price:"¥129.99"},
-    "T7保2个T7单": {code:"SP011",price:"¥52.99"},
-    "单局300w单": {code:"SP012",price:"¥119.99"},
-    "战地指挥官单": {code:"SP013",price:"¥79.99"},
-    "单局三金单": {code:"SP014",price:"¥259.99"},
-    "单局双金单": {code:"SP015",price:"¥139.99"},
-    "移动保镖单": {code:"SP016",price:"¥（按实际填写）"},
-    "指定改装单": {code:"SP017",price:"¥（按实际填写）"}
-};
-
-function switchPage(id){
-    document.querySelectorAll('.page').forEach(p=>{
-        p.classList.remove('active');
-    });
-    document.getElementById(id).classList.add('active');
-
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    if(event && event.currentTarget) event.currentTarget.classList.add('active');
-
-    if(id === 'pageAdmin'){
-        renderAdminOrder();
-    }
-}
-
-if(!localStorage.getItem('clubOrderList')){
-    localStorage.setItem('clubOrderList',JSON.stringify([]));
-}
-
-// 提交订单
-function submitOrder(){
-    let name = document.getElementById('userName').value.trim();
-    let type = document.getElementById('orderType').value;
-    let price = document.getElementById('orderPrice').value.trim();
-    let msg = document.getElementById('orderMsg').value.trim();
-
-    if(!name){
-        alert('请输入昵称/QQ！');
-        return;
-    }
-    if(!price){
-        alert('请填写订单价格！');
-        return;
-    }
-
-    let orderId = Date.now();
-    let order = {
-        orderId: orderId,
-        goodsCode: goodsInfo[type].code,
-        name:name,
-        type:type,
-        price:price,
-        msg:msg,
-        time:new Date().toLocaleString()
-    };
-
-    let list = JSON.parse(localStorage.getItem('clubOrderList'));
-    list.unshift(order);
-    localStorage.setItem('clubOrderList',JSON.stringify(list));
-
-    alert('订单提交成功！\n订单编号：'+orderId);
-    document.getElementById('userName').value = '';
-    document.getElementById('orderPrice').value = '';
-    document.getElementById('orderMsg').value = '';
-
-    switchPage('pageAdmin');
-}
-
-// 个人查询订单
-function searchOrder(){
-    let key = document.getElementById('searchKey').value.trim();
-    let list = JSON.parse(localStorage.getItem('clubOrderList'));
-    let html = '';
-
-    let filter = list.filter(item=>item.name.includes(key));
-    if(filter.length === 0){
-        html = '<div class="order-item">暂无匹配订单，请核对昵称/QQ</div>';
-    }else{
-        filter.forEach(item=>{
-            html += `
-            <div class="order-item">
-                <p>📋 订单编号：${item.orderId}</p>
-                <p>📦 商品编号：${item.goodsCode}</p>
-                <p>👤 下单人：${item.name}</p>
-                <p>📌 订单类型：${item.type}</p>
-                <div class="order-price">💰 订单价格：${item.price}</div>
-                <p>📝 备注：${item.msg||'无'}</p>
-                <p>⏰ 下单时间：${item.time}</p>
+<body class="bg-darker text-white min-h-screen overflow-x-hidden no-scrollbar">
+    <!-- 雪花特效容器 -->
+    <div id="snow-container" class="fixed inset-0 pointer-events-none z-50"></div>
+    
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass safe-area-top">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                    <i class="fa fa-shield text-primary text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-shadow">FG俱乐部</h1>
+                    <p class="text-xs text-gray-400">暗区突围专业护航</p>
+                </div>
             </div>
-            `;
+            <div class="flex items-center space-x-4">
+                <button id="refresh-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale">
+                    <i class="fa fa-refresh text-gray-300"></i>
+                </button>
+                <button id="admin-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale">
+                    <i class="fa fa-user-circle text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="pt-24 pb-32 px-4 container mx-auto max-w-lg">
+        <!-- 轮播公告 -->
+        <div class="mb-6 gradient-border">
+            <div class="bg-card rounded-xl p-4 overflow-hidden">
+                <div id="announcement" class="flex items-center space-x-2">
+                    <div class="shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                        <i class="fa fa-bullhorn text-primary text-xs"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-sm text-gray-300 whitespace-nowrap animate-marquee">
+                            🔥 新用户首单立减5元 | 🔥 每日前10单赠送T7装备一套 | 🔥 累计下单5次升级VIP会员
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.1s">
+                <p class="text-2xl font-bold text-primary" id="total-orders">0</p>
+                <p class="text-xs text-gray-400">总订单</p>
+            </div>
+            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.2s">
+                <p class="text-2xl font-bold text-success" id="completed-orders">0</p>
+                <p class="text-xs text-gray-400">已完成</p>
+            </div>
+            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.3s">
+                <p class="text-2xl font-bold text-warning" id="pending-orders">0</p>
+                <p class="text-xs text-gray-400">待处理</p>
+            </div>
+        </div>
+
+        <!-- 服务套餐 -->
+        <h2 class="text-lg font-bold mb-4 flex items-center">
+            <i class="fa fa-star text-secondary mr-2"></i>
+            热门套餐
+        </h2>
+        
+        <div class="space-y-4 mb-8">
+            <!-- 基础套餐 -->
+            <div class="bg-card rounded-xl overflow-hidden animate-fade-in" style="animation-delay: 0.4s">
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg">基础护航</h3>
+                            <p class="text-sm text-gray-400">单打手全程跟随</p>
+                        </div>
+                        <span class="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full">性价比首选</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>保底带出100万物资</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>包撤离失败全额退款</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>全程语音指挥</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-secondary">¥8.99</span>
+                            <span class="text-sm text-gray-400 line-through ml-2">¥15</span>
+                        </div>
+                        <button class="order-btn bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                                data-price="8.99" data-name="基础护航">
+                            立即下单
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- T7套装套餐 -->
+            <div class="bg-card rounded-xl overflow-hidden animate-fade-in relative" style="animation-delay: 0.5s">
+                <div class="absolute top-0 right-0 bg-secondary text-white text-xs px-3 py-1 rounded-bl-lg font-medium">
+                    热销
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg">T7套装护航</h3>
+                            <p class="text-sm text-gray-400">全套顶级装备开局</p>
+                        </div>
+                        <span class="bg-secondary/20 text-secondary text-xs px-2 py-1 rounded-full">装备全送</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>赠送全套T7装备+满改枪</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>保底带出200万物资</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>包撤离失败全额退款</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>优先派单</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-secondary">¥19.99</span>
+                            <span class="text-sm text-gray-400 line-through ml-2">¥35</span>
+                        </div>
+                        <button class="order-btn bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                                data-price="19.99" data-name="T7套装护航">
+                            立即下单
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 三金套餐 -->
+            <div class="gradient-border animate-fade-in" style="animation-delay: 0.6s">
+                <div class="bg-card rounded-xl p-4">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-lg">三金豪华套餐</h3>
+                            <p class="text-sm text-gray-400">三打手全程保护</p>
+                        </div>
+                        <span class="bg-success/20 text-success text-xs px-2 py-1 rounded-full">豪华体验</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>3名王牌打手全程护航</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>赠送全套T7装备+3把满改枪</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>保底带出500万物资</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>包撤离失败双倍赔偿</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fa fa-check text-success mr-2"></i>
+                            <span>专属客服1对1服务</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-secondary">¥259.99</span>
+                            <span class="text-sm text-gray-400 line-through ml-2">¥399</span>
+                        </div>
+                        <button class="order-btn bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                                data-price="259.99" data-name="三金豪华套餐">
+                            立即下单
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 订单记录 -->
+        <h2 class="text-lg font-bold mb-4 flex items-center">
+            <i class="fa fa-list-alt text-primary mr-2"></i>
+            最近订单
+        </h2>
+        
+        <div id="orders-container" class="space-y-3 mb-8">
+            <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                <i class="fa fa-inbox text-3xl mb-2"></i>
+                <p>暂无订单记录</p>
+                <p class="text-sm">点击上方套餐开始下单</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="fixed bottom-0 left-0 right-0 glass safe-area-bottom z-40">
+        <div class="container mx-auto max-w-lg">
+            <div class="grid grid-cols-4 py-2">
+                <button class="nav-btn active flex flex-col items-center py-2 touch-scale" data-tab="home">
+                    <i class="fa fa-home text-xl mb-1"></i>
+                    <span class="text-xs">首页</span>
+                </button>
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="orders">
+                    <i class="fa fa-file-text-o text-xl mb-1"></i>
+                    <span class="text-xs">订单</span>
+                </button>
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="contact">
+                    <i class="fa fa-headphones text-xl mb-1"></i>
+                    <span class="text-xs">客服</span>
+                </button>
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="profile">
+                    <i class="fa fa-user-o text-xl mb-1"></i>
+                    <span class="text-xs">我的</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 下单弹窗 -->
+    <div id="order-modal" class="fixed inset-0 bg-black/70 z-50 flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-card rounded-t-2xl w-full max-w-lg transform translate-y-full transition-transform duration-300 safe-area-bottom">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">确认订单</h3>
+                <button id="close-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale">
+                    <i class="fa fa-times text-gray-400"></i>
+                </button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="bg-dark rounded-lg p-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400">套餐名称</span>
+                        <span id="modal-package-name" class="font-medium">基础护航</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">套餐价格</span>
+                        <span id="modal-package-price" class="font-bold text-secondary">¥8.99</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">游戏QQ号</label>
+                    <input type="text" id="game-qq" placeholder="请输入你的游戏QQ号" 
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">游戏昵称</label>
+                    <input type="text" id="game-nickname" placeholder="请输入你的游戏昵称" 
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">备注信息（选填）</label>
+                    <textarea id="order-remark" placeholder="如有特殊要求请在此说明" rows="2"
+                              class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"></textarea>
+                </div>
+                
+                <button id="submit-order" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-bold text-lg touch-scale">
+                    立即支付
+                </button>
+                
+                <p class="text-xs text-gray-500 text-center">
+                    下单后将在5分钟内安排打手，如有问题请联系客服
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员登录弹窗 -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="bg-card rounded-xl w-full max-w-sm transform scale-95 transition-transform duration-300">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">管理员登录</h3>
+                <button id="close-admin-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale">
+                    <i class="fa fa-times text-gray-400"></i>
+                </button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">管理员密码</label>
+                    <input type="password" id="admin-password" placeholder="请输入管理员密码" 
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                </div>
+                <button id="admin-login" class="w-full bg-primary text-white py-3 rounded-lg font-medium touch-scale">
+                    登录
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员面板 -->
+    <div id="admin-panel" class="fixed inset-0 bg-darker z-50 transform translate-x-full transition-transform duration-300">
+        <header class="bg-card safe-area-top">
+            <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <button id="back-from-admin" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center touch-scale">
+                        <i class="fa fa-arrow-left text-gray-300"></i>
+                    </button>
+                    <h1 class="text-lg font-bold">管理员面板</h1>
+                </div>
+                <button id="logout-admin" class="text-danger touch-scale">
+                    退出
+                </button>
+            </div>
+        </header>
+        
+        <div class="p-4 pt-6 pb-32 overflow-y-auto h-full no-scrollbar">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-card rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-primary" id="admin-total-orders">0</p>
+                    <p class="text-sm text-gray-400">总订单数</p>
+                </div>
+                <div class="bg-card rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-secondary" id="admin-total-income">¥0</p>
+                    <p class="text-sm text-gray-400">总收入</p>
+                </div>
+            </div>
+            
+            <h2 class="text-lg font-bold mb-4">所有订单</h2>
+            <div id="admin-orders-container" class="space-y-3">
+                <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                    <i class="fa fa-inbox text-3xl mb-2"></i>
+                    <p>暂无订单</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div id="toast" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white px-6 py-3 rounded-lg z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
+        <p id="toast-message">操作成功</p>
+    </div>
+
+    <script>
+        // 全局配置
+        const CONFIG = {
+            ADMIN_PASSWORD: 'fg123456', // 管理员密码
+            EMAIL_NOTIFICATION: '3428979006@qq.com', // 订单通知邮箱
+            STORAGE_KEYS: {
+                ORDERS: 'fg_club_orders',
+                ADMIN_LOGGED_IN: 'fg_club_admin_logged_in'
+            }
+        };
+
+        // 工具函数
+        const utils = {
+            // 生成唯一订单号
+            generateOrderId() {
+                const timestamp = Date.now().toString(36).toUpperCase();
+                const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+                return `FG${timestamp}${random}`;
+            },
+            
+            // 格式化时间
+            formatTime(timestamp) {
+                const date = new Date(timestamp);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            },
+            
+            // 显示Toast提示
+            showToast(message, duration = 2000) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                toastMessage.textContent = message;
+                toast.classList.remove('opacity-0', 'pointer-events-none');
+                toast.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0', 'pointer-events-none');
+                }, duration);
+            },
+            
+            // 本地存储操作 - APP优化版
+            storage: {
+                get(key) {
+                    try {
+                        const value = localStorage.getItem(key);
+                        return value ? JSON.parse(value) : null;
+                    } catch (e) {
+                        console.error('Storage get error:', e);
+                        return null;
+                    }
+                },
+                set(key, value) {
+                    try {
+                        localStorage.setItem(key, JSON.stringify(value));
+                        return true;
+                    } catch (e) {
+                        console.error('Storage set error:', e);
+                        return false;
+                    }
+                },
+                remove(key) {
+                    try {
+                        localStorage.removeItem(key);
+                        return true;
+                    } catch (e) {
+                        console.error('Storage remove error:', e);
+                        return false;
+                    }
+                }
+            }
+        };
+
+        // 订单管理
+        const orderManager = {
+            orders: [],
+            
+            init() {
+                this.orders = utils.storage.get(CONFIG.STORAGE_KEYS.ORDERS) || [];
+                this.updateStats();
+                this.renderOrders();
+                this.renderAdminOrders();
+            },
+            
+            // 创建新订单
+            createOrder(packageName, packagePrice, gameQQ, gameNickname, remark) {
+                const order = {
+                    id: utils.generateOrderId(),
+                    packageName,
+                    packagePrice,
+                    gameQQ,
+                    gameNickname,
+                    remark,
+                    status: 'pending', // pending, processing, completed, cancelled
+                    createTime: Date.now()
+                };
+                
+                this.orders.unshift(order);
+                utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                
+                this.updateStats();
+                this.renderOrders();
+                this.renderAdminOrders();
+                
+                // 模拟发送邮件通知
+                this.sendEmailNotification(order);
+                
+                return order;
+            },
+            
+            // 更新订单状态
+            updateOrderStatus(orderId, status) {
+                const order = this.orders.find(o => o.id === orderId);
+                if (order) {
+                    order.status = status;
+                    utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                    this.updateStats();
+                    this.renderOrders();
+                    this.renderAdminOrders();
+                    return true;
+                }
+                return false;
+            },
+            
+            // 删除订单
+            deleteOrder(orderId) {
+                const index = this.orders.findIndex(o => o.id === orderId);
+                if (index !== -1) {
+                    this.orders.splice(index, 1);
+                    utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                    this.updateStats();
+                    this.renderOrders();
+                    this.renderAdminOrders();
+                    return true;
+                }
+                return false;
+            },
+            
+            // 更新统计数据
+            updateStats() {
+                const total = this.orders.length;
+                const completed = this.orders.filter(o => o.status === 'completed').length;
+                const pending = this.orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+                const totalIncome = this.orders
+                    .filter(o => o.status === 'completed')
+                    .reduce((sum, o) => sum + parseFloat(o.packagePrice), 0);
+                
+                document.getElementById('total-orders').textContent = total;
+                document.getElementById('completed-orders').textContent = completed;
+                document.getElementById('pending-orders').textContent = pending;
+                document.getElementById('admin-total-orders').textContent = total;
+                document.getElementById('admin-total-income').textContent = `¥${totalIncome.toFixed(2)}`;
+            },
+            
+            // 渲染用户订单列表
+            renderOrders() {
+                const container = document.getElementById('orders-container');
+                
+                if (this.orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                            <i class="fa fa-inbox text-3xl mb-2"></i>
+                            <p>暂无订单记录</p>
+                            <p class="text-sm">点击上方套餐开始下单</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = this.orders.slice(0, 5).map(order => {
+                    const statusMap = {
+                        pending: { text: '待处理', color: 'text-warning', bg: 'bg-warning/20' },
+                        processing: { text: '进行中', color: 'text-primary', bg: 'bg-primary/20' },
+                        completed: { text: '已完成', color: 'text-success', bg: 'bg-success/20' },
+                        cancelled: { text: '已取消', color: 'text-danger', bg: 'bg-danger/20' }
+                    };
+                    const status = statusMap[order.status];
+                    
+                    return `
+                        <div class="bg-card rounded-xl p-4 animate-fade-in">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 class="font-medium">${order.packageName}</h4>
+                                    <p class="text-xs text-gray-400">订单号: ${order.id}</p>
+                                </div>
+                                <span class="${status.bg} ${status.color} text-xs px-2 py-1 rounded-full">
+                                    ${status.text}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400">${utils.formatTime(order.createTime)}</span>
+                                <span class="font-bold text-secondary">¥${order.packagePrice}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+            
+            // 渲染管理员订单列表
+            renderAdminOrders() {
+                const container = document.getElementById('admin-orders-container');
+                
+                if (this.orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                            <i class="fa fa-inbox text-3xl mb-2"></i>
+                            <p>暂无订单</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = this.orders.map(order => {
+                    const statusMap = {
+                        pending: { text: '待处理', color: 'text-warning', bg: 'bg-warning/20' },
+                        processing: { text: '进行中', color: 'text-primary', bg: 'bg-primary/20' },
+                        completed: { text: '已完成', color: 'text-success', bg: 'bg-success/20' },
+                        cancelled: { text: '已取消', color: 'text-danger', bg: 'bg-danger/20' }
+                    };
+                    const status = statusMap[order.status];
+                    
+                    return `
+                        <div class="bg-card rounded-xl p-4 animate-fade-in">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="font-medium">${order.packageName}</h4>
+                                    <p class="text-xs text-gray-400">订单号: ${order.id}</p>
+                                    <p class="text-xs text-gray-400">QQ: ${order.gameQQ}</p>
+                                    <p class="text-xs text-gray-400">昵称: ${order.gameNickname}</p>
+                                    ${order.remark ? `<p class="text-xs text-gray-400">备注: ${order.remark}</p>` : ''}
+                                </div>
+                                <span class="${status.bg} ${status.color} text-xs px-2 py-1 rounded-full">
+                                    ${status.text}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-sm text-gray-400">${utils.formatTime(order.createTime)}</span>
+                                <span class="font-bold text-secondary">¥${order.packagePrice}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                ${order.status === 'pending' ? `
+                                    <button class="admin-order-btn bg-primary text-white py-2 rounded text-sm touch-scale" 
+                                            data-id="${order.id}" data-action="processing">
+                                        开始处理
+                                    </button>
+                                ` : ''}
+                                ${order.status === 'processing' ? `
+                                    <button class="admin-order-btn bg-success text-white py-2 rounded text-sm touch-scale" 
+                                            data-id="${order.id}" data-action="completed">
+                                        完成订单
+                                    </button>
+                                ` : ''}
+                                ${order.status !== 'completed' && order.status !== 'cancelled' ? `
+                                    <button class="admin-order-btn bg-danger text-white py-2 rounded text-sm touch-scale" 
+                                            data-id="${order.id}" data-action="cancelled">
+                                        取消订单
+                                    </button>
+                                ` : ''}
+                                <button class="admin-order-btn bg-gray-600 text-white py-2 rounded text-sm touch-scale" 
+                                        data-id="${order.id}" data-action="delete">
+                                    删除
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // 绑定管理员订单按钮事件
+                document.querySelectorAll('.admin-order-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const orderId = e.target.dataset.id;
+                        const action = e.target.dataset.action;
+                        
+                        if (action === 'delete') {
+                            if (confirm('确定要删除这个订单吗？')) {
+                                if (orderManager.deleteOrder(orderId)) {
+                                    utils.showToast('订单已删除');
+                                }
+                            }
+                        } else {
+                            if (orderManager.updateOrderStatus(orderId, action)) {
+                                utils.showToast('订单状态已更新');
+                            }
+                        }
+                    });
+                });
+            },
+            
+            // 模拟发送邮件通知
+            sendEmailNotification(order) {
+                console.log('发送订单通知邮件到:', CONFIG.EMAIL_NOTIFICATION);
+                console.log('订单详情:', order);
+                // 这里可以集成实际的邮件发送服务
+            }
+        };
+
+        // 雪花特效 - APP优化版
+        const snowEffect = {
+            snowflakes: [],
+            maxSnowflakes: 80,
+            animationId: null,
+            
+            init() {
+                this.container = document.getElementById('snow-container');
+                this.createSnowflakes();
+                this.animate();
+                
+                // 性能优化：页面不可见时暂停动画
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        this.pause();
+                    } else {
+                        this.resume();
+                    }
+                });
+            },
+            
+            createSnowflakes() {
+                for (let i = 0; i < this.maxSnowflakes; i++) {
+                    this.createSnowflake();
+                }
+            },
+            
+            createSnowflake() {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'absolute rounded-full bg-white opacity-70';
+                
+                const size = Math.random() * 4 + 1;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}%`;
+                snowflake.style.top = `${-10}px`;
+                
+                const snowflakeData = {
+                    element: snowflake,
+                    x: parseFloat(snowflake.style.left),
+                    y: parseFloat(snowflake.style.top),
+                    speed: Math.random() * 1 + 0.5,
+                    swing: Math.random() * 0.5 - 0.25,
+                    size: size
+                };
+                
+                this.snowflakes.push(snowflakeData);
+                this.container.appendChild(snowflake);
+            },
+            
+            animate() {
+                this.snowflakes.forEach((flake, index) => {
+                    flake.y += flake.speed;
+                    flake.x += flake.swing;
+                    
+                    flake.element.style.top = `${flake.y}%`;
+                    flake.element.style.left = `${flake.x}%`;
+                    
+                    // 雪花超出屏幕后重置
+                    if (flake.y > 110 || flake.x < -10 || flake.x > 110) {
+                        flake.y = -10;
+                        flake.x = Math.random() * 100;
+                        flake.speed = Math.random() * 1 + 0.5;
+                        flake.swing = Math.random() * 0.5 - 0.25;
+                    }
+                });
+                
+                this.animationId = requestAnimationFrame(() => this.animate());
+            },
+            
+            pause() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+            },
+            
+            resume() {
+                if (!this.animationId) {
+                    this.animate();
+                }
+            }
+        };
+
+        // 页面交互
+        const ui = {
+            init() {
+                this.bindEvents();
+                this.checkAdminLogin();
+            },
+            
+            bindEvents() {
+                // 下单按钮
+                document.querySelectorAll('.order-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const packageName = e.target.dataset.name;
+                        const packagePrice = e.target.dataset.price;
+                        
+                        document.getElementById('modal-package-name').textContent = packageName;
+                        document.getElementById('modal-package-price').textContent = `¥${packagePrice}`;
+                        
+                        // 存储当前选择的套餐信息
+                        document.getElementById('submit-order').dataset.name = packageName;
+                        document.getElementById('submit-order').dataset.price = packagePrice;
+                        
+                        this.showModal('order-modal');
+                    });
+                });
+                
+                // 关闭订单弹窗
+                document.getElementById('close-modal').addEventListener('click', () => {
+                    this.hideModal('order-modal');
+                });
+                
+                // 提交订单
+                document.getElementById('submit-order').addEventListener('click', () => {
+                    const packageName = document.getElementById('submit-order').dataset.name;
+                    const packagePrice = document.getElementById('submit-order').dataset.price;
+                    const gameQQ = document.getElementById('game-qq').value.trim();
+                    const gameNickname = document.getElementById('game-nickname').value.trim();
+                    const remark = document.getElementById('order-remark').value.trim();
+                    
+                    if (!gameQQ) {
+                        utils.showToast('请输入游戏QQ号');
+                        return;
+                    }
+                    
+                    if (!gameNickname) {
+                        utils.showToast('请输入游戏昵称');
+                        return;
+                    }
+                    
+                    const order = orderManager.createOrder(packageName, packagePrice, gameQQ, gameNickname, remark);
+                    
+                    utils.showToast('下单成功！我们将尽快安排打手');
+                    this.hideModal('order-modal');
+                    
+                    // 清空表单
+                    document.getElementById('game-qq').value = '';
+                    document.getElementById('game-nickname').value = '';
+                    document.getElementById('order-remark').value = '';
+                });
+                
+                // 管理员按钮
+                document.getElementById('admin-btn').addEventListener('click', () => {
+                    if (utils.storage.get(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN)) {
+                        this.showAdminPanel();
+                    } else {
+                        this.showModal('admin-modal');
+                    }
+                });
+                
+                // 关闭管理员登录弹窗
+                document.getElementById('close-admin-modal').addEventListener('click', () => {
+                    this.hideModal('admin-modal');
+                });
+                
+                // 管理员登录
+                document.getElementById('admin-login').addEventListener('click', () => {
+                    const password = document.getElementById('admin-password').value.trim();
+                    
+                    if (password === CONFIG.ADMIN_PASSWORD) {
+                        utils.storage.set(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN, true);
+                        this.hideModal('admin-modal');
+                        this.showAdminPanel();
+                        utils.showToast('登录成功');
+                        document.getElementById('admin-password').value = '';
+                    } else {
+                        utils.showToast('密码错误');
+                    }
+                });
+                
+                // 从管理员面板返回
+                document.getElementById('back-from-admin').addEventListener('click', () => {
+                    this.hideAdminPanel();
+                });
+                
+                // 退出管理员
+                document.getElementById('logout-admin').addEventListener('click', () => {
+                    utils.storage.remove(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN);
+                    this.hideAdminPanel();
+                    utils.showToast('已退出登录');
+                });
+                
+                // 刷新按钮
+                document.getElementById('refresh-btn').addEventListener('click', () => {
+                    orderManager.init();
+                    utils.showToast('数据已刷新');
+                });
+                
+                // 底部导航
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'text-primary'));
+                        e.currentTarget.classList.add('active', 'text-primary');
+                        utils.showToast('功能开发中');
+                    });
+                });
+                
+                // 点击弹窗背景关闭
+                document.getElementById('order-modal').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        this.hideModal('order-modal');
+                    }
+                });
+                
+                document.getElementById('admin-modal').addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        this.hideModal('admin-modal');
+                    }
+                });
+                
+                // 防止移动端双击缩放
+                document.addEventListener('touchend', function(event) {
+                    event.preventDefault();
+                }, { passive: false });
+                
+                // 防止移动端长按弹出菜单
+                document.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                });
+            },
+            
+            showModal(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                
+                const content = modal.querySelector('.transform');
+                setTimeout(() => {
+                    if (modalId === 'order-modal') {
+                        content.classList.remove('translate-y-full');
+                        content.classList.add('translate-y-0');
+                    } else {
+                        content.classList.remove('scale-95');
+                        content.classList.add('scale-100');
+                    }
+                }, 10);
+                
+                // 禁止背景滚动
+                document.body.style.overflow = 'hidden';
+            },
+            
+            hideModal(modalId) {
+                const modal = document.getElementById(modalId);
+                const content = modal.querySelector('.transform');
+                
+                if (modalId === 'order-modal') {
+                    content.classList.remove('translate-y-0');
+                    content.classList.add('translate-y-full');
+                } else {
+                    content.classList.remove('scale-100');
+                    content.classList.add('scale-95');
+                }
+                
+                setTimeout(() => {
+                    modal.classList.remove('opacity-100');
+                    modal.classList.add('opacity-0', 'pointer-events-none');
+                    // 恢复背景滚动
+                    document.body.style.overflow = '';
+                }, 300);
+            },
+            
+            showAdminPanel() {
+                const panel = document.getElementById('admin-panel');
+                panel.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            },
+            
+            hideAdminPanel() {
+                const panel = document.getElementById('admin-panel');
+                panel.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            },
+            
+            checkAdminLogin() {
+                if (utils.storage.get(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN)) {
+                    // 已登录状态
+                }
+            }
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            orderManager.init();
+            ui.init();
+            snowEffect.init();
+            
+            // APP启动优化：预加载关键资源
+            setTimeout(() => {
+                document.body.classList.add('animate-fade-in');
+            }, 100);
         });
-    }
-    document.getElementById('searchResult').innerHTML = html;
-}
 
-// 后台分类渲染订单
-function renderAdminOrder(){
-    let list = JSON.parse(localStorage.getItem('clubOrderList'));
-    let html = '';
+        // 错误处理 - APP崩溃保护
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('Global error:', message, source, lineno, colno, error);
+            utils.showToast('发生错误，请刷新页面');
+            return true;
+        };
 
-    // 按类型分类
-    let djList = list.filter(x=>x.type.includes("大金"));
-    let jmList = list.filter(x=>x.type.includes("机密"));
-    let tbList = list.filter(x=>x.type.includes("保底"));
-    let sjList = list.filter(x=>x.type.includes("单局"));
-    let t7List = list.filter(x=>x.type.includes("T7"));
-    let otherList = list.filter(x=>!djList.includes(x) && !jmList.includes(x) && !tbList.includes(x) && !sjList.includes(x) && !t7List.includes(x));
-
-    // 大金相关订单
-    html += '<div class="order-title">💎 大金类订单</div>';
-    if(djList.length===0) html += '<div class="order-item">暂无大金类订单</div>';
-    djList.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    // 机密文件订单
-    html += '<div class="order-title">📀 机密文件类订单</div>';
-    if(jmList.length===0) html += '<div class="order-item">暂无机密文件类订单</div>';
-    jmList.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    // 保底类订单
-    html += '<div class="order-title">💰 保底类订单</div>';
-    if(tbList.length===0) html += '<div class="order-item">暂无保底类订单</div>';
-    tbList.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    // 单局类订单
-    html += '<div class="order-title">💵 单局类订单</div>';
-    if(sjList.length===0) html += '<div class="order-item">暂无单局类订单</div>';
-    sjList.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    // T7类订单
-    html += '<div class="order-title">🔭 T7类订单</div>';
-    if(t7List.length===0) html += '<div class="order-item">暂无T7类订单</div>';
-    t7List.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    // 其他订单
-    html += '<div class="order-title">📦 其他订单</div>';
-    if(otherList.length===0) html += '<div class="order-item">暂无其他订单</div>';
-    otherList.forEach(item=>{
-        html += `
-        <div class="order-item">
-            <p>📋 订单编号：${item.orderId}</p>
-            <p>📦 商品编号：${item.goodsCode}</p>
-            <p>👤 用户：${item.name}</p>
-            <p>📌 订单类型：${item.type}</p>
-            <div class="order-price">💰 价格：${item.price}</div>
-            <p>⏰ 时间：${item.time}</p>
-            <p>📝 备注：${item.msg||'无'}</p>
-        </div>
-        `;
-    });
-
-    document.getElementById('adminOrderList').innerHTML = html;
-}
-
-// 清空全部订单
-function clearAllOrder(){
-    if(confirm('确定要清空所有订单数据吗？不可恢复！')){
-        localStorage.setItem('clubOrderList',JSON.stringify([]));
-        renderAdminOrder();
-        alert('所有订单已清空');
-    }
-}
-
-renderAdminOrder();
-</script>
-
-</body>
-</html>
-
-
+        // 未处理的Promise错误
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection
