@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>FG俱乐部 - 暗区突围护航</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -24,43 +25,8 @@
                         warning: '#F59E0B'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'slide-down': 'slideDown 0.5s ease-out',
-                        'fade-in': 'fadeIn 0.4s ease-out',
-                        'scale-in': 'scaleIn 0.3s ease-out',
-                        'shimmer': 'shimmer 2s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        scaleIn: {
-                            '0%': { transform: 'scale(0.9)', opacity: '0' },
-                            '100%': { transform: 'scale(1)', opacity: '1' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' },
-                        },
-                    },
+                        sans: ['system-ui', 'sans-serif'],
+                    }
                 }
             }
         }
@@ -74,44 +40,22 @@
                 text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             }
             .glass {
-                background: rgba(30, 41, 59, 0.7);
-                backdrop-filter: blur(10px);
+                background: rgba(30, 41, 59, 0.85);
                 -webkit-backdrop-filter: blur(10px);
-            }
-            .gradient-border {
-                position: relative;
-                border-radius: 0.75rem;
-            }
-            .gradient-border::before {
-                content: '';
-                position: absolute;
-                inset: -2px;
-                border-radius: 0.85rem;
-                background: linear-gradient(45deg, #165DFF, #FF7D00, #10B981, #165DFF);
-                background-size: 300% 300%;
-                animation: gradient 3s ease infinite;
-                z-index: -1;
-            }
-            @keyframes gradient {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-            .shimmer-effect {
-                background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-                background-size: 200% 100%;
-                animation: shimmer 2s infinite;
+                backdrop-filter: blur(10px);
             }
             .safe-area-top {
-                padding-top: env(safe-area-inset-top, 0px);
+                padding-top: env(safe-area-inset-top, 20px);
             }
             .safe-area-bottom {
-                padding-bottom: env(safe-area-inset-bottom, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 20px);
             }
             .touch-scale {
+                -webkit-transition: transform 0.15s ease;
                 transition: transform 0.15s ease;
             }
             .touch-scale:active {
+                -webkit-transform: scale(0.95);
                 transform: scale(0.95);
             }
             .no-scrollbar::-webkit-scrollbar {
@@ -121,13 +65,14 @@
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
+            .clickable {
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
         }
     </style>
 </head>
 <body class="bg-darker text-white min-h-screen overflow-x-hidden no-scrollbar">
-    <!-- 雪花特效容器 -->
-    <div id="snow-container" class="fixed inset-0 pointer-events-none z-50"></div>
-    
     <!-- 顶部导航栏 -->
     <header class="fixed top-0 left-0 right-0 z-40 glass safe-area-top">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -141,10 +86,10 @@
                 </div>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="refresh-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale">
+                <button id="refresh-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale clickable">
                     <i class="fa fa-refresh text-gray-300"></i>
                 </button>
-                <button id="admin-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale">
+                <button id="admin-btn" class="w-10 h-10 rounded-full bg-card/50 flex items-center justify-center touch-scale clickable">
                     <i class="fa fa-user-circle text-gray-300"></i>
                 </button>
             </div>
@@ -154,15 +99,15 @@
     <!-- 主内容区 -->
     <main class="pt-24 pb-32 px-4 container mx-auto max-w-lg">
         <!-- 轮播公告 -->
-        <div class="mb-6 gradient-border">
-            <div class="bg-card rounded-xl p-4 overflow-hidden">
-                <div id="announcement" class="flex items-center space-x-2">
+        <div class="mb-6">
+            <div class="bg-card rounded-xl p-4 overflow-hidden border border-primary/20">
+                <div class="flex items-center space-x-2">
                     <div class="shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
                         <i class="fa fa-bullhorn text-primary text-xs"></i>
                     </div>
                     <div class="overflow-hidden">
-                        <p class="text-sm text-gray-300 whitespace-nowrap animate-marquee">
-                            🔥 新用户首单立减5元 | 🔥 每日前10单赠送T7装备一套 | 🔥 累计下单5次升级VIP会员
+                        <p class="text-sm text-gray-300 whitespace-nowrap">
+                            🔥 新用户首单立减5元 | 每日前10单赠送T7装备一套
                         </p>
                     </div>
                 </div>
@@ -171,15 +116,15 @@
 
         <!-- 统计卡片 -->
         <div class="grid grid-cols-3 gap-3 mb-6">
-            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.1s">
+            <div class="bg-card rounded-xl p-3 text-center border border-gray-700/50">
                 <p class="text-2xl font-bold text-primary" id="total-orders">0</p>
                 <p class="text-xs text-gray-400">总订单</p>
             </div>
-            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.2s">
+            <div class="bg-card rounded-xl p-3 text-center border border-gray-700/50">
                 <p class="text-2xl font-bold text-success" id="completed-orders">0</p>
                 <p class="text-xs text-gray-400">已完成</p>
             </div>
-            <div class="bg-card rounded-xl p-3 text-center animate-slide-up" style="animation-delay: 0.3s">
+            <div class="bg-card rounded-xl p-3 text-center border border-gray-700/50">
                 <p class="text-2xl font-bold text-warning" id="pending-orders">0</p>
                 <p class="text-xs text-gray-400">待处理</p>
             </div>
@@ -193,7 +138,7 @@
         
         <div class="space-y-4 mb-8">
             <!-- 基础套餐 -->
-            <div class="bg-card rounded-xl overflow-hidden animate-fade-in" style="animation-delay: 0.4s">
+            <div class="bg-card rounded-xl overflow-hidden border border-gray-700/50">
                 <div class="p-4">
                     <div class="flex justify-between items-start mb-3">
                         <div>
@@ -221,7 +166,7 @@
                             <span class="text-2xl font-bold text-secondary">¥8.99</span>
                             <span class="text-sm text-gray-400 line-through ml-2">¥15</span>
                         </div>
-                        <button class="order-btn bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                        <button class="order-btn bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale clickable" 
                                 data-price="8.99" data-name="基础护航">
                             立即下单
                         </button>
@@ -230,7 +175,7 @@
             </div>
 
             <!-- T7套装套餐 -->
-            <div class="bg-card rounded-xl overflow-hidden animate-fade-in relative" style="animation-delay: 0.5s">
+            <div class="bg-card rounded-xl overflow-hidden border border-secondary/30 relative">
                 <div class="absolute top-0 right-0 bg-secondary text-white text-xs px-3 py-1 rounded-bl-lg font-medium">
                     热销
                 </div>
@@ -265,7 +210,7 @@
                             <span class="text-2xl font-bold text-secondary">¥19.99</span>
                             <span class="text-sm text-gray-400 line-through ml-2">¥35</span>
                         </div>
-                        <button class="order-btn bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                        <button class="order-btn bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-lg font-medium touch-scale clickable" 
                                 data-price="19.99" data-name="T7套装护航">
                             立即下单
                         </button>
@@ -274,8 +219,8 @@
             </div>
 
             <!-- 三金套餐 -->
-            <div class="gradient-border animate-fade-in" style="animation-delay: 0.6s">
-                <div class="bg-card rounded-xl p-4">
+            <div class="bg-card rounded-xl overflow-hidden border-2 border-primary/50">
+                <div class="p-4">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <h3 class="font-bold text-lg">三金豪华套餐</h3>
@@ -310,7 +255,7 @@
                             <span class="text-2xl font-bold text-secondary">¥259.99</span>
                             <span class="text-sm text-gray-400 line-through ml-2">¥399</span>
                         </div>
-                        <button class="order-btn bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white px-6 py-2 rounded-lg font-medium touch-scale" 
+                        <button class="order-btn bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white px-6 py-2 rounded-lg font-medium touch-scale clickable" 
                                 data-price="259.99" data-name="三金豪华套餐">
                             立即下单
                         </button>
@@ -326,7 +271,7 @@
         </h2>
         
         <div id="orders-container" class="space-y-3 mb-8">
-            <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+            <div class="bg-card rounded-xl p-4 text-center text-gray-400 border border-gray-700/50">
                 <i class="fa fa-inbox text-3xl mb-2"></i>
                 <p>暂无订单记录</p>
                 <p class="text-sm">点击上方套餐开始下单</p>
@@ -338,19 +283,19 @@
     <nav class="fixed bottom-0 left-0 right-0 glass safe-area-bottom z-40">
         <div class="container mx-auto max-w-lg">
             <div class="grid grid-cols-4 py-2">
-                <button class="nav-btn active flex flex-col items-center py-2 touch-scale" data-tab="home">
+                <button class="nav-btn active flex flex-col items-center py-2 touch-scale clickable" data-tab="home">
                     <i class="fa fa-home text-xl mb-1"></i>
                     <span class="text-xs">首页</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="orders">
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale clickable" data-tab="orders">
                     <i class="fa fa-file-text-o text-xl mb-1"></i>
                     <span class="text-xs">订单</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="contact">
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale clickable" data-tab="contact">
                     <i class="fa fa-headphones text-xl mb-1"></i>
                     <span class="text-xs">客服</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center py-2 touch-scale" data-tab="profile">
+                <button class="nav-btn flex flex-col items-center py-2 touch-scale clickable" data-tab="profile">
                     <i class="fa fa-user-o text-xl mb-1"></i>
                     <span class="text-xs">我的</span>
                 </button>
@@ -360,15 +305,15 @@
 
     <!-- 下单弹窗 -->
     <div id="order-modal" class="fixed inset-0 bg-black/70 z-50 flex items-end justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-card rounded-t-2xl w-full max-w-lg transform translate-y-full transition-transform duration-300 safe-area-bottom">
+        <div class="bg-card rounded-t-2xl w-full max-w-lg transform translate-y-full transition-transform duration-300 safe-area-bottom border-t border-gray-700">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
                 <h3 class="text-lg font-bold">确认订单</h3>
-                <button id="close-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale">
+                <button id="close-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale clickable">
                     <i class="fa fa-times text-gray-400"></i>
                 </button>
             </div>
             <div class="p-4 space-y-4">
-                <div class="bg-dark rounded-lg p-3">
+                <div class="bg-dark rounded-lg p-3 border border-gray-700/50">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-gray-400">套餐名称</span>
                         <span id="modal-package-name" class="font-medium">基础护航</span>
@@ -382,22 +327,22 @@
                 <div class="space-y-2">
                     <label class="text-sm text-gray-400">游戏QQ号</label>
                     <input type="text" id="game-qq" placeholder="请输入你的游戏QQ号" 
-                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-gray-700/50">
                 </div>
                 
                 <div class="space-y-2">
                     <label class="text-sm text-gray-400">游戏昵称</label>
                     <input type="text" id="game-nickname" placeholder="请输入你的游戏昵称" 
-                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-gray-700/50">
                 </div>
                 
                 <div class="space-y-2">
                     <label class="text-sm text-gray-400">备注信息（选填）</label>
                     <textarea id="order-remark" placeholder="如有特殊要求请在此说明" rows="2"
-                              class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"></textarea>
+                              class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none border border-gray-700/50"></textarea>
                 </div>
                 
-                <button id="submit-order" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-bold text-lg touch-scale">
+                <button id="submit-order" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-bold text-lg touch-scale clickable">
                     立即支付
                 </button>
                 
@@ -410,10 +355,10 @@
 
     <!-- 管理员登录弹窗 -->
     <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
-        <div class="bg-card rounded-xl w-full max-w-sm transform scale-95 transition-transform duration-300">
+        <div class="bg-card rounded-xl w-full max-w-sm transform scale-95 transition-transform duration-300 border border-gray-700">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
                 <h3 class="text-lg font-bold">管理员登录</h3>
-                <button id="close-admin-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale">
+                <button id="close-admin-modal" class="w-8 h-8 rounded-full bg-dark flex items-center justify-center touch-scale clickable">
                     <i class="fa fa-times text-gray-400"></i>
                 </button>
             </div>
@@ -421,9 +366,9 @@
                 <div class="space-y-2">
                     <label class="text-sm text-gray-400">管理员密码</label>
                     <input type="password" id="admin-password" placeholder="请输入管理员密码" 
-                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+                           class="w-full bg-dark rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-gray-700/50">
                 </div>
-                <button id="admin-login" class="w-full bg-primary text-white py-3 rounded-lg font-medium touch-scale">
+                <button id="admin-login" class="w-full bg-primary text-white py-3 rounded-lg font-medium touch-scale clickable">
                     登录
                 </button>
             </div>
@@ -432,15 +377,15 @@
 
     <!-- 管理员面板 -->
     <div id="admin-panel" class="fixed inset-0 bg-darker z-50 transform translate-x-full transition-transform duration-300">
-        <header class="bg-card safe-area-top">
+        <header class="bg-card safe-area-top border-b border-gray-700">
             <div class="container mx-auto px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <button id="back-from-admin" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center touch-scale">
+                    <button id="back-from-admin" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center touch-scale clickable">
                         <i class="fa fa-arrow-left text-gray-300"></i>
                     </button>
                     <h1 class="text-lg font-bold">管理员面板</h1>
                 </div>
-                <button id="logout-admin" class="text-danger touch-scale">
+                <button id="logout-admin" class="text-danger touch-scale clickable">
                     退出
                 </button>
             </div>
@@ -448,11 +393,11 @@
         
         <div class="p-4 pt-6 pb-32 overflow-y-auto h-full no-scrollbar">
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-card rounded-xl p-4 text-center">
+                <div class="bg-card rounded-xl p-4 text-center border border-gray-700/50">
                     <p class="text-3xl font-bold text-primary" id="admin-total-orders">0</p>
                     <p class="text-sm text-gray-400">总订单数</p>
                 </div>
-                <div class="bg-card rounded-xl p-4 text-center">
+                <div class="bg-card rounded-xl p-4 text-center border border-gray-700/50">
                     <p class="text-3xl font-bold text-secondary" id="admin-total-income">¥0</p>
                     <p class="text-sm text-gray-400">总收入</p>
                 </div>
@@ -460,7 +405,7 @@
             
             <h2 class="text-lg font-bold mb-4">所有订单</h2>
             <div id="admin-orders-container" class="space-y-3">
-                <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                <div class="bg-card rounded-xl p-4 text-center text-gray-400 border border-gray-700/50">
                     <i class="fa fa-inbox text-3xl mb-2"></i>
                     <p>暂无订单</p>
                 </div>
@@ -469,31 +414,96 @@
     </div>
 
     <!-- Toast提示 -->
-    <div id="toast" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white px-6 py-3 rounded-lg z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="toast" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 text-white px-6 py-3 rounded-lg z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
         <p id="toast-message">操作成功</p>
     </div>
 
     <script>
+        // ==========================================
+        // APP专属修复 - 不依赖localStorage的存储系统
+        // ==========================================
+        const AppStorage = {
+            _data: {},
+            _cookiePrefix: 'fg_club_',
+            
+            init() {
+                // 尝试从Cookie恢复数据
+                this._loadFromCookie();
+                console.log('AppStorage初始化完成');
+            },
+            
+            _loadFromCookie() {
+                try {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.indexOf(this._cookiePrefix) === 0) {
+                            const key = cookie.substring(this._cookiePrefix.length, cookie.indexOf('='));
+                            const value = decodeURIComponent(cookie.substring(cookie.indexOf('=') + 1));
+                            try {
+                                this._data[key] = JSON.parse(value);
+                            } catch (e) {
+                                this._data[key] = value;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Cookie加载失败，使用内存存储');
+                }
+            },
+            
+            _saveToCookie(key, value) {
+                try {
+                    const expires = new Date();
+                    expires.setFullYear(expires.getFullYear() + 1);
+                    const cookieValue = encodeURIComponent(JSON.stringify(value));
+                    document.cookie = `${this._cookiePrefix}${key}=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
+                } catch (e) {
+                    console.log('Cookie保存失败，仅使用内存存储');
+                }
+            },
+            
+            get(key) {
+                return this._data[key] || null;
+            },
+            
+            set(key, value) {
+                this._data[key] = value;
+                this._saveToCookie(key, value);
+                return true;
+            },
+            
+            remove(key) {
+                delete this._data[key];
+                try {
+                    document.cookie = `${this._cookiePrefix}${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+                } catch (e) {}
+                return true;
+            }
+        };
+
+        // ==========================================
         // 全局配置
+        // ==========================================
         const CONFIG = {
-            ADMIN_PASSWORD: 'fg123456', // 管理员密码
-            EMAIL_NOTIFICATION: '3428979006@qq.com', // 订单通知邮箱
+            ADMIN_PASSWORD: 'fg123456',
+            EMAIL_NOTIFICATION: '3428979006@qq.com',
             STORAGE_KEYS: {
                 ORDERS: 'fg_club_orders',
                 ADMIN_LOGGED_IN: 'fg_club_admin_logged_in'
             }
         };
 
+        // ==========================================
         // 工具函数
+        // ==========================================
         const utils = {
-            // 生成唯一订单号
             generateOrderId() {
                 const timestamp = Date.now().toString(36).toUpperCase();
                 const random = Math.random().toString(36).substring(2, 6).toUpperCase();
                 return `FG${timestamp}${random}`;
             },
             
-            // 格式化时间
             formatTime(timestamp) {
                 const date = new Date(timestamp);
                 const year = date.getFullYear();
@@ -504,140 +514,115 @@
                 return `${year}-${month}-${day} ${hours}:${minutes}`;
             },
             
-            // 显示Toast提示
-            showToast(message, duration = 2000) {
+            showToast(message, duration) {
+                duration = duration || 2000;
                 const toast = document.getElementById('toast');
                 const toastMessage = document.getElementById('toast-message');
                 toastMessage.textContent = message;
-                toast.classList.remove('opacity-0', 'pointer-events-none');
-                toast.classList.add('opacity-100');
+                toast.style.opacity = '1';
+                toast.style.pointerEvents = 'auto';
                 
-                setTimeout(() => {
-                    toast.classList.remove('opacity-100');
-                    toast.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.pointerEvents = 'none';
                 }, duration);
-            },
-            
-            // 本地存储操作 - APP优化版
-            storage: {
-                get(key) {
-                    try {
-                        const value = localStorage.getItem(key);
-                        return value ? JSON.parse(value) : null;
-                    } catch (e) {
-                        console.error('Storage get error:', e);
-                        return null;
-                    }
-                },
-                set(key, value) {
-                    try {
-                        localStorage.setItem(key, JSON.stringify(value));
-                        return true;
-                    } catch (e) {
-                        console.error('Storage set error:', e);
-                        return false;
-                    }
-                },
-                remove(key) {
-                    try {
-                        localStorage.removeItem(key);
-                        return true;
-                    } catch (e) {
-                        console.error('Storage remove error:', e);
-                        return false;
-                    }
-                }
             }
         };
 
+        // ==========================================
         // 订单管理
+        // ==========================================
         const orderManager = {
             orders: [],
             
             init() {
-                this.orders = utils.storage.get(CONFIG.STORAGE_KEYS.ORDERS) || [];
+                this.orders = AppStorage.get(CONFIG.STORAGE_KEYS.ORDERS) || [];
                 this.updateStats();
                 this.renderOrders();
                 this.renderAdminOrders();
+                console.log('订单管理初始化完成，订单数:', this.orders.length);
             },
             
-            // 创建新订单
             createOrder(packageName, packagePrice, gameQQ, gameNickname, remark) {
                 const order = {
                     id: utils.generateOrderId(),
-                    packageName,
-                    packagePrice,
-                    gameQQ,
-                    gameNickname,
-                    remark,
-                    status: 'pending', // pending, processing, completed, cancelled
+                    packageName: packageName,
+                    packagePrice: packagePrice,
+                    gameQQ: gameQQ,
+                    gameNickname: gameNickname,
+                    remark: remark,
+                    status: 'pending',
                     createTime: Date.now()
                 };
                 
                 this.orders.unshift(order);
-                utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                AppStorage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
                 
                 this.updateStats();
                 this.renderOrders();
                 this.renderAdminOrders();
                 
-                // 模拟发送邮件通知
-                this.sendEmailNotification(order);
-                
+                console.log('新订单创建:', order);
                 return order;
             },
             
-            // 更新订单状态
             updateOrderStatus(orderId, status) {
-                const order = this.orders.find(o => o.id === orderId);
-                if (order) {
-                    order.status = status;
-                    utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
-                    this.updateStats();
-                    this.renderOrders();
-                    this.renderAdminOrders();
-                    return true;
+                for (let i = 0; i < this.orders.length; i++) {
+                    if (this.orders[i].id === orderId) {
+                        this.orders[i].status = status;
+                        AppStorage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                        this.updateStats();
+                        this.renderOrders();
+                        this.renderAdminOrders();
+                        return true;
+                    }
                 }
                 return false;
             },
             
-            // 删除订单
             deleteOrder(orderId) {
-                const index = this.orders.findIndex(o => o.id === orderId);
-                if (index !== -1) {
-                    this.orders.splice(index, 1);
-                    utils.storage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
-                    this.updateStats();
-                    this.renderOrders();
-                    this.renderAdminOrders();
-                    return true;
+                for (let i = 0; i < this.orders.length; i++) {
+                    if (this.orders[i].id === orderId) {
+                        this.orders.splice(i, 1);
+                        AppStorage.set(CONFIG.STORAGE_KEYS.ORDERS, this.orders);
+                        this.updateStats();
+                        this.renderOrders();
+                        this.renderAdminOrders();
+                        return true;
+                    }
                 }
                 return false;
             },
             
-            // 更新统计数据
             updateStats() {
                 const total = this.orders.length;
-                const completed = this.orders.filter(o => o.status === 'completed').length;
-                const pending = this.orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-                const totalIncome = this.orders
-                    .filter(o => o.status === 'completed')
-                    .reduce((sum, o) => sum + parseFloat(o.packagePrice), 0);
+                let completed = 0;
+                let pending = 0;
+                let totalIncome = 0;
+                
+                for (let i = 0; i < this.orders.length; i++) {
+                    const order = this.orders[i];
+                    if (order.status === 'completed') {
+                        completed++;
+                        totalIncome += parseFloat(order.packagePrice);
+                    } else if (order.status === 'pending' || order.status === 'processing') {
+                        pending++;
+                    }
+                }
                 
                 document.getElementById('total-orders').textContent = total;
                 document.getElementById('completed-orders').textContent = completed;
                 document.getElementById('pending-orders').textContent = pending;
                 document.getElementById('admin-total-orders').textContent = total;
-                document.getElementById('admin-total-income').textContent = `¥${totalIncome.toFixed(2)}`;
+                document.getElementById('admin-total-income').textContent = '¥' + totalIncome.toFixed(2);
             },
             
-            // 渲染用户订单列表
             renderOrders() {
                 const container = document.getElementById('orders-container');
                 
                 if (this.orders.length === 0) {
                     container.innerHTML = `
-                        <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                        <div class="bg-card rounded-xl p-4 text-center text-gray-400 border border-gray-700/50">
                             <i class="fa fa-inbox text-3xl mb-2"></i>
                             <p>暂无订单记录</p>
                             <p class="text-sm">点击上方套餐开始下单</p>
@@ -646,17 +631,21 @@
                     return;
                 }
                 
-                container.innerHTML = this.orders.slice(0, 5).map(order => {
+                let html = '';
+                const displayOrders = this.orders.slice(0, 5);
+                
+                for (let i = 0; i < displayOrders.length; i++) {
+                    const order = displayOrders[i];
                     const statusMap = {
                         pending: { text: '待处理', color: 'text-warning', bg: 'bg-warning/20' },
                         processing: { text: '进行中', color: 'text-primary', bg: 'bg-primary/20' },
                         completed: { text: '已完成', color: 'text-success', bg: 'bg-success/20' },
                         cancelled: { text: '已取消', color: 'text-danger', bg: 'bg-danger/20' }
                     };
-                    const status = statusMap[order.status];
+                    const status = statusMap[order.status] || statusMap.pending;
                     
-                    return `
-                        <div class="bg-card rounded-xl p-4 animate-fade-in">
+                    html += `
+                        <div class="bg-card rounded-xl p-4 border border-gray-700/50">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
                                     <h4 class="font-medium">${order.packageName}</h4>
@@ -672,16 +661,17 @@
                             </div>
                         </div>
                     `;
-                }).join('');
+                }
+                
+                container.innerHTML = html;
             },
             
-            // 渲染管理员订单列表
             renderAdminOrders() {
                 const container = document.getElementById('admin-orders-container');
                 
                 if (this.orders.length === 0) {
                     container.innerHTML = `
-                        <div class="bg-card rounded-xl p-4 text-center text-gray-400">
+                        <div class="bg-card rounded-xl p-4 text-center text-gray-400 border border-gray-700/50">
                             <i class="fa fa-inbox text-3xl mb-2"></i>
                             <p>暂无订单</p>
                         </div>
@@ -689,17 +679,56 @@
                     return;
                 }
                 
-                container.innerHTML = this.orders.map(order => {
+                let html = '';
+                
+                for (let i = 0; i < this.orders.length; i++) {
+                    const order = this.orders[i];
                     const statusMap = {
                         pending: { text: '待处理', color: 'text-warning', bg: 'bg-warning/20' },
                         processing: { text: '进行中', color: 'text-primary', bg: 'bg-primary/20' },
                         completed: { text: '已完成', color: 'text-success', bg: 'bg-success/20' },
                         cancelled: { text: '已取消', color: 'text-danger', bg: 'bg-danger/20' }
                     };
-                    const status = statusMap[order.status];
+                    const status = statusMap[order.status] || statusMap.pending;
                     
-                    return `
-                        <div class="bg-card rounded-xl p-4 animate-fade-in">
+                    let actionButtons = '';
+                    
+                    if (order.status === 'pending') {
+                        actionButtons += `
+                            <button class="admin-order-btn bg-primary text-white py-2 rounded text-sm touch-scale clickable" 
+                                    data-id="${order.id}" data-action="processing">
+                                开始处理
+                            </button>
+                        `;
+                    }
+                    
+                    if (order.status === 'processing') {
+                        actionButtons += `
+                            <button class="admin-order-btn bg-success text-white py-2 rounded text-sm touch-scale clickable" 
+                                    data-id="${order.id}" data-action="completed">
+                                完成订单
+                            </button>
+                        `;
+                    }
+                    
+                    if (order.status !== 'completed' && order.status !== 'cancelled') {
+                        actionButtons += `
+                            <button class="admin-order-btn bg-danger text-white py-2 rounded text-sm touch-scale clickable" 
+                                    data-id="${order.id}" data-action="cancelled">
+                                取消订单
+                            </button>
+                        `;
+                    }
+                    
+                    actionButtons += `
+                        <button class="admin-order-btn bg-gray-600 text-white py-2 rounded text-sm touch-scale clickable" 
+                                data-id="${order.id}" data-action="delete">
+                            删除
+                        </button>
+                    `;
+                    
+                    html += `
+                        <div class="bg-card rounded-xl p-4 border border-gray-700/50">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
                                     <h4 class="font-medium">${order.packageName}</h4>
@@ -717,363 +746,327 @@
                                 <span class="font-bold text-secondary">¥${order.packagePrice}</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                ${order.status === 'pending' ? `
-                                    <button class="admin-order-btn bg-primary text-white py-2 rounded text-sm touch-scale" 
-                                            data-id="${order.id}" data-action="processing">
-                                        开始处理
-                                    </button>
-                                ` : ''}
-                                ${order.status === 'processing' ? `
-                                    <button class="admin-order-btn bg-success text-white py-2 rounded text-sm touch-scale" 
-                                            data-id="${order.id}" data-action="completed">
-                                        完成订单
-                                    </button>
-                                ` : ''}
-                                ${order.status !== 'completed' && order.status !== 'cancelled' ? `
-                                    <button class="admin-order-btn bg-danger text-white py-2 rounded text-sm touch-scale" 
-                                            data-id="${order.id}" data-action="cancelled">
-                                        取消订单
-                                    </button>
-                                ` : ''}
-                                <button class="admin-order-btn bg-gray-600 text-white py-2 rounded text-sm touch-scale" 
-                                        data-id="${order.id}" data-action="delete">
-                                    删除
-                                </button>
+                                ${actionButtons}
                             </div>
                         </div>
                     `;
-                }).join('');
+                }
+                
+                container.innerHTML = html;
                 
                 // 绑定管理员订单按钮事件
-                document.querySelectorAll('.admin-order-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const orderId = e.target.dataset.id;
-                        const action = e.target.dataset.action;
-                        
-                        if (action === 'delete') {
-                            if (confirm('确定要删除这个订单吗？')) {
-                                if (orderManager.deleteOrder(orderId)) {
-                                    utils.showToast('订单已删除');
-                                }
-                            }
-                        } else {
-                            if (orderManager.updateOrderStatus(orderId, action)) {
-                                utils.showToast('订单状态已更新');
-                            }
-                        }
-                    });
-                });
-            },
-            
-            // 模拟发送邮件通知
-            sendEmailNotification(order) {
-                console.log('发送订单通知邮件到:', CONFIG.EMAIL_NOTIFICATION);
-                console.log('订单详情:', order);
-                // 这里可以集成实际的邮件发送服务
-            }
-        };
-
-        // 雪花特效 - APP优化版
-        const snowEffect = {
-            snowflakes: [],
-            maxSnowflakes: 80,
-            animationId: null,
-            
-            init() {
-                this.container = document.getElementById('snow-container');
-                this.createSnowflakes();
-                this.animate();
-                
-                // 性能优化：页面不可见时暂停动画
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden) {
-                        this.pause();
-                    } else {
-                        this.resume();
-                    }
-                });
-            },
-            
-            createSnowflakes() {
-                for (let i = 0; i < this.maxSnowflakes; i++) {
-                    this.createSnowflake();
-                }
-            },
-            
-            createSnowflake() {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'absolute rounded-full bg-white opacity-70';
-                
-                const size = Math.random() * 4 + 1;
-                snowflake.style.width = `${size}px`;
-                snowflake.style.height = `${size}px`;
-                snowflake.style.left = `${Math.random() * 100}%`;
-                snowflake.style.top = `${-10}px`;
-                
-                const snowflakeData = {
-                    element: snowflake,
-                    x: parseFloat(snowflake.style.left),
-                    y: parseFloat(snowflake.style.top),
-                    speed: Math.random() * 1 + 0.5,
-                    swing: Math.random() * 0.5 - 0.25,
-                    size: size
-                };
-                
-                this.snowflakes.push(snowflakeData);
-                this.container.appendChild(snowflake);
-            },
-            
-            animate() {
-                this.snowflakes.forEach((flake, index) => {
-                    flake.y += flake.speed;
-                    flake.x += flake.swing;
-                    
-                    flake.element.style.top = `${flake.y}%`;
-                    flake.element.style.left = `${flake.x}%`;
-                    
-                    // 雪花超出屏幕后重置
-                    if (flake.y > 110 || flake.x < -10 || flake.x > 110) {
-                        flake.y = -10;
-                        flake.x = Math.random() * 100;
-                        flake.speed = Math.random() * 1 + 0.5;
-                        flake.swing = Math.random() * 0.5 - 0.25;
-                    }
-                });
-                
-                this.animationId = requestAnimationFrame(() => this.animate());
-            },
-            
-            pause() {
-                if (this.animationId) {
-                    cancelAnimationFrame(this.animationId);
-                    this.animationId = null;
-                }
-            },
-            
-            resume() {
-                if (!this.animationId) {
-                    this.animate();
+                const adminButtons = document.querySelectorAll('.admin-order-btn');
+                for (let i = 0; i < adminButtons.length; i++) {
+                    adminButtons[i].addEventListener('click', handleAdminOrderClick);
+                    adminButtons[i].addEventListener('touchstart', handleAdminOrderClick);
                 }
             }
         };
 
-        // 页面交互
-        const ui = {
-            init() {
-                this.bindEvents();
-                this.checkAdminLogin();
-            },
+        // ==========================================
+        // 事件处理函数（全局，支持事件委托）
+        // ==========================================
+        let currentPackage = { name: '', price: '' };
+        
+        function handleOrderBtnClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            bindEvents() {
-                // 下单按钮
-                document.querySelectorAll('.order-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const packageName = e.target.dataset.name;
-                        const packagePrice = e.target.dataset.price;
-                        
-                        document.getElementById('modal-package-name').textContent = packageName;
-                        document.getElementById('modal-package-price').textContent = `¥${packagePrice}`;
-                        
-                        // 存储当前选择的套餐信息
-                        document.getElementById('submit-order').dataset.name = packageName;
-                        document.getElementById('submit-order').dataset.price = packagePrice;
-                        
-                        this.showModal('order-modal');
-                    });
-                });
-                
-                // 关闭订单弹窗
-                document.getElementById('close-modal').addEventListener('click', () => {
-                    this.hideModal('order-modal');
-                });
-                
-                // 提交订单
-                document.getElementById('submit-order').addEventListener('click', () => {
-                    const packageName = document.getElementById('submit-order').dataset.name;
-                    const packagePrice = document.getElementById('submit-order').dataset.price;
-                    const gameQQ = document.getElementById('game-qq').value.trim();
-                    const gameNickname = document.getElementById('game-nickname').value.trim();
-                    const remark = document.getElementById('order-remark').value.trim();
-                    
-                    if (!gameQQ) {
-                        utils.showToast('请输入游戏QQ号');
-                        return;
-                    }
-                    
-                    if (!gameNickname) {
-                        utils.showToast('请输入游戏昵称');
-                        return;
-                    }
-                    
-                    const order = orderManager.createOrder(packageName, packagePrice, gameQQ, gameNickname, remark);
-                    
-                    utils.showToast('下单成功！我们将尽快安排打手');
-                    this.hideModal('order-modal');
-                    
-                    // 清空表单
-                    document.getElementById('game-qq').value = '';
-                    document.getElementById('game-nickname').value = '';
-                    document.getElementById('order-remark').value = '';
-                });
-                
-                // 管理员按钮
-                document.getElementById('admin-btn').addEventListener('click', () => {
-                    if (utils.storage.get(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN)) {
-                        this.showAdminPanel();
-                    } else {
-                        this.showModal('admin-modal');
-                    }
-                });
-                
-                // 关闭管理员登录弹窗
-                document.getElementById('close-admin-modal').addEventListener('click', () => {
-                    this.hideModal('admin-modal');
-                });
-                
-                // 管理员登录
-                document.getElementById('admin-login').addEventListener('click', () => {
-                    const password = document.getElementById('admin-password').value.trim();
-                    
-                    if (password === CONFIG.ADMIN_PASSWORD) {
-                        utils.storage.set(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN, true);
-                        this.hideModal('admin-modal');
-                        this.showAdminPanel();
-                        utils.showToast('登录成功');
-                        document.getElementById('admin-password').value = '';
-                    } else {
-                        utils.showToast('密码错误');
-                    }
-                });
-                
-                // 从管理员面板返回
-                document.getElementById('back-from-admin').addEventListener('click', () => {
-                    this.hideAdminPanel();
-                });
-                
-                // 退出管理员
-                document.getElementById('logout-admin').addEventListener('click', () => {
-                    utils.storage.remove(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN);
-                    this.hideAdminPanel();
-                    utils.showToast('已退出登录');
-                });
-                
-                // 刷新按钮
-                document.getElementById('refresh-btn').addEventListener('click', () => {
-                    orderManager.init();
-                    utils.showToast('数据已刷新');
-                });
-                
-                // 底部导航
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'text-primary'));
-                        e.currentTarget.classList.add('active', 'text-primary');
-                        utils.showToast('功能开发中');
-                    });
-                });
-                
-                // 点击弹窗背景关闭
-                document.getElementById('order-modal').addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) {
-                        this.hideModal('order-modal');
-                    }
-                });
-                
-                document.getElementById('admin-modal').addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) {
-                        this.hideModal('admin-modal');
-                    }
-                });
-                
-                // 防止移动端双击缩放
-                document.addEventListener('touchend', function(event) {
-                    event.preventDefault();
-                }, { passive: false });
-                
-                // 防止移动端长按弹出菜单
-                document.addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                });
-            },
+            const btn = e.target.closest('.order-btn');
+            if (!btn) return;
             
-            showModal(modalId) {
-                const modal = document.getElementById(modalId);
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modal.classList.add('opacity-100');
-                
-                const content = modal.querySelector('.transform');
-                setTimeout(() => {
-                    if (modalId === 'order-modal') {
-                        content.classList.remove('translate-y-full');
-                        content.classList.add('translate-y-0');
-                    } else {
-                        content.classList.remove('scale-95');
-                        content.classList.add('scale-100');
-                    }
-                }, 10);
-                
-                // 禁止背景滚动
-                document.body.style.overflow = 'hidden';
-            },
+            currentPackage.name = btn.getAttribute('data-name');
+            currentPackage.price = btn.getAttribute('data-price');
             
-            hideModal(modalId) {
-                const modal = document.getElementById(modalId);
-                const content = modal.querySelector('.transform');
-                
-                if (modalId === 'order-modal') {
-                    content.classList.remove('translate-y-0');
-                    content.classList.add('translate-y-full');
-                } else {
-                    content.classList.remove('scale-100');
-                    content.classList.add('scale-95');
-                }
-                
-                setTimeout(() => {
-                    modal.classList.remove('opacity-100');
-                    modal.classList.add('opacity-0', 'pointer-events-none');
-                    // 恢复背景滚动
-                    document.body.style.overflow = '';
-                }, 300);
-            },
+            document.getElementById('modal-package-name').textContent = currentPackage.name;
+            document.getElementById('modal-package-price').textContent = '¥' + currentPackage.price;
             
-            showAdminPanel() {
-                const panel = document.getElementById('admin-panel');
-                panel.classList.remove('translate-x-full');
-                document.body.style.overflow = 'hidden';
-            },
+            showModal('order-modal');
+        }
+        
+        function handleCloseModalClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideModal('order-modal');
+        }
+        
+        function handleSubmitOrderClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            hideAdminPanel() {
-                const panel = document.getElementById('admin-panel');
-                panel.classList.add('translate-x-full');
-                document.body.style.overflow = '';
-            },
+            const gameQQ = document.getElementById('game-qq').value.trim();
+            const gameNickname = document.getElementById('game-nickname').value.trim();
+            const remark = document.getElementById('order-remark').value.trim();
             
-            checkAdminLogin() {
-                if (utils.storage.get(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN)) {
-                    // 已登录状态
-                }
+            if (!gameQQ) {
+                utils.showToast('请输入游戏QQ号');
+                return;
             }
-        };
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
+            
+            if (!gameNickname) {
+                utils.showToast('请输入游戏昵称');
+                return;
+            }
+            
+            orderManager.createOrder(currentPackage.name, currentPackage.price, gameQQ, gameNickname, remark);
+            
+            utils.showToast('下单成功！我们将尽快安排打手');
+            hideModal('order-modal');
+            
+            // 清空表单
+            document.getElementById('game-qq').value = '';
+            document.getElementById('game-nickname').value = '';
+            document.getElementById('order-remark').value = '';
+        }
+        
+        function handleAdminBtnClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (AppStorage.get(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN)) {
+                showAdminPanel();
+            } else {
+                showModal('admin-modal');
+            }
+        }
+        
+        function handleCloseAdminModalClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideModal('admin-modal');
+        }
+        
+        function handleAdminLoginClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const password = document.getElementById('admin-password').value.trim();
+            
+            if (password === CONFIG.ADMIN_PASSWORD) {
+                AppStorage.set(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN, true);
+                hideModal('admin-modal');
+                showAdminPanel();
+                utils.showToast('登录成功');
+                document.getElementById('admin-password').value = '';
+            } else {
+                utils.showToast('密码错误');
+            }
+        }
+        
+        function handleBackFromAdminClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideAdminPanel();
+        }
+        
+        function handleLogoutAdminClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            AppStorage.remove(CONFIG.STORAGE_KEYS.ADMIN_LOGGED_IN);
+            hideAdminPanel();
+            utils.showToast('已退出登录');
+        }
+        
+        function handleRefreshBtnClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
             orderManager.init();
-            ui.init();
-            snowEffect.init();
+            utils.showToast('数据已刷新');
+        }
+        
+        function handleNavBtnClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            // APP启动优化：预加载关键资源
-            setTimeout(() => {
-                document.body.classList.add('animate-fade-in');
-            }, 100);
-        });
+            const btns = document.querySelectorAll('.nav-btn');
+            for (let i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('active', 'text-primary');
+            }
+            
+            e.currentTarget.classList.add('active', 'text-primary');
+            utils.showToast('功能开发中');
+        }
+        
+        function handleAdminOrderClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.admin-order-btn');
+            if (!btn) return;
+            
+            const orderId = btn.getAttribute('data-id');
+            const action = btn.getAttribute('data-action');
+            
+            if (action === 'delete') {
+                if (confirm('确定要删除这个订单吗？')) {
+                    if (orderManager.deleteOrder(orderId)) {
+                        utils.showToast('订单已删除');
+                    }
+                }
+            } else {
+                if (orderManager.updateOrderStatus(orderId, action)) {
+                    utils.showToast('订单状态已更新');
+                }
+            }
+        }
+        
+        function handleModalBackgroundClick(e) {
+            if (e.target === e.currentTarget) {
+                const modalId = e.currentTarget.id;
+                hideModal(modalId);
+            }
+        }
 
-        // 错误处理 - APP崩溃保护
+        // ==========================================
+        // UI控制函数
+        // ==========================================
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.opacity = '1';
+            modal.style.pointerEvents = 'auto';
+            
+            const content = modal.querySelector('.transform');
+            setTimeout(function() {
+                if (modalId === 'order-modal') {
+                    content.style.transform = 'translateY(0)';
+                } else {
+                    content.style.transform = 'scale(1)';
+                }
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = modal.querySelector('.transform');
+            
+            if (modalId === 'order-modal') {
+                content.style.transform = 'translateY(100%)';
+            } else {
+                content.style.transform = 'scale(0.95)';
+            }
+            
+            setTimeout(function() {
+                modal.style.opacity = '0';
+                modal.style.pointerEvents = 'none';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        function showAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            panel.style.transform = 'translateX(0)';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function hideAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            panel.style.transform = 'translateX(100%)';
+            document.body.style.overflow = '';
+        }
+
+        // ==========================================
+        // 初始化函数
+        // ==========================================
+        function initApp() {
+            console.log('APP开始初始化...');
+            
+            // 初始化存储系统
+            AppStorage.init();
+            
+            // 初始化订单管理
+            orderManager.init();
+            
+            // 绑定所有事件（同时支持click和touchstart）
+            bindEvents();
+            
+            console.log('APP初始化完成！');
+            utils.showToast('欢迎使用FG俱乐部');
+        }
+        
+        function bindEvents() {
+            // 下单按钮
+            const orderBtns = document.querySelectorAll('.order-btn');
+            for (let i = 0; i < orderBtns.length; i++) {
+                orderBtns[i].addEventListener('click', handleOrderBtnClick);
+                orderBtns[i].addEventListener('touchstart', handleOrderBtnClick);
+            }
+            
+            // 关闭订单弹窗
+            document.getElementById('close-modal').addEventListener('click', handleCloseModalClick);
+            document.getElementById('close-modal').addEventListener('touchstart', handleCloseModalClick);
+            
+            // 提交订单
+            document.getElementById('submit-order').addEventListener('click', handleSubmitOrderClick);
+            document.getElementById('submit-order').addEventListener('touchstart', handleSubmitOrderClick);
+            
+            // 管理员按钮
+            document.getElementById('admin-btn').addEventListener('click', handleAdminBtnClick);
+            document.getElementById('admin-btn').addEventListener('touchstart', handleAdminBtnClick);
+            
+            // 关闭管理员登录弹窗
+            document.getElementById('close-admin-modal').addEventListener('click', handleCloseAdminModalClick);
+            document.getElementById('close-admin-modal').addEventListener('touchstart', handleCloseAdminModalClick);
+            
+            // 管理员登录
+            document.getElementById('admin-login').addEventListener('click', handleAdminLoginClick);
+            document.getElementById('admin-login').addEventListener('touchstart', handleAdminLoginClick);
+            
+            // 从管理员面板返回
+            document.getElementById('back-from-admin').addEventListener('click', handleBackFromAdminClick);
+            document.getElementById('back-from-admin').addEventListener('touchstart', handleBackFromAdminClick);
+            
+            // 退出管理员
+            document.getElementById('logout-admin').addEventListener('click', handleLogoutAdminClick);
+            document.getElementById('logout-admin').addEventListener('touchstart', handleLogoutAdminClick);
+            
+            // 刷新按钮
+            document.getElementById('refresh-btn').addEventListener('click', handleRefreshBtnClick);
+            document.getElementById('refresh-btn').addEventListener('touchstart', handleRefreshBtnClick);
+            
+            // 底部导航
+            const navBtns = document.querySelectorAll('.nav-btn');
+            for (let i = 0; i < navBtns.length; i++) {
+                navBtns[i].addEventListener('click', handleNavBtnClick);
+                navBtns[i].addEventListener('touchstart', handleNavBtnClick);
+            }
+            
+            // 点击弹窗背景关闭
+            document.getElementById('order-modal').addEventListener('click', handleModalBackgroundClick);
+            document.getElementById('admin-modal').addEventListener('click', handleModalBackgroundClick);
+            
+            console.log('所有事件绑定完成');
+        }
+
+        // ==========================================
+        // 错误处理
+        // ==========================================
         window.onerror = function(message, source, lineno, colno, error) {
-            console.error('Global error:', message, source, lineno, colno, error);
-            utils.showToast('发生错误，请刷新页面');
+            console.error('全局错误:', message, '行号:', lineno);
+            utils.showToast('发生错误: ' + message.substring(0, 20));
             return true;
         };
 
-        // 未处理的Promise错误
         window.addEventListener('unhandledrejection', function(event) {
-            console.error('Unhandled promise rejection
+            console.error('未处理的Promise错误:', event.reason);
+            utils.showToast('网络错误，请重试');
+        });
+
+        // ==========================================
+        // 启动应用
+        // ==========================================
+        // 确保DOM完全加载后再初始化
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(initApp, 100);
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initApp, 100);
+            });
+        }
+        
+        // 备用启动方式，防止DOMContentLoaded在WebView中不触发
+        setTimeout(initApp, 1000);
+    </script>
+</body>
+</html>
