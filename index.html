@@ -640,4 +640,35 @@
             document.getElementById('detail-product').textContent=o.product;
             document.getElementById('detail-price').textContent='¥'+o.price.toFixed(2);
             document.getElementById('detail-status').innerHTML=`<span class="status-badge ${statusConfig[o.status].class}">${statusConfig[o.status].label}</span>`;
-            document.getElementById('detail-gameid').t
+            document.getElementById('detail-gameid').textContent=o.gameId;
+            document.getElementById('detail-qq').textContent=o.qq;
+            document.getElementById('detail-phone').textContent=o.userPhone;
+            document.getElementById('detail-remark').textContent=o.remark;
+            document.getElementById('detail-time').textContent=formatDate(o.createdAt);
+            document.getElementById('new-status').value=o.status;
+            document.getElementById('order-detail-modal').classList.remove('hidden');
+        }
+        function hideOrderDetailModal(){document.getElementById('order-detail-modal').classList.add('hidden');currentOrder=null;}
+
+        //管理员修改订单状态
+        function updateOrderStatus(){
+            const ns=document.getElementById('new-status').value;
+            if(ns===currentOrder.status){showToast('状态无修改');return;}
+            currentOrder.status=ns;
+            currentOrder.statusHistory.push({status:ns,time:new Date().toISOString(),note:'管理员修改'});
+            const idx=orders.findIndex(o=>o.id===currentOrder.id);
+            if(idx>-1){orders[idx]=currentOrder;localStorage.setItem('fg-orders',JSON.stringify(orders));}
+            hideOrderDetailModal();renderOrders();updateStatistics();showToast('状态更新成功');
+        }
+
+        //弹窗提示
+        function showToast(msg){
+            let old=document.querySelector('.toast-message');if(old)old.remove();
+            const t=document.createElement('div');
+            t.className='toast-message fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-5 py-3 rounded-lg z-[9999] text-sm';
+            t.textContent=msg;document.body.appendChild(t);
+            setTimeout(()=>{t.style.opacity='0';t.style.transition='0.3s';setTimeout(()=>t.remove(),300)},3000)
+        }
+    </script>
+</body>
+</html>
