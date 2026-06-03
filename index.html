@@ -256,7 +256,7 @@
         </div>
     </div>
 
-    <!-- 支付模态框 -->
+    <!-- 支付模态框（已删掉二维码） -->
     <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg w-full max-w-sm mx-4">
             <div class="p-4 border-b border-gray-200">
@@ -269,28 +269,18 @@
             </div>
             <div class="p-4 text-center">
                 <p class="text-gray-600 mb-2">订单金额</p>
-                <p class="text-3xl font-bold text-gray-900 mb-4" id="pay-amount">¥0.00</p>
-                
-                <!-- 你的最新微信收款码（高清无损） -->
-                <div class="bg-wechat rounded-lg p-6 mb-6">
-                    <p class="text-white text-xl font-bold mb-4">推荐使用微信支付</p>
-                    <div class="bg-white rounded-lg p-4 inline-block">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/4e3a7e8b9c0d4f1a8b7c6d5e4f3a2b1c~tplv-obj.image?rk3s=18ea6f23&x-expires=1750216440&x-signature=abc123def456ghi789jkl012mnop345qrst678uvw=" 
-                             alt="微信收款码" class="w-64 h-64 mx-auto" loading="eager">
-                    </div>
-                    <p class="text-white/80 text-sm mt-3">似江倾(××丽)</p>
-                </div>
+                <p class="text-3xl font-bold text-gray-900 mb-6" id="pay-amount">¥0.00</p>
                 
                 <button id="paid-btn" class="btn btn-wechat w-full mb-2">
                     <i class="fa fa-check-circle mr-2"></i>
-                    我已完成支付
+                    跳转微信付款
                 </button>
                 <button id="cancel-pay-btn" class="btn btn-outline w-full">
                     取消支付
                 </button>
                 <p class="text-gray-500 text-xs mt-4">
-                    请使用微信扫描上方二维码完成支付<br>
-                    支付完成后点击"我已完成支付"按钮
+                    点击按钮自动打开微信转账<br>
+                    付款后在订单页点确认已付款
                 </p>
             </div>
         </div>
@@ -368,6 +358,8 @@
     </div>
 
     <script>
+        // 你的微信收款前缀
+        const WX_BASE = "wxp://f2f0JhCjMkpvim80qEhw81tHvYmGIuq8Y48N8h42SePPsGM";
         // 🔥 管理员账号（改成你自己的手机号）
         const ADMIN_PHONE = '19236163806';
         
@@ -550,7 +542,15 @@
             // 支付相关
             document.getElementById('close-payment').addEventListener('click', hidePaymentModal);
             document.getElementById('cancel-pay-btn').addEventListener('click', hidePaymentModal);
-            document.getElementById('paid-btn').addEventListener('click', confirmPaymentSuccess);
+            // 修改：跳转微信链接
+            document.getElementById('paid-btn').addEventListener('click', function(){
+                if(!currentOrder) return;
+                let price = currentOrder.price.toFixed(2);
+                let remark = encodeURIComponent(currentOrder.product + "|" + currentOrder.qq);
+                let payUrl = WX_BASE + `?amount=${price}&remark=${remark}`;
+                window.location.href = payUrl;
+                showToast('正在唤起微信转账，付款后回来点确认');
+            });
 
             // 订单详情
             document.getElementById('close-detail').addEventListener('click', hideOrderDetailModal);
@@ -728,10 +728,9 @@
         // 隐藏支付模态框
         function hidePaymentModal() {
             document.getElementById('payment-modal').classList.add('hidden');
-            currentOrder = null;
         }
 
-        // 确认支付成功
+        // 手动确认付款（用户转账完自己点）
         function confirmPaymentSuccess() {
             if (!currentOrder) {
                 showToast('订单信息错误，请重试');
@@ -743,7 +742,7 @@
             currentOrder.statusHistory.push({
                 status: 'paid',
                 time: new Date().toISOString(),
-                note: '客户已完成支付，等待接单'
+                note: '客户手动确认已付款，等待接单'
             });
 
             // 更新本地存储
@@ -760,7 +759,7 @@
             renderOrders();
             updateStatistics();
             
-            showToast('支付确认成功！我们会尽快安排打手联系你');
+            showToast('确认成功！等待打手接单');
         }
 
         // 显示订单详情
@@ -813,7 +812,7 @@
             currentOrder.statusHistory.push({
                 status: newStatus,
                 time: new Date().toISOString(),
-                note: '状态已更新'
+                note: '管理员修改状态'
             });
 
             // 更新本地存储
