@@ -6,9 +6,6 @@
     <title>FG俱乐部 - 暗区突围护航</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- 实时数据库 -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -58,9 +55,6 @@
             .table-cell {
                 @apply px-4 py-3 whitespace-nowrap text-sm;
             }
-            .notification-badge {
-                @apply absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center;
-            }
         }
     </style>
 </head>
@@ -77,12 +71,8 @@
                     <button id="login-btn" class="btn btn-primary text-sm py-1 px-3">
                         <i class="fa fa-user"></i> 登录
                     </button>
-                    <div id="user-info" class="hidden flex items-center gap-2 relative">
+                    <div id="user-info" class="hidden flex items-center gap-2">
                         <span id="user-phone" class="text-xs text-gray-300"></span>
-                        <button id="notification-btn" class="text-gray-400 hover:text-white relative">
-                            <i class="fa fa-bell"></i>
-                            <span id="notification-badge" class="notification-badge hidden">0</span>
-                        </button>
                         <button id="logout-btn" class="text-gray-400 hover:text-white">
                             <i class="fa fa-sign-out"></i>
                         </button>
@@ -91,20 +81,6 @@
             </div>
         </div>
     </nav>
-
-    <!-- 新订单通知弹窗 -->
-    <div id="new-order-notification" class="fixed top-20 right-4 bg-white rounded-lg shadow-lg p-4 z-50 hidden max-w-sm">
-        <div class="flex justify-between items-start mb-2">
-            <h4 class="font-bold text-gray-900">🔔 新订单！</h4>
-            <button id="close-notification" class="text-gray-400">
-                <i class="fa fa-times"></i>
-            </button>
-        </div>
-        <p class="text-gray-600 text-sm mb-3" id="notification-content"></p>
-        <button id="view-order-btn" class="btn btn-primary text-sm py-1 px-3 w-full">
-            查看订单
-        </button>
-    </div>
 
     <!-- 主内容区 -->
     <main class="px-4 py-6 pb-20">
@@ -293,25 +269,29 @@
             </div>
             <div class="p-4 text-center">
                 <p class="text-gray-600 mb-2">订单金额</p>
-                <p class="text-2xl font-bold text-gray-900 mb-4" id="pay-amount">¥0.00</p>
+                <p class="text-3xl font-bold text-gray-900 mb-4" id="pay-amount">¥0.00</p>
                 
-                <!-- 你的微信收款码 -->
-                <div class="bg-wechat rounded-lg p-4 mb-4">
-                    <p class="text-white font-bold mb-3">扫码支付</p>
-                    <div class="bg-white rounded p-2 inline-block">
+                <!-- 你的最新微信收款码（高清无损） -->
+                <div class="bg-wechat rounded-lg p-6 mb-6">
+                    <p class="text-white text-xl font-bold mb-4">推荐使用微信支付</p>
+                    <div class="bg-white rounded-lg p-4 inline-block">
                         <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/4e3a7e8b9c0d4f1a8b7c6d5e4f3a2b1c~tplv-obj.image?rk3s=18ea6f23&x-expires=1750216440&x-signature=abc123def456ghi789jkl012mnop345qrst678uvw=" 
-                             alt="微信收款码" class="w-48 h-48 mx-auto">
+                             alt="微信收款码" class="w-64 h-64 mx-auto" loading="eager">
                     </div>
-                    <p class="text-white/80 text-xs mt-2">似江倾(××丽)</p>
+                    <p class="text-white/80 text-sm mt-3">似江倾(××丽)</p>
                 </div>
                 
                 <button id="paid-btn" class="btn btn-wechat w-full mb-2">
+                    <i class="fa fa-check-circle mr-2"></i>
                     我已完成支付
                 </button>
                 <button id="cancel-pay-btn" class="btn btn-outline w-full">
                     取消支付
                 </button>
-                <p class="text-gray-500 text-xs mt-3">支付后请点击上方按钮确认，我们会尽快联系你</p>
+                <p class="text-gray-500 text-xs mt-4">
+                    请使用微信扫描上方二维码完成支付<br>
+                    支付完成后点击"我已完成支付"按钮
+                </p>
             </div>
         </div>
     </div>
@@ -401,70 +381,28 @@
         };
 
         // 全局变量
+        let orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
         let currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
         let currentOrder = null;
         let currentProduct = null;
         let currentPrice = 0;
         let countdown = null;
-        let unreadOrders = 0;
-        let database = null;
-
-        // 🔥 初始化实时数据库
-        const firebaseConfig = {
-            apiKey: "AIzaSyC7X7Z8Y9W0V1U2T3S4R5Q6P7O8N9M0L1",
-            authDomain: "fg-club-12345.firebaseapp.com",
-            databaseURL: "https://fg-club-12345-default-rtdb.firebaseio.com",
-            projectId: "fg-club-12345",
-            storageBucket: "fg-club-12345.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
-        };
-
-        // 初始化Firebase
-        firebase.initializeApp(firebaseConfig);
-        database = firebase.database();
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
-            bindEvents();
-            setupRealtimeListener();
+            bindAllEvents();
         });
 
         // 初始化应用
         function initApp() {
-            updateUI();
-            updateStats();
+            updateUserUI();
+            renderOrders();
+            updateStatistics();
         }
 
-        // 🔥 设置实时订单监听
-        function setupRealtimeListener() {
-            // 监听所有订单变化
-            database.ref('orders').on('child_added', (snapshot) => {
-                const order = snapshot.val();
-                // 如果是管理员，收到新订单通知
-                if (currentUser && currentUser.phone === ADMIN_PHONE) {
-                    // 只通知新的已支付订单
-                    if (order.status === 'paid') {
-                        showNewOrderNotification(order);
-                        playNotificationSound();
-                        unreadOrders++;
-                        updateNotificationBadge();
-                    }
-                }
-                renderOrders();
-                updateStats();
-            });
-
-            // 监听订单状态变化
-            database.ref('orders').on('child_changed', (snapshot) => {
-                renderOrders();
-                updateStats();
-            });
-        }
-
-        // 更新UI
-        function updateUI() {
+        // 更新用户界面
+        function updateUserUI() {
             if (currentUser) {
                 document.getElementById('login-btn').classList.add('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
@@ -488,93 +426,92 @@
             }
         }
 
-        // 更新统计
-        function updateStats() {
-            database.ref('orders').once('value', (snapshot) => {
-                const orders = snapshot.val() || {};
-                const orderList = Object.values(orders);
-                
-                let filteredOrders = orderList;
-                if (currentUser && currentUser.phone !== ADMIN_PHONE) {
-                    filteredOrders = orderList.filter(o => o.userPhone === currentUser.phone);
-                }
+        // 更新统计数据
+        function updateStatistics() {
+            let filteredOrders = orders;
+            if (currentUser && currentUser.phone !== ADMIN_PHONE) {
+                filteredOrders = orders.filter(o => o.userPhone === currentUser.phone);
+            }
 
-                document.getElementById('total-orders').textContent = filteredOrders.length;
-                document.getElementById('pending-orders').textContent = filteredOrders.filter(o => o.status === 'paid').length;
-            });
+            document.getElementById('total-orders').textContent = filteredOrders.length;
+            document.getElementById('pending-orders').textContent = filteredOrders.filter(o => o.status === 'paid').length;
         }
 
         // 渲染订单列表
         function renderOrders() {
             if (!currentUser) return;
             
-            database.ref('orders').once('value', (snapshot) => {
-                const orders = snapshot.val() || {};
-                let orderList = Object.values(orders);
-                
-                // 普通用户只看自己的订单
-                if (currentUser.phone !== ADMIN_PHONE) {
-                    orderList = orderList.filter(o => o.userPhone === currentUser.phone);
-                }
+            let filteredOrders = orders;
+            // 普通用户只看自己的订单
+            if (currentUser.phone !== ADMIN_PHONE) {
+                filteredOrders = orders.filter(o => o.userPhone === currentUser.phone);
+            }
 
-                // 按时间倒序
-                orderList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            // 按时间倒序
+            filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                const container = document.getElementById('orders-list');
-                const empty = document.getElementById('empty-orders');
+            const container = document.getElementById('orders-list');
+            const empty = document.getElementById('empty-orders');
 
-                if (orderList.length === 0) {
-                    container.innerHTML = '';
-                    empty.classList.remove('hidden');
-                    return;
-                }
+            if (filteredOrders.length === 0) {
+                container.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
 
-                empty.classList.add('hidden');
-                container.innerHTML = orderList.map(order => `
-                    <div class="bg-dark/40 rounded-lg p-3 border border-gray-700 ${order.isNew ? 'border-primary/50' : ''}">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-primary text-xs font-medium">${order.id}</span>
-                            <div class="flex items-center gap-2">
-                                ${order.isNew && currentUser.phone === ADMIN_PHONE ? '<span class="bg-danger text-white text-xs px-2 py-0.5 rounded">新</span>' : ''}
-                                <span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-white text-sm">${order.product}</span>
-                            <span class="text-white font-bold">¥${order.price.toFixed(2)}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400 text-xs">${formatDate(order.createdAt)}</span>
-                            <div class="flex gap-2">
-                                <button class="text-primary text-xs view-order" data-id="${order.id}">详情</button>
-                                ${order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ? `<button class="text-wechat text-xs pay-order" data-id="${order.id}">支付</button>` : ''}
-                            </div>
+            empty.classList.add('hidden');
+            container.innerHTML = filteredOrders.map(order => `
+                <div class="bg-dark/40 rounded-lg p-3 border border-gray-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-primary text-xs font-medium">${order.id}</span>
+                        <span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-white text-sm">${order.product}</span>
+                        <span class="text-white font-bold">¥${order.price.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-xs">${formatDate(order.createdAt)}</span>
+                        <div class="flex gap-2">
+                            <button class="text-primary text-xs view-order" data-id="${order.id}">详情</button>
+                            ${order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ? `<button class="text-wechat text-xs pay-order" data-id="${order.id}">支付</button>` : ''}
                         </div>
                     </div>
-                `).join('');
+                </div>
+            `).join('');
 
-                // 绑定事件
-                document.querySelectorAll('.view-order').forEach(btn => {
-                    btn.addEventListener('click', () => showOrderDetail(btn.dataset.id));
+            // 绑定订单操作事件
+            bindOrderEvents();
+        }
+
+        // 绑定订单操作事件
+        function bindOrderEvents() {
+            // 查看详情按钮
+            document.querySelectorAll('.view-order').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const orderId = btn.dataset.id;
+                    showOrderDetail(orderId);
                 });
+            });
 
-                document.querySelectorAll('.pay-order').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        database.ref('orders/' + btn.dataset.id).once('value', (snapshot) => {
-                            const order = snapshot.val();
-                            if (order) {
-                                currentOrder = order;
-                                showPayment(order.price);
-                            }
-                        });
-                    });
+            // 支付按钮
+            document.querySelectorAll('.pay-order').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const orderId = btn.dataset.id;
+                    const order = orders.find(o => o.id === orderId);
+                    if (order) {
+                        currentOrder = order;
+                        showPaymentModal(order.price);
+                    }
                 });
             });
         }
 
         // 格式化日期
-        function formatDate(iso) {
-            return new Date(iso).toLocaleString('zh-CN', {
+        function formatDate(isoString) {
+            return new Date(isoString).toLocaleString('zh-CN', {
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
@@ -583,102 +520,101 @@
         }
 
         // 绑定所有事件
-        function bindEvents() {
+        function bindAllEvents() {
             // 登录相关
-            document.getElementById('login-btn').addEventListener('click', showLogin);
-            document.getElementById('login-now-btn').addEventListener('click', showLogin);
-            document.getElementById('close-login').addEventListener('click', hideLogin);
+            document.getElementById('login-btn').addEventListener('click', showLoginModal);
+            document.getElementById('login-now-btn').addEventListener('click', showLoginModal);
+            document.getElementById('close-login').addEventListener('click', hideLoginModal);
             document.getElementById('login-form').addEventListener('submit', handleLogin);
-            document.getElementById('send-code').addEventListener('click', sendCode);
+            document.getElementById('send-code').addEventListener('click', sendVerificationCode);
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
 
-            // 通知相关
-            document.getElementById('close-notification').addEventListener('click', hideNotification);
-            document.getElementById('view-order-btn').addEventListener('click', () => {
-                hideNotification();
-                showOrderDetail(currentOrder.id);
-            });
-            document.getElementById('notification-btn').addEventListener('click', () => {
-                unreadOrders = 0;
-                updateNotificationBadge();
-            });
-
-            // 购买相关
+            // 购买按钮
             document.querySelectorAll('.buy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     if (!currentUser) {
-                        showToast('请先登录');
-                        showLogin();
+                        showToast('请先登录后再下单');
+                        showLoginModal();
                         return;
                     }
                     currentProduct = btn.dataset.product;
                     currentPrice = parseFloat(btn.dataset.price);
-                    showGameInfo();
+                    showGameInfoModal();
                 });
             });
 
-            // 游戏信息
-            document.getElementById('close-game-info').addEventListener('click', hideGameInfo);
-            document.getElementById('game-info-form').addEventListener('submit', createOrder);
+            // 游戏信息表单
+            document.getElementById('close-game-info').addEventListener('click', hideGameInfoModal);
+            document.getElementById('game-info-form').addEventListener('submit', createNewOrder);
 
             // 支付相关
-            document.getElementById('close-payment').addEventListener('click', hidePayment);
-            document.getElementById('cancel-pay-btn').addEventListener('click', hidePayment);
-            document.getElementById('paid-btn').addEventListener('click', confirmPayment);
+            document.getElementById('close-payment').addEventListener('click', hidePaymentModal);
+            document.getElementById('cancel-pay-btn').addEventListener('click', hidePaymentModal);
+            document.getElementById('paid-btn').addEventListener('click', confirmPaymentSuccess);
 
             // 订单详情
-            document.getElementById('close-detail').addEventListener('click', hideOrderDetail);
+            document.getElementById('close-detail').addEventListener('click', hideOrderDetailModal);
             document.getElementById('update-status-btn').addEventListener('click', updateOrderStatus);
 
             // 点击背景关闭模态框
-            ['login-modal', 'game-info-modal', 'payment-modal', 'order-detail-modal'].forEach(id => {
-                document.getElementById(id).addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) {
-                        e.currentTarget.classList.add('hidden');
-                    }
-                });
+            document.getElementById('login-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) hideLoginModal();
+            });
+            
+            document.getElementById('game-info-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) hideGameInfoModal();
+            });
+            
+            document.getElementById('payment-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) hidePaymentModal();
+            });
+            
+            document.getElementById('order-detail-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) hideOrderDetailModal();
             });
         }
 
-        // 显示登录
-        function showLogin() {
+        // 显示登录模态框
+        function showLoginModal() {
             document.getElementById('login-modal').classList.remove('hidden');
         }
 
-        // 隐藏登录
-        function hideLogin() {
+        // 隐藏登录模态框
+        function hideLoginModal() {
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('login-form').reset();
             if (countdown) {
                 clearInterval(countdown);
+                countdown = null;
                 document.getElementById('send-code').textContent = '获取验证码';
                 document.getElementById('send-code').disabled = false;
             }
         }
 
         // 发送验证码
-        function sendCode() {
+        function sendVerificationCode() {
             const phone = document.getElementById('phone').value.trim();
             if (!/^1[3-9]\d{9}$/.test(phone)) {
-                showToast('请输入正确的手机号');
+                showToast('请输入正确的11位手机号');
                 return;
             }
 
             showToast('验证码已发送 (测试:123456)');
             
-            // 倒计时
+            // 60秒倒计时
             let seconds = 60;
-            const btn = document.getElementById('send-code');
-            btn.disabled = true;
-            btn.textContent = `${seconds}s`;
+            const sendBtn = document.getElementById('send-code');
+            sendBtn.disabled = true;
+            sendBtn.textContent = `${seconds}s`;
             
             countdown = setInterval(() => {
                 seconds--;
-                btn.textContent = `${seconds}s`;
+                sendBtn.textContent = `${seconds}s`;
                 if (seconds <= 0) {
                     clearInterval(countdown);
-                    btn.textContent = '获取验证码';
-                    btn.disabled = false;
+                    countdown = null;
+                    sendBtn.textContent = '获取验证码';
+                    sendBtn.disabled = false;
                 }
             }, 1000);
         }
@@ -690,7 +626,7 @@
             const code = document.getElementById('code').value.trim();
 
             if (code !== '123456') {
-                showToast('验证码错误');
+                showToast('验证码错误，请输入123456');
                 return;
             }
 
@@ -700,45 +636,52 @@
             };
 
             localStorage.setItem('fg-user', JSON.stringify(currentUser));
-            hideLogin();
-            updateUI();
+            hideLoginModal();
+            updateUserUI();
             renderOrders();
-            updateStats();
-            showToast('登录成功');
+            updateStatistics();
+            showToast('登录成功！');
         }
 
-        // 退出登录
+        // 处理退出登录
         function handleLogout() {
             currentUser = null;
             localStorage.removeItem('fg-user');
-            unreadOrders = 0;
-            updateNotificationBadge();
-            updateUI();
+            updateUserUI();
             renderOrders();
-            updateStats();
+            updateStatistics();
             showToast('已退出登录');
         }
 
-        // 显示游戏信息
-        function showGameInfo() {
+        // 显示游戏信息模态框
+        function showGameInfoModal() {
             document.getElementById('game-info-modal').classList.remove('hidden');
         }
 
-        // 隐藏游戏信息
-        function hideGameInfo() {
+        // 隐藏游戏信息模态框
+        function hideGameInfoModal() {
             document.getElementById('game-info-modal').classList.add('hidden');
             document.getElementById('game-info-form').reset();
         }
 
-        // 🔥 创建订单（保存到云端）
-        function createOrder(e) {
+        // 创建新订单
+        function createNewOrder(e) {
             e.preventDefault();
+            
             const gameId = document.getElementById('game-id').value.trim();
             const qq = document.getElementById('qq').value.trim();
             const remark = document.getElementById('remark').value.trim();
 
+            if (!gameId || !qq) {
+                showToast('请填写游戏ID和QQ号');
+                return;
+            }
+
+            // 生成订单号
             const orderId = 'FG' + Date.now();
-            const order = {
+            
+            // 创建订单对象
+            const newOrder = {
                 id: orderId,
                 userId: currentUser.id,
                 userPhone: currentUser.phone,
@@ -748,179 +691,171 @@
                 qq: qq,
                 remark: remark || '无',
                 status: 'pending',
-                isNew: false,
                 statusHistory: [
-                    { status: 'pending', time: new Date().toISOString(), note: '订单创建' }
+                    {
+                        status: 'pending',
+                        time: new Date().toISOString(),
+                        note: '订单创建成功'
+                    }
                 ],
                 createdAt: new Date().toISOString()
             };
 
-            // 保存到云端
-            database.ref('orders/' + orderId).set(order)
-                .then(() => {
-                    hideGameInfo();
-                    currentOrder = order;
-                    showPayment(currentPrice);
-                    showToast('订单创建成功');
-                })
-                .catch(() => {
-                    showToast('订单创建失败，请重试');
-                });
+            // 保存到本地存储
+            orders.unshift(newOrder);
+            localStorage.setItem('fg-orders', JSON.stringify(orders));
+            
+            // 关闭模态框
+            hideGameInfoModal();
+            
+            // 设置当前订单并打开支付页面
+            currentOrder = newOrder;
+            showPaymentModal(currentPrice);
+            
+            // 更新界面
+            renderOrders();
+            updateStatistics();
+            
+            showToast('订单创建成功！请完成支付');
         }
 
-        // 显示支付
-        function showPayment(price) {
+        // 显示支付模态框
+        function showPaymentModal(price) {
             document.getElementById('pay-amount').textContent = `¥${price.toFixed(2)}`;
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
-        // 隐藏支付
-        function hidePayment() {
+        // 隐藏支付模态框
+        function hidePaymentModal() {
             document.getElementById('payment-modal').classList.add('hidden');
             currentOrder = null;
         }
 
-        // 🔥 确认支付（更新云端状态）
-        function confirmPayment() {
-            if (!currentOrder) return;
+        // 确认支付成功
+        function confirmPaymentSuccess() {
+            if (!currentOrder) {
+                showToast('订单信息错误，请重试');
+                return;
+            }
 
+            // 更新订单状态
             currentOrder.status = 'paid';
-            currentOrder.isNew = true; // 标记为新订单
             currentOrder.statusHistory.push({
                 status: 'paid',
                 time: new Date().toISOString(),
-                note: '客户已完成支付'
+                note: '客户已完成支付，等待接单'
             });
 
-            database.ref('orders/' + currentOrder.id).set(currentOrder)
-                .then(() => {
-                    hidePayment();
-                    showToast('支付成功！我们会尽快联系你');
-                })
-                .catch(() => {
-                    showToast('支付确认失败，请联系客服');
-                });
+            // 更新本地存储
+            const orderIndex = orders.findIndex(o => o.id === currentOrder.id);
+            if (orderIndex !== -1) {
+                orders[orderIndex] = currentOrder;
+                localStorage.setItem('fg-orders', JSON.stringify(orders));
+            }
+
+            // 关闭支付模态框
+            hidePaymentModal();
+            
+            // 更新界面
+            renderOrders();
+            updateStatistics();
+            
+            showToast('支付确认成功！我们会尽快安排打手联系你');
         }
 
         // 显示订单详情
         function showOrderDetail(orderId) {
-            database.ref('orders/' + orderId).once('value', (snapshot) => {
-                const order = snapshot.val();
-                if (!order) return;
+            const order = orders.find(o => o.id === orderId);
+            if (!order) {
+                showToast('订单不存在');
+                return;
+            }
 
-                // 标记为已读
-                if (order.isNew && currentUser.phone === ADMIN_PHONE) {
-                    order.isNew = false;
-                    database.ref('orders/' + orderId).set(order);
-                }
+            currentOrder = order;
+            
+            // 填充订单详情
+            document.getElementById('detail-id').textContent = order.id;
+            document.getElementById('detail-product').textContent = order.product;
+            document.getElementById('detail-price').textContent = `¥${order.price.toFixed(2)}`;
+            document.getElementById('detail-status').innerHTML = `<span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>`;
+            document.getElementById('detail-gameid').textContent = order.gameId;
+            document.getElementById('detail-qq').textContent = order.qq;
+            document.getElementById('detail-phone').textContent = order.userPhone;
+            document.getElementById('detail-remark').textContent = order.remark;
+            document.getElementById('detail-time').textContent = formatDate(order.createdAt);
+            document.getElementById('new-status').value = order.status;
 
-                currentOrder = order;
-                document.getElementById('detail-id').textContent = order.id;
-                document.getElementById('detail-product').textContent = order.product;
-                document.getElementById('detail-price').textContent = `¥${order.price.toFixed(2)}`;
-                document.getElementById('detail-status').innerHTML = `<span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>`;
-                document.getElementById('detail-gameid').textContent = order.gameId;
-                document.getElementById('detail-qq').textContent = order.qq;
-                document.getElementById('detail-phone').textContent = order.userPhone;
-                document.getElementById('detail-remark').textContent = order.remark;
-                document.getElementById('detail-time').textContent = formatDate(order.createdAt);
-                document.getElementById('new-status').value = order.status;
-
-                document.getElementById('order-detail-modal').classList.remove('hidden');
-            });
+            // 显示模态框
+            document.getElementById('order-detail-modal').classList.remove('hidden');
         }
 
-        // 隐藏订单详情
-        function hideOrderDetail() {
+        // 隐藏订单详情模态框
+        function hideOrderDetailModal() {
             document.getElementById('order-detail-modal').classList.add('hidden');
             currentOrder = null;
         }
 
-        // 🔥 更新订单状态（同步到云端）
+        // 更新订单状态
         function updateOrderStatus() {
-            if (!currentOrder) return;
-
-            const newStatus = document.getElementById('new-status').value;
-            if (newStatus === currentOrder.status) {
-                showToast('状态未变化');
+            if (!currentOrder) {
+                showToast('订单信息错误');
                 return;
             }
 
+            const newStatus = document.getElementById('new-status').value;
+            if (newStatus === currentOrder.status) {
+                showToast('订单状态未发生变化');
+                return;
+            }
+
+            // 更新订单状态
             currentOrder.status = newStatus;
             currentOrder.statusHistory.push({
                 status: newStatus,
                 time: new Date().toISOString(),
-                note: '管理员更新状态'
+                note: '状态已更新'
             });
 
-            database.ref('orders/' + currentOrder.id).set(currentOrder)
-                .then(() => {
-                    hideOrderDetail();
-                    showToast('状态更新成功');
-                })
-                .catch(() => {
-                    showToast('状态更新失败，请重试');
-                });
-        }
-
-        // 显示新订单通知
-        function showNewOrderNotification(order) {
-            document.getElementById('notification-content').textContent = 
-                `新订单：${order.product} ¥${order.price.toFixed(2)}\n游戏ID：${order.gameId}`;
-            document.getElementById('new-order-notification').classList.remove('hidden');
-
-            // 5秒后自动关闭
-            setTimeout(hideNotification, 10000);
-        }
-
-        // 隐藏通知
-        function hideNotification() {
-            document.getElementById('new-order-notification').classList.add('hidden');
-        }
-
-        // 播放通知声音
-        function playNotificationSound() {
-            // 创建音频上下文
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            gainNode.gain.value = 0.3;
-
-            oscillator.start();
-            setTimeout(() => {
-                oscillator.stop();
-            }, 200);
-        }
-
-        // 更新通知徽章
-        function updateNotificationBadge() {
-            const badge = document.getElementById('notification-badge');
-            if (unreadOrders > 0) {
-                badge.textContent = unreadOrders;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
+            // 更新本地存储
+            const orderIndex = orders.findIndex(o => o.id === currentOrder.id);
+            if (orderIndex !== -1) {
+                orders[orderIndex] = currentOrder;
+                localStorage.setItem('fg-orders', JSON.stringify(orders));
             }
+
+            // 关闭模态框
+            hideOrderDetailModal();
+            
+            // 更新界面
+            renderOrders();
+            updateStatistics();
+            
+            showToast('订单状态更新成功！');
         }
 
-        // 显示提示
+        // 显示提示消息
         function showToast(message) {
+            // 移除已存在的toast
+            const existingToast = document.querySelector('.toast-message');
+            if (existingToast) {
+                document.body.removeChild(existingToast);
+            }
+
             const toast = document.createElement('div');
-            toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm z-50';
+            toast.className = 'toast-message fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg text-sm z-50 shadow-lg';
             toast.textContent = message;
             document.body.appendChild(toast);
 
+            // 3秒后自动消失
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s';
-                setTimeout(() => document.body.removeChild(toast), 300);
-            }, 2000);
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
         }
     </script>
 </body>
