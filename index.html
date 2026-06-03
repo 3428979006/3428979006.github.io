@@ -96,6 +96,11 @@
             </div>
         </div>
 
+        <!--客服QQ提示栏-->
+        <div class="bg-primary/15 rounded-lg p-3 mb-6 border border-primary/30 text-center">
+            <p class="text-sm"><i class="fa fa-qq text-primary mr-1"></i>下单后添加客服QQ：<span class="text-primary font-bold">3428979006</span> 对接打手安排订单</p>
+        </div>
+
         <!-- 商品套餐区 -->
         <div class="bg-dark/60 rounded-lg p-4 border border-primary/10 mb-6">
             <h2 class="text-base font-bold text-white mb-4">🔥 热门护航套餐</h2>
@@ -251,6 +256,9 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">备注（可选）</label>
                     <textarea id="remark" class="input" rows="2" placeholder="如有特殊要求请说明"></textarea>
                 </div>
+                <div class="bg-green-50 p-3 rounded border border-wechat text-center">
+                    <p class="text-sm text-gray-800"><i class="fa fa-qq text-wechat"></i>下单后添加客服QQ：<strong>3428979006</strong></p>
+                </div>
                 <button type="submit" class="btn btn-primary w-full">去支付</button>
             </form>
         </div>
@@ -277,7 +285,8 @@
                         1.打开微信 → 打开【文件传输助手】<br>
                         2.长按输入框粘贴链接并发送<br>
                         3.点击发送的链接直接跳转转账<br>
-                        4.付款完成后返回本页点【已付完款】
+                        4.付款完成后返回本页点【已付完款】<br>
+                        <span class="text-wechat font-medium mt-1 block">付款后加客服QQ：3428979006对接服务</span>
                     </p>
                 </div>
                 
@@ -344,6 +353,9 @@
                         <span id="detail-time" class="font-medium text-gray-900 text-xs"></span>
                     </div>
                 </div>
+                <div class="bg-green-50 p-3 rounded mb-4 border border-wechat text-center">
+                    <p class="text-gray-800 text-sm">客服对接QQ：<strong class="text-wechat">3428979006</strong></p>
+                </div>
 
                 <!-- 状态更新 -->
                 <div class="border-t border-gray-200 pt-4">
@@ -370,6 +382,8 @@
         const WX_BASE = "wxp://f2f0JhCjMkpvim80qEhw81tHvYmGIuq8Y48N8h42SePPsGM";
         // 管理员手机号
         const ADMIN_PHONE = '19236163806';
+        //客服QQ
+        const SERVICE_QQ = "3428979006";
         
         // 订单状态配置
         const statusConfig = {
@@ -542,7 +556,7 @@
         //复制付款链接函数（核心修复）
         function copyPayLink(){
             navigator.clipboard.writeText(payUrl).then(()=>{
-                showToast('付款链接复制成功！去微信粘贴转账');
+                showToast('付款链接复制成功！去微信粘贴转账，付款后添加客服QQ：'+SERVICE_QQ);
             }).catch(()=>{
                 //兼容低端手机剪贴板
                 const tmp=document.createElement('input');
@@ -551,7 +565,7 @@
                 tmp.select();
                 document.execCommand('copy');
                 document.body.removeChild(tmp);
-                showToast('已复制链接');
+                showToast('已复制链接，付款后加客服QQ：'+SERVICE_QQ);
             })
         }
 
@@ -609,7 +623,7 @@
             hideGameInfoModal();
             currentOrder=newO;
             showPaymentModal(currentPrice);
-            renderOrders();updateStatistics();showToast('订单创建完毕');
+            renderOrders();updateStatistics();showToast('订单创建完毕，付款后添加客服QQ：'+SERVICE_QQ);
         }
 
         //打开支付弹窗、生成付款链接
@@ -629,7 +643,7 @@
             currentOrder.statusHistory.push({status:'paid',time:new Date().toISOString(),note:'用户自主确认付款'});
             const idx=orders.findIndex(o=>o.id===currentOrder.id);
             if(idx>-1){orders[idx]=currentOrder;localStorage.setItem('fg-orders',JSON.stringify(orders));}
-            hidePaymentModal();renderOrders();updateStatistics();showToast('确认成功，等待打手接单！');
+            hidePaymentModal();renderOrders();updateStatistics();showToast('确认成功！尽快添加客服QQ：'+SERVICE_QQ安排打手接单！');
         }
 
         //查看订单详情
