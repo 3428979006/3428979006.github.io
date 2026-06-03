@@ -103,10 +103,15 @@
                         <i class="fa fa-clock-o mr-1"></i>
                         <span id="current-time"></span>
                     </span>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded">管理员</span>
-                        <i class="fa fa-user-circle text-xl text-gray-400"></i>
+                    <div id="user-info" class="flex items-center gap-2 hidden">
+                        <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded" id="user-phone"></span>
+                        <button id="logout-btn" class="text-gray-400 hover:text-white">
+                            <i class="fa fa-sign-out"></i>
+                        </button>
                     </div>
+                    <button id="login-btn" class="btn btn-primary text-sm">
+                        <i class="fa fa-user"></i> 登录
+                    </button>
                 </div>
             </div>
         </div>
@@ -165,51 +170,68 @@
         <!-- 商品套餐区 -->
         <div class="bg-dark/60 backdrop-blur-sm rounded-xl p-6 card-shadow border border-primary/10 mb-8">
             <h2 class="text-lg font-bold text-white mb-6">🔥 热门护航套餐</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-dark/40 rounded-xl p-6 border border-primary/20 hover:border-primary/50 transition-all">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-white">T7基础套装</h3>
-                        <span class="text-2xl font-bold text-primary">¥8.99</span>
+                        <h3 class="text-xl font-bold text-white">基础护航</h3>
+                        <span class="text-2xl font-bold text-primary">¥13.9</span>
                     </div>
                     <ul class="text-gray-400 space-y-2 mb-6">
                         <li><i class="fa fa-check text-primary mr-2"></i> 全程护航1小时</li>
                         <li><i class="fa fa-check text-primary mr-2"></i> 包撤离失败全额退款</li>
-                        <li><i class="fa fa-check text-primary mr-2"></i> 保底带出100万物资</li>
+                        <li><i class="fa fa-check text-primary mr-2"></i> 保底带出80万物资</li>
                         <li><i class="fa fa-check text-primary mr-2"></i> 专业打手一对一</li>
                     </ul>
-                    <button class="btn btn-primary w-full buy-btn" data-product="T7基础套装" data-price="8.99">
+                    <button class="btn btn-primary w-full buy-btn" data-product="基础护航" data-price="13.9">
+                        立即下单
+                    </button>
+                </div>
+                <div class="bg-dark/40 rounded-xl p-6 border border-primary/20 hover:border-primary/50 transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white">T7基础套装</h3>
+                        <span class="text-2xl font-bold text-primary">¥19.9</span>
+                    </div>
+                    <ul class="text-gray-400 space-y-2 mb-6">
+                        <li><i class="fa fa-check text-primary mr-2"></i> 全程护航1.5小时</li>
+                        <li><i class="fa fa-check text-primary mr-2"></i> 包撤离失败全额退款</li>
+                        <li><i class="fa fa-check text-primary mr-2"></i> 保底带出120万物资</li>
+                        <li><i class="fa fa-check text-primary mr-2"></i> 专业打手一对一</li>
+                        <li><i class="fa fa-check text-primary mr-2"></i> 提供基础装备</li>
+                    </ul>
+                    <button class="btn btn-primary w-full buy-btn" data-product="T7基础套装" data-price="19.9">
                         立即下单
                     </button>
                 </div>
                 <div class="bg-dark/40 rounded-xl p-6 border border-accent/20 hover:border-accent/50 transition-all relative overflow-hidden">
                     <div class="absolute top-0 right-0 bg-accent text-white text-xs px-3 py-1 rounded-bl-lg">推荐</div>
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-white">豪华三金单</h3>
-                        <span class="text-2xl font-bold text-accent">¥259.99</span>
+                        <h3 class="text-xl font-bold text-white">全装包赔单</h3>
+                        <span class="text-2xl font-bold text-accent">¥29.9</span>
                     </div>
                     <ul class="text-gray-400 space-y-2 mb-6">
-                        <li><i class="fa fa-check text-accent mr-2"></i> 全程护航3小时</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i> 包出3个大金</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i> 不出全额退款</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i> 3名顶级打手护航</li>
+                        <li><i class="fa fa-check text-accent mr-2"></i> 全程护航2小时</li>
+                        <li><i class="fa fa-check text-accent mr-2"></i> 提供全套顶级装备</li>
+                        <li><i class="fa fa-check text-accent mr-2"></i> 死亡包赔所有损失</li>
+                        <li><i class="fa fa-check text-accent mr-2"></i> 2名打手保驾护航</li>
                         <li><i class="fa fa-check text-accent mr-2"></i> 优先安排订单</li>
                     </ul>
-                    <button class="btn btn-accent w-full buy-btn" data-product="豪华三金单" data-price="259.99">
+                    <button class="btn btn-accent w-full buy-btn" data-product="全装包赔单" data-price="29.9">
                         立即下单
                     </button>
                 </div>
                 <div class="bg-dark/40 rounded-xl p-6 border border-secondary/20 hover:border-secondary/50 transition-all">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-white">全装包赔单</h3>
-                        <span class="text-2xl font-bold text-secondary">¥99.99</span>
+                        <h3 class="text-xl font-bold text-white">豪华三金单</h3>
+                        <span class="text-2xl font-bold text-secondary">¥99.9</span>
                     </div>
                     <ul class="text-gray-400 space-y-2 mb-6">
-                        <li><i class="fa fa-check text-secondary mr-2"></i> 全程护航2小时</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i> 提供全套顶级装备</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i> 死亡包赔所有损失</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i> 2名打手保驾护航</li>
+                        <li><i class="fa fa-check text-secondary mr-2"></i> 全程护航3小时</li>
+                        <li><i class="fa fa-check text-secondary mr-2"></i> 包出3个大金</li>
+                        <li><i class="fa fa-check text-secondary mr-2"></i> 不出全额退款</li>
+                        <li><i class="fa fa-check text-secondary mr-2"></i> 3名顶级打手护航</li>
+                        <li><i class="fa fa-check text-secondary mr-2"></i> VIP专属客服</li>
                     </ul>
-                    <button class="btn btn-secondary w-full buy-btn" data-product="全装包赔单" data-price="99.99">
+                    <button class="btn btn-secondary w-full buy-btn" data-product="豪华三金单" data-price="99.9">
                         立即下单
                     </button>
                 </div>
@@ -261,8 +283,56 @@
                 <i class="fa fa-inbox text-gray-600 text-5xl mb-4"></i>
                 <p class="text-gray-400">暂无订单，快去选择一个套餐下单吧！</p>
             </div>
+
+            <!-- 未登录提示 -->
+            <div id="not-logged-in-state" class="py-16 text-center">
+                <i class="fa fa-user-lock text-gray-600 text-5xl mb-4"></i>
+                <p class="text-gray-400 mb-4">请先登录后再查看订单</p>
+                <button id="login-now-btn" class="btn btn-primary mx-auto">
+                    <i class="fa fa-user"></i> 立即登录
+                </button>
+            </div>
         </div>
     </main>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-md mx-4 transform transition-all scale-95 opacity-0" id="login-modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-900">手机验证码登录</h3>
+                    <button id="close-login-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <form id="login-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">手机号码</label>
+                    <input type="tel" id="phone-input" name="phone" class="input" required placeholder="请输入11位手机号" maxlength="11">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">验证码</label>
+                    <div class="flex gap-3">
+                        <input type="text" id="code-input" name="code" class="input flex-1" required placeholder="请输入验证码" maxlength="6">
+                        <button type="button" id="send-code-btn" class="btn btn-outline whitespace-nowrap">
+                            获取验证码
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="auto-login" name="autoLogin" class="mr-2">
+                    <label for="auto-login" class="text-sm text-gray-600">自动登录</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">
+                    登录
+                </button>
+                <p class="text-gray-500 text-xs text-center">
+                    登录即表示同意《用户服务协议》和《隐私政策》
+                </p>
+            </form>
+        </div>
+    </div>
 
     <!-- 支付模态框 -->
     <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
@@ -285,7 +355,7 @@
                 <div class="bg-wechat rounded-xl p-6 mb-6">
                     <p class="text-white text-xl font-bold mb-4">推荐使用微信支付</p>
                     <div class="bg-white rounded-lg p-4 inline-block">
-                        <!-- 这里替换成你的收款码base64编码 -->
+                        <!-- 重要：这里需要替换成你自己的收款码base64编码 -->
                         <img id="wechat-qrcode" src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/4e3a7e8b9c0d4f1a8b7c6d5e4f3a2b1c~tplv-obj.image?rk3s=18ea6f23&x-expires=1750216440&x-signature=abc123def456ghi789jkl012mnop345qrst678uvw=" 
                              alt="微信收款码" class="w-64 h-64 mx-auto">
                     </div>
@@ -347,9 +417,13 @@
                         <p class="text-gray-500 text-sm mb-1">游戏ID</p>
                         <p class="font-medium text-gray-900" id="detail-game-id"></p>
                     </div>
+                    <div>
+                        <p class="text-gray-500 text-sm mb-1">联系QQ</p>
+                        <p class="font-medium text-gray-900" id="detail-qq"></p>
+                    </div>
                 </div>
 
-                <!-- 状态更新区域（管理员可见） -->
+                <!-- 状态更新区域 -->
                 <div class="mb-8 border-t border-gray-200 pt-6">
                     <h4 class="text-md font-bold text-gray-900 mb-4">更新订单状态</h4>
                     <div class="flex flex-col sm:flex-row gap-3">
@@ -417,17 +491,20 @@
             cancelled: { label: '已取消', class: 'bg-red-100 text-red-800' }
         };
 
-        // 订单数据存储
+        // 全局变量
         let orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
         let currentOrderId = null;
         let currentProduct = null;
         let currentPrice = 0;
+        let codeCountdown = null;
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             updateTime();
             setInterval(updateTime, 1000);
             createSnowflakes();
+            checkLoginStatus();
             renderOrders();
             updateStatistics();
             initEventListeners();
@@ -457,6 +534,21 @@
             }
         }
 
+        // 检查登录状态
+        function checkLoginStatus() {
+            if (currentUser) {
+                document.getElementById('login-btn').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('hidden');
+                document.getElementById('user-phone').textContent = currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+                document.getElementById('not-logged-in-state').classList.add('hidden');
+            } else {
+                document.getElementById('login-btn').classList.remove('hidden');
+                document.getElementById('user-info').classList.add('hidden');
+                document.getElementById('not-logged-in-state').classList.remove('hidden');
+                document.getElementById('empty-state').classList.add('hidden');
+            }
+        }
+
         // 生成订单号
         function generateOrderId() {
             const now = new Date();
@@ -479,7 +571,20 @@
         function renderOrders(filteredOrders = null) {
             const tbody = document.getElementById('orders-table-body');
             const emptyState = document.getElementById('empty-state');
-            const ordersToRender = filteredOrders || orders;
+            const notLoggedInState = document.getElementById('not-logged-in-state');
+            
+            if (!currentUser) {
+                tbody.innerHTML = '';
+                emptyState.classList.add('hidden');
+                notLoggedInState.classList.remove('hidden');
+                return;
+            }
+            
+            notLoggedInState.classList.add('hidden');
+            
+            // 只显示当前用户的订单
+            const userOrders = orders.filter(o => o.userId === currentUser.id);
+            const ordersToRender = filteredOrders || userOrders;
 
             if (ordersToRender.length === 0) {
                 tbody.innerHTML = '';
@@ -526,10 +631,11 @@
 
         // 更新统计数据
         function updateStatistics() {
-            document.getElementById('total-orders').textContent = orders.length;
-            document.getElementById('pending-orders').textContent = orders.filter(o => o.status === 'paid').length;
-            document.getElementById('in-progress-orders').textContent = orders.filter(o => o.status === 'in-progress').length;
-            document.getElementById('completed-orders').textContent = orders.filter(o => o.status === 'completed').length;
+            const userOrders = currentUser ? orders.filter(o => o.userId === currentUser.id) : [];
+            document.getElementById('total-orders').textContent = userOrders.length;
+            document.getElementById('pending-orders').textContent = userOrders.filter(o => o.status === 'paid').length;
+            document.getElementById('in-progress-orders').textContent = userOrders.filter(o => o.status === 'in-progress').length;
+            document.getElementById('completed-orders').textContent = userOrders.filter(o => o.status === 'completed').length;
         }
 
         // 格式化日期
@@ -545,9 +651,22 @@
 
         // 初始化事件监听器
         function initEventListeners() {
+            // 登录相关
+            document.getElementById('login-btn').addEventListener('click', openLoginModal);
+            document.getElementById('login-now-btn').addEventListener('click', openLoginModal);
+            document.getElementById('close-login-modal').addEventListener('click', closeLoginModal);
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('send-code-btn').addEventListener('click', sendVerificationCode);
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+            
             // 购买按钮
             document.querySelectorAll('.buy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    if (!currentUser) {
+                        showToast('请先登录后再下单', 'warning');
+                        openLoginModal();
+                        return;
+                    }
                     currentProduct = btn.dataset.product;
                     currentPrice = parseFloat(btn.dataset.price);
                     openGameIdModal();
@@ -579,6 +698,10 @@
             document.getElementById('game-id-form').addEventListener('submit', createOrder);
             
             // 点击模态框背景关闭
+            document.getElementById('login-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeLoginModal();
+            });
+            
             document.getElementById('payment-modal').addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) closePaymentModal();
             });
@@ -590,6 +713,120 @@
             document.getElementById('game-id-modal').addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) closeGameIdModal();
             });
+        }
+
+        // 打开登录模态框
+        function openLoginModal() {
+            const modal = document.getElementById('login-modal');
+            const content = document.getElementById('login-modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // 关闭登录模态框
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            const content = document.getElementById('login-modal-content');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('login-form').reset();
+                if (codeCountdown) {
+                    clearInterval(codeCountdown);
+                    codeCountdown = null;
+                    document.getElementById('send-code-btn').textContent = '获取验证码';
+                    document.getElementById('send-code-btn').disabled = false;
+                }
+            }, 200);
+        }
+
+        // 发送验证码
+        function sendVerificationCode() {
+            const phone = document.getElementById('phone-input').value.trim();
+            const phoneRegex = /^1[3-9]\d{9}$/;
+            
+            if (!phoneRegex.test(phone)) {
+                showToast('请输入正确的11位手机号', 'error');
+                return;
+            }
+            
+            // 模拟发送验证码（实际项目中需要调用后端API）
+            showToast('验证码已发送到你的手机', 'success');
+            console.log('发送验证码到:', phone);
+            console.log('验证码: 123456 (测试用)');
+            
+            // 60秒倒计时
+            let seconds = 60;
+            const sendBtn = document.getElementById('send-code-btn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = `${seconds}秒后重新获取`;
+            
+            codeCountdown = setInterval(() => {
+                seconds--;
+                sendBtn.textContent = `${seconds}秒后重新获取`;
+                
+                if (seconds <= 0) {
+                    clearInterval(codeCountdown);
+                    codeCountdown = null;
+                    sendBtn.textContent = '获取验证码';
+                    sendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // 处理登录
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone-input').value.trim();
+            const code = document.getElementById('code-input').value.trim();
+            const autoLogin = document.getElementById('auto-login').checked;
+            
+            // 模拟验证（实际项目中需要调用后端API）
+            // 测试用：验证码为123456即可登录
+            if (code !== '123456') {
+                showToast('验证码错误，请重新输入', 'error');
+                return;
+            }
+            
+            // 创建用户信息
+            currentUser = {
+                id: 'user_' + phone,
+                phone: phone,
+                loginTime: new Date().toISOString()
+            };
+            
+            // 保存用户信息
+            if (autoLogin) {
+                localStorage.setItem('fg-user', JSON.stringify(currentUser));
+            } else {
+                sessionStorage.setItem('fg-user', JSON.stringify(currentUser));
+            }
+            
+            closeLoginModal();
+            checkLoginStatus();
+            renderOrders();
+            updateStatistics();
+            
+            showToast('登录成功！', 'success');
+        }
+
+        // 处理退出登录
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('fg-user');
+            sessionStorage.removeItem('fg-user');
+            checkLoginStatus();
+            renderOrders();
+            updateStatistics();
+            showToast('已退出登录', 'info');
         }
 
         // 打开游戏ID模态框
@@ -625,6 +862,8 @@
             const formData = new FormData(e.target);
             const newOrder = {
                 id: generateOrderId(),
+                userId: currentUser.id,
+                userPhone: currentUser.phone,
                 product: currentProduct,
                 price: currentPrice,
                 gameId: formData.get('gameId'),
@@ -710,7 +949,7 @@
             updateStatistics();
             closePaymentModal();
             
-            // 模拟发送邮箱通知（实际项目中需要后端支持）
+            // 模拟发送邮箱通知
             sendEmailNotification(order);
             
             showToast('支付确认成功！我们会尽快安排打手联系你', 'success');
@@ -725,12 +964,7 @@
             console.log('金额:', order.price);
             console.log('游戏ID:', order.gameId);
             console.log('QQ:', order.qq);
-            
-            // 实际项目中这里应该调用后端API发送邮件
-            // fetch('/api/send-email', {
-            //     method: 'POST',
-            //     body: JSON.stringify(order)
-            // });
+            console.log('用户手机:', order.userPhone);
         }
 
         // 查看订单详情
@@ -746,6 +980,7 @@
             document.getElementById('detail-amount').textContent = `¥${order.price.toFixed(2)}`;
             document.getElementById('detail-create-time').textContent = formatDate(order.createdAt);
             document.getElementById('detail-game-id').textContent = order.gameId || '未填写';
+            document.getElementById('detail-qq').textContent = order.qq || '未填写';
             
             // 设置当前状态
             const statusElement = document.getElementById('detail-order-status');
@@ -847,52 +1082,5 @@
 
         // 筛选订单
         function filterOrders() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const statusFilter = document.getElementById('status-filter').value;
+            if (!currentUser) return;
             
-            let filteredOrders = orders;
-            
-            // 状态筛选
-            if (statusFilter !== 'all') {
-                filteredOrders = filteredOrders.filter(o => o.status === statusFilter);
-            }
-            
-            // 搜索筛选
-            if (searchTerm) {
-                filteredOrders = filteredOrders.filter(o => 
-                    o.id.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            renderOrders(filteredOrders);
-        }
-
-        // 显示提示消息
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            const bgColor = {
-                success: 'bg-primary',
-                error: 'bg-danger',
-                info: 'bg-secondary',
-                warning: 'bg-accent'
-            }[type] || 'bg-gray-700';
-            
-            toast.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-20 opacity-0 z-50`;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-20', 'opacity-0');
-            }, 10);
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
