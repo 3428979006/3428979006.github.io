@@ -6,7 +6,6 @@
     <title>FG俱乐部 - 暗区突围护航</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
@@ -30,24 +29,10 @@
                         'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                     },
                     keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        bounceIn: {
-                            '0%': { transform: 'scale(0.3)', opacity: '0' },
-                            '50%': { transform: 'scale(1.05)' },
-                            '70%': { transform: 'scale(0.9)' },
-                            '100%': { transform: 'scale(1)', opacity: '1' }
-                        }
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        slideDown: { '0%': { transform: 'translateY(-20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        bounceIn: { '0%': { transform: 'scale(0.3)', opacity: '0' }, '50%': { transform: 'scale(1.05)' }, '70%': { transform: 'scale(0.9)' }, '100%': { transform: 'scale(1)', opacity: '1' } }
                     }
                 }
             }
@@ -55,99 +40,47 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .status-badge {
-                @apply px-3 py-1 rounded-full text-xs font-medium;
-            }
-            .btn {
-                @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 active:scale-95;
-            }
-            .btn-primary {
-                @apply bg-primary text-white hover:bg-primary/90 active:bg-primary/80 shadow-lg shadow-primary/20;
-            }
-            .btn-accent {
-                @apply bg-accent text-white hover:bg-accent/90 active:bg-accent/80 shadow-lg shadow-accent/20;
-            }
-            .btn-secondary {
-                @apply bg-secondary text-white hover:bg-secondary/90 active:bg-secondary/80 shadow-lg shadow-secondary/20;
-            }
-            .btn-wechat {
-                @apply bg-wechat text-white hover:bg-wechat/90 active:bg-wechat/80 shadow-lg shadow-wechat/20;
-            }
-            .btn-outline {
-                @apply border border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100;
-            }
-            .btn-icon {
-                @apply p-2 rounded-full transition-all duration-200 hover:bg-white/10 active:scale-90;
-            }
-            .input {
-                @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-gray-50;
-            }
-            .table-cell {
-                @apply px-4 py-3 whitespace-nowrap text-sm;
-            }
-            .card {
-                @apply bg-dark/60 rounded-2xl p-4 border border-primary/10 backdrop-blur-sm;
-            }
-            .nav-item {
-                @apply flex flex-col items-center justify-center py-2 px-4 transition-all duration-200;
-            }
-            .nav-item.active {
-                @apply text-primary;
-            }
-            .tab-btn {
-                @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200;
-            }
-            .tab-btn.active {
-                @apply bg-primary text-white;
-            }
-            .glass-effect {
-                @apply bg-dark/80 backdrop-blur-lg border border-white/10;
-            }
-            .skeleton {
-                @apply animate-pulse bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 bg-[length:200%_100%];
-            }
+            .content-auto { content-visibility: auto; }
+            .status-badge { @apply px-3 py-1 rounded-full text-xs font-medium; }
+            .btn { @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 select-none; }
+            .btn-primary { @apply bg-primary text-white hover:bg-primary/90 active:bg-primary/80 shadow-lg shadow-primary/20; }
+            .btn-accent { @apply bg-accent text-white hover:bg-accent/90 active:bg-accent/80 shadow-lg shadow-accent/20; }
+            .btn-secondary { @apply bg-secondary text-white hover:bg-secondary/90 active:bg-secondary/80 shadow-lg shadow-secondary/20; }
+            .btn-wechat { @apply bg-wechat text-white hover:bg-wechat/90 active:bg-wechat/80 shadow-lg shadow-wechat/20; }
+            .btn-outline { @apply border border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100; }
+            .btn-icon { @apply p-2 rounded-full transition-all duration-200 hover:bg-white/10 active:scale-90 select-none; }
+            .input { @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-gray-50; }
+            .table-cell { @apply px-4 py-3 whitespace-nowrap text-sm; }
+            .card { @apply bg-dark/60 rounded-2xl p-4 border border-primary/10 backdrop-blur-sm; }
+            .nav-item { @apply flex flex-col items-center justify-center py-2 px-4 transition-all duration-200 select-none; }
+            .nav-item.active { @apply text-primary; }
+            .tab-btn { @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 select-none; }
+            .tab-btn.active { @apply bg-primary text-white; }
+            .glass-effect { @apply bg-dark/80 backdrop-blur-lg border border-white/10; }
+            .skeleton { @apply animate-pulse bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 bg-[length:200%_100%]; }
         }
-        
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(34,197,94,0.3);
-            border-radius: 2px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(34,197,94,0.5);
-        }
-        
-        /* 防止双击缩放 */
-        * {
-            touch-action: manipulation;
-        }
-        
-        /* 安全区域适配 */
-        .safe-area-bottom {
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-        }
-        
-        /* 通知动画 */
-        @keyframes notificationPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        .notification-dot {
-            animation: notificationPulse 1.5s ease-in-out infinite;
-        }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.5); }
+        * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        @keyframes notificationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .notification-dot { animation: notificationPulse 1.5s ease-in-out infinite; }
+        .loading-spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-gradient-to-br from-darker via-dark to-slate-900 min-h-screen text-white antialiased">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-darker z-[9999] flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-400">加载中...</p>
+        </div>
+    </div>
+
     <!-- 顶部导航 -->
     <nav class="glass-effect shadow-lg sticky top-0 z-50 border-b border-primary/20">
         <div class="px-4">
@@ -186,15 +119,14 @@
     <main id="main-content" class="px-4 py-6 pb-24">
         <!-- 首页内容 -->
         <div id="page-home" class="page-content">
-            <!-- 轮播公告 -->
             <div class="card mb-6 relative overflow-hidden">
                 <div class="flex items-center gap-3">
                     <div class="bg-accent/20 text-accent px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                         <i class="fa fa-bullhorn"></i> 公告
                     </div>
                     <div class="flex-1 overflow-hidden">
-                        <div id="notice-marquee" class="whitespace-nowrap animate-[slide-in_10s_linear_infinite]">
-                            <span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单 | 📱 实时同步订单消息</span>
+                        <div class="whitespace-nowrap">
+                            <span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单</span>
                         </div>
                     </div>
                 </div>
@@ -215,7 +147,7 @@
 
             <!-- 统计卡片 -->
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="card animate-fade-in" style="animation-delay: 0.1s">
+                <div class="card animate-fade-in">
                     <div class="flex items-center justify-between mb-2">
                         <i class="fa fa-file-text-o text-primary/60 text-xl"></i>
                         <span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">全部</span>
@@ -223,7 +155,7 @@
                     <p class="text-gray-400 text-xs mb-1">全部订单</p>
                     <h3 class="text-2xl font-bold text-white" id="total-orders">0</h3>
                 </div>
-                <div class="card animate-fade-in" style="animation-delay: 0.2s">
+                <div class="card animate-fade-in">
                     <div class="flex items-center justify-between mb-2">
                         <i class="fa fa-clock-o text-accent/60 text-xl"></i>
                         <span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">待接</span>
@@ -234,27 +166,27 @@
             </div>
 
             <!-- 快捷入口 -->
-            <div class="card mb-6 animate-fade-in" style="animation-delay: 0.3s">
+            <div class="card mb-6 animate-fade-in">
                 <div class="grid grid-cols-4 gap-4">
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all" onclick="switchTab('orders')">
+                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
                         <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
                             <i class="fa fa-shopping-cart text-primary text-xl"></i>
                         </div>
                         <span class="text-xs text-gray-300">下单</span>
                     </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all" onclick="showToast('点击联系客服QQ：3428979006'); copyToClipboard('3428979006')">
+                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006'); showToast('客服QQ已复制', 'success')">
                         <div class="w-12 h-12 bg-wechat/20 rounded-2xl flex items-center justify-center">
                             <i class="fa fa-qq text-wechat text-xl"></i>
                         </div>
                         <span class="text-xs text-gray-300">客服</span>
                     </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all" onclick="switchTab('orders')">
+                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
                         <div class="w-12 h-12 bg-secondary/20 rounded-2xl flex items-center justify-center">
                             <i class="fa fa-list text-secondary text-xl"></i>
                         </div>
                         <span class="text-xs text-gray-300">订单</span>
                     </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all" onclick="switchTab('profile')">
+                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('profile')">
                         <div class="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center">
                             <i class="fa fa-user text-accent text-xl"></i>
                         </div>
@@ -264,7 +196,7 @@
             </div>
 
             <!--客服QQ提示栏-->
-            <div class="bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl p-4 mb-6 border border-primary/30 animate-fade-in" style="animation-delay: 0.4s">
+            <div class="bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl p-4 mb-6 border border-primary/30 animate-fade-in">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-wechat rounded-2xl flex items-center justify-center shadow-lg">
                         <i class="fa fa-qq text-white text-2xl"></i>
@@ -280,7 +212,7 @@
             </div>
 
             <!-- 商品套餐区 -->
-            <div class="card mb-6 animate-fade-in" style="animation-delay: 0.5s">
+            <div class="card mb-6 animate-fade-in">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
                         <i class="fa fa-fire text-accent"></i> 热门护航套餐
@@ -288,7 +220,8 @@
                     <span class="text-xs text-gray-400">4款精选</span>
                 </div>
                 <div class="grid grid-cols-1 gap-4">
-                    <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02] product-card">
+                    <!-- 基础护航 -->
+                    <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02]">
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h3 class="text-lg font-bold text-white">基础护航</h3>
@@ -304,12 +237,13 @@
                             <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出200万物资</strong></li>
                             <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>专业打手一对一</li>
                         </ul>
-                        <button class="btn btn-primary w-full buy-btn" data-product="基础护航" data-price="13.9">
+                        <button class="btn btn-primary w-full" onclick="handleBuyClick('基础护航', 13.9)">
                             <i class="fa fa-shopping-cart"></i> 立即下单
                         </button>
                     </div>
 
-                    <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02] product-card">
+                    <!-- 进阶护航 -->
+                    <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02]">
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h3 class="text-lg font-bold text-white">进阶护航</h3>
@@ -325,12 +259,13 @@
                             <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出350万物资</strong></li>
                             <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>提供基础装备</li>
                         </ul>
-                        <button class="btn btn-primary w-full buy-btn" data-product="进阶护航" data-price="19.9">
+                        <button class="btn btn-primary w-full" onclick="handleBuyClick('进阶护航', 19.9)">
                             <i class="fa fa-shopping-cart"></i> 立即下单
                         </button>
                     </div>
 
-                    <div class="bg-dark/40 rounded-2xl p-4 border border-accent/20 relative hover:border-accent/40 transition-all hover:scale-[1.02] product-card">
+                    <!-- 全装包赔 -->
+                    <div class="bg-dark/40 rounded-2xl p-4 border border-accent/20 relative hover:border-accent/40 transition-all hover:scale-[1.02]">
                         <div class="absolute -top-2 -right-2 bg-gradient-to-r from-accent to-orange-500 text-white text-xs px-3 py-1 rounded-full shadow-lg font-bold">
                             <i class="fa fa-star mr-1"></i> 推荐
                         </div>
@@ -350,12 +285,13 @@
                             <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i><strong class="text-white">保底带出500万物资</strong></li>
                             <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>优先安排订单</li>
                         </ul>
-                        <button class="btn btn-accent w-full buy-btn" data-product="全装包赔" data-price="29.9">
+                        <button class="btn btn-accent w-full" onclick="handleBuyClick('全装包赔', 29.9)">
                             <i class="fa fa-shopping-cart"></i> 立即下单
                         </button>
                     </div>
 
-                    <div class="bg-dark/40 rounded-2xl p-4 border border-secondary/20 hover:border-secondary/40 transition-all hover:scale-[1.02] product-card">
+                    <!-- 豪华三金 -->
+                    <div class="bg-dark/40 rounded-2xl p-4 border border-secondary/20 hover:border-secondary/40 transition-all hover:scale-[1.02]">
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h3 class="text-lg font-bold text-white">豪华三金</h3>
@@ -372,7 +308,7 @@
                             <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i><strong class="text-white">保底带出1200万物资</strong></li>
                             <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>3名顶级打手护航</li>
                         </ul>
-                        <button class="btn btn-secondary w-full buy-btn" data-product="豪华三金" data-price="99.9">
+                        <button class="btn btn-secondary w-full" onclick="handleBuyClick('豪华三金', 99.9)">
                             <i class="fa fa-shopping-cart"></i> 立即下单
                         </button>
                     </div>
@@ -388,20 +324,16 @@
                     <span id="order-title">我的订单</span>
                     <span id="admin-badge" class="text-xs bg-danger/20 text-danger px-2 py-1 rounded-full hidden">管理员</span>
                 </h2>
-                
-                <!-- 订单筛选 -->
                 <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
-                    <button class="tab-btn active whitespace-nowrap" data-filter="all">全部</button>
-                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="pending">待支付</button>
-                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="paid">待接单</button>
-                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="in-progress">进行中</button>
-                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="completed">已完成</button>
+                    <button class="tab-btn active whitespace-nowrap" data-filter="all" onclick="filterOrders('all')">全部</button>
+                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="pending" onclick="filterOrders('pending')">待支付</button>
+                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="paid" onclick="filterOrders('paid')">待接单</button>
+                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="in-progress" onclick="filterOrders('in-progress')">进行中</button>
+                    <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="completed" onclick="filterOrders('completed')">已完成</button>
                 </div>
-                
-                <!-- 搜索框 -->
                 <div class="relative mb-4">
                     <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="search-order" class="input pl-10 bg-dark/40 border-gray-600 text-white placeholder-gray-400" placeholder="搜索订单号、游戏ID...">
+                    <input type="text" id="search-order" class="input pl-10 bg-dark/40 border-gray-600 text-white placeholder-gray-400" placeholder="搜索订单号、游戏ID..." oninput="searchOrders(this.value)">
                 </div>
             </div>
 
@@ -411,7 +343,7 @@
                     <i class="fa fa-user-lock text-gray-500 text-4xl"></i>
                 </div>
                 <p class="text-gray-400 mb-4">请先登录后查看订单</p>
-                <button id="login-now-btn" class="btn btn-primary mx-auto">
+                <button id="login-now-btn" class="btn btn-primary mx-auto" onclick="showLoginModal()">
                     <i class="fa fa-sign-in"></i> 立即登录
                 </button>
             </div>
@@ -454,7 +386,7 @@
                     </div>
                     <h3 class="text-lg font-bold text-white mb-2">欢迎使用FG俱乐部</h3>
                     <p class="text-gray-400 text-sm mb-4">登录后查看更多功能</p>
-                    <button id="profile-login-btn" class="btn btn-primary">
+                    <button id="profile-login-btn" class="btn btn-primary" onclick="showLoginModal()">
                         <i class="fa fa-sign-in"></i> 立即登录
                     </button>
                 </div>
@@ -484,7 +416,7 @@
                         <label class="block text-xs text-gray-400 mb-2">Firebase数据库URL</label>
                         <input type="text" id="firebase-url" class="input w-full bg-dark/60 border-gray-600 text-white text-sm" placeholder="https://your-project.firebaseio.com">
                     </div>
-                    <button id="save-firebase-config" class="btn btn-primary w-full py-2 text-sm">
+                    <button id="save-firebase-config" class="btn btn-primary w-full py-2 text-sm" onclick="saveFirebaseConfig()">
                         <i class="fa fa-save"></i> 保存配置
                     </button>
                     <p class="text-xs text-gray-400">
@@ -497,7 +429,7 @@
             <!-- 功能菜单 -->
             <div class="card mb-4">
                 <div class="space-y-1">
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all" onclick="switchTab('orders')">
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
                                 <i class="fa fa-file-text-o text-primary"></i>
@@ -506,7 +438,7 @@
                         </div>
                         <i class="fa fa-chevron-right text-gray-500"></i>
                     </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all" onclick="showToast('客服QQ：3428979006'); copyToClipboard('3428979006')">
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006'); showToast('客服QQ已复制', 'success')">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-wechat/20 rounded-xl flex items-center justify-center">
                                 <i class="fa fa-qq text-wechat"></i>
@@ -515,7 +447,7 @@
                         </div>
                         <i class="fa fa-chevron-right text-gray-500"></i>
                     </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all" onclick="shareApp()">
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="shareApp()">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-secondary/20 rounded-xl flex items-center justify-center">
                                 <i class="fa fa-share-alt text-secondary"></i>
@@ -524,7 +456,7 @@
                         </div>
                         <i class="fa fa-chevron-right text-gray-500"></i>
                     </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all" onclick="showAbout()">
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="showAbout()">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
                                 <i class="fa fa-info-circle text-accent"></i>
@@ -538,7 +470,7 @@
 
             <!-- 退出登录 -->
             <div id="logout-section" class="card hidden">
-                <button id="logout-btn" class="btn btn-outline w-full border-red-500/50 text-red-400 hover:bg-red-500/10">
+                <button id="logout-btn" class="btn btn-outline w-full border-red-500/50 text-red-400 hover:bg-red-500/10" onclick="handleLogout()">
                     <i class="fa fa-sign-out"></i> 退出登录
                 </button>
             </div>
@@ -548,19 +480,20 @@
     <!-- 底部导航栏 -->
     <nav class="fixed bottom-0 left-0 right-0 glass-effect border-t border-white/10 z-40 safe-area-bottom">
         <div class="flex justify-around items-center h-16">
-            <button class="nav-item active" data-tab="home">
+            <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
                 <i class="fa fa-home text-xl mb-1"></i>
                 <span class="text-xs">首页</span>
             </button>
-            <button class="nav-item text-gray-400" data-tab="orders">
+            <button class="nav-item text-gray-400" data-tab="orders" onclick="switchTab('orders')">
                 <i class="fa fa-list-alt text-xl mb-1"></i>
                 <span class="text-xs">订单</span>
             </button>
-            <button class="nav-item text-gray-400" data-tab="notifications">
+            <button class="nav-item text-gray-400 relative" data-tab="notifications" onclick="switchTab('notifications')">
                 <i class="fa fa-bell text-xl mb-1"></i>
+                <span id="nav-notification-dot" class="absolute top-0 right-3 w-2 h-2 bg-accent rounded-full hidden"></span>
                 <span class="text-xs">消息</span>
             </button>
-            <button class="nav-item text-gray-400" data-tab="profile">
+            <button class="nav-item text-gray-400" data-tab="profile" onclick="switchTab('profile')">
                 <i class="fa fa-user text-xl mb-1"></i>
                 <span class="text-xs">我的</span>
             </button>
@@ -572,11 +505,11 @@
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-900">手机登录</h3>
-                <button id="close-login" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <button id="close-login" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideLoginModal()">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
             </div>
-            <form id="login-form" class="p-6 space-y-4">
+            <form id="login-form" class="p-6 space-y-4" onsubmit="handleLogin(event)">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">手机号</label>
                     <div class="relative">
@@ -591,7 +524,7 @@
                             <i class="fa fa-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="text" id="code" class="input pl-12" required placeholder="6位验证码" maxlength="6">
                         </div>
-                        <button type="button" id="send-code" class="btn btn-outline whitespace-nowrap min-w-[100px]">
+                        <button type="button" id="send-code" class="btn btn-outline whitespace-nowrap min-w-[100px]" onclick="sendVerificationCode()">
                             获取验证码
                         </button>
                     </div>
@@ -614,11 +547,11 @@
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-900">填写游戏信息</h3>
-                <button id="close-game-info" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <button id="close-game-info" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideGameInfoModal()">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
             </div>
-            <form id="game-info-form" class="p-6 space-y-4">
+            <form id="game-info-form" class="p-6 space-y-4" onsubmit="createNewOrder(event)">
                 <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 mb-4">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
@@ -667,7 +600,7 @@
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-900">微信扫码支付</h3>
-                <button id="close-payment" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <button id="close-payment" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hidePaymentModal()">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
             </div>
@@ -714,13 +647,13 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <button id="save-qr-btn" class="btn btn-wechat w-full py-3">
+                    <button id="save-qr-btn" class="btn btn-wechat w-full py-3" onclick="saveQRCode()">
                         <i class="fa fa-download mr-2"></i>保存收款码图片
                     </button>
-                    <button id="paid-btn" class="btn btn-primary w-full py-3">
+                    <button id="paid-btn" class="btn btn-primary w-full py-3" onclick="confirmPaymentSuccess()">
                         <i class="fa fa-check-circle mr-2"></i>已完成支付
                     </button>
-                    <button id="cancel-pay-btn" class="btn btn-outline w-full py-3">
+                    <button id="cancel-pay-btn" class="btn btn-outline w-full py-3" onclick="hidePaymentModal()">
                         取消支付
                     </button>
                 </div>
@@ -733,12 +666,11 @@
         <div class="bg-white rounded-t-3xl w-full max-w-lg max-h-[85vh] overflow-y-auto animate-slide-up">
             <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-900">订单详情</h3>
-                <button id="close-detail" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <button id="close-detail" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideOrderDetailModal()">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
             </div>
             <div class="p-6">
-                <!-- 订单状态时间线 -->
                 <div class="mb-6">
                     <div id="status-timeline" class="space-y-4"></div>
                 </div>
@@ -789,11 +721,9 @@
                     </p>
                 </div>
 
-                <!-- 操作按钮 -->
                 <div class="space-y-3">
                     <div id="detail-actions" class="space-y-2"></div>
                     
-                    <!-- 管理员状态更新 -->
                     <div id="admin-status-update" class="border-t border-gray-200 pt-4 hidden">
                         <h4 class="text-sm font-bold text-gray-900 mb-3">
                             <i class="fa fa-cog text-gray-500 mr-2"></i>管理员操作
@@ -806,7 +736,7 @@
                                 <option value="completed">已完成</option>
                                 <option value="cancelled">已取消</option>
                             </select>
-                            <button id="update-status-btn" class="btn btn-primary text-sm py-2 px-4">
+                            <button id="update-status-btn" class="btn btn-primary text-sm py-2 px-4" onclick="updateOrderStatus()">
                                 更新
                             </button>
                         </div>
@@ -821,7 +751,7 @@
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-900">关于我们</h3>
-                <button id="close-about" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <button id="close-about" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideAboutModal()">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
             </div>
@@ -830,7 +760,7 @@
                     <i class="fa fa-shield text-white text-4xl"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">FG俱乐部</h3>
-                <p class="text-gray-500 text-sm mb-6">版本 2.0.0</p>
+                <p class="text-gray-500 text-sm mb-6">版本 2.1.0</p>
                 <div class="bg-gray-50 rounded-2xl p-4 text-left mb-6">
                     <p class="text-gray-600 text-sm leading-relaxed">
                         FG俱乐部致力于为暗区突围玩家提供专业、安全、高效的护航服务。我们拥有经验丰富的打手团队，24小时在线接单，保障您的游戏体验。
@@ -851,74 +781,100 @@
     <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] space-y-2"></div>
 
     <script>
-        // 配置常量
+        // ==================== 全局变量 ====================
         const WX_BASE = "wxp://f2f0JhCjMkpvim80qEhw81tHvYmGIuq8Y48N8h42SePPsGM";
         const ADMIN_PHONE = '19236163806';
         const SERVICE_QQ = "3428979006";
         const RIGHT_CODE = "123456";
 
-        // Firebase配置（用户需要替换为自己的配置）
-        let firebaseConfig = {
-            databaseURL: localStorage.getItem('firebase_url') || ""
-        };
-
+        let firebaseConfig = { databaseURL: "" };
         let firebaseApp = null;
         let firebaseDB = null;
-        let orderListener = null;
+        let firebaseInitialized = false;
 
-        // 订单状态配置
         const statusConfig = {
-            pending: { label: '待支付', class: 'bg-yellow-100 text-yellow-800', icon: 'clock-o', color: 'text-yellow-500' },
-            paid: { label: '已支付/待接单', class: 'bg-blue-100 text-blue-800', icon: 'check-circle', color: 'text-blue-500' },
-            'in-progress': { label: '进行中', class: 'bg-purple-100 text-purple-800', icon: 'spinner', color: 'text-purple-500' },
-            completed: { label: '已完成', class: 'bg-green-100 text-green-800', icon: 'check-circle', color: 'text-green-500' },
-            cancelled: { label: '已取消', class: 'bg-red-100 text-red-800', icon: 'times-circle', color: 'text-red-500' }
+            pending: { label: '待支付', class: 'bg-yellow-100 text-yellow-800', icon: 'clock-o' },
+            paid: { label: '已支付/待接单', class: 'bg-blue-100 text-blue-800', icon: 'check-circle' },
+            'in-progress': { label: '进行中', class: 'bg-purple-100 text-purple-800', icon: 'spinner' },
+            completed: { label: '已完成', class: 'bg-green-100 text-green-800', icon: 'check-circle' },
+            cancelled: { label: '已取消', class: 'bg-red-100 text-red-800', icon: 'times-circle' }
         };
 
-        // 状态顺序（用于时间线）
-        const statusOrder = ['pending', 'paid', 'in-progress', 'completed'];
-
-        // 全局变量
-        let orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
-        let notifications = JSON.parse(localStorage.getItem('fg-notifications')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
+        let orders = [];
+        let notifications = [];
+        let currentUser = null;
         let currentOrder = null;
         let currentProduct = null;
         let currentPrice = 0;
         let countdown = null;
-        let payUrl = '';
         let currentFilter = 'all';
         let searchQuery = '';
         let currentTab = 'home';
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
             initApp();
-            bindAllEvents();
             initFirebase();
-            checkForUpdates();
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 500);
         });
 
-        // 初始化Firebase
+        function loadData() {
+            try {
+                orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
+                notifications = JSON.parse(localStorage.getItem('fg-notifications')) || [];
+                currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
+            } catch (e) {
+                console.error('加载数据失败:', e);
+                orders = [];
+                notifications = [];
+                currentUser = null;
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('fg-orders', JSON.stringify(orders));
+                localStorage.setItem('fg-notifications', JSON.stringify(notifications));
+                if (currentUser) {
+                    localStorage.setItem('fg-user', JSON.stringify(currentUser));
+                }
+            } catch (e) {
+                console.error('保存数据失败:', e);
+            }
+        }
+
+        // ==================== 应用初始化 ====================
+        function initApp() {
+            updateUserUI();
+            renderOrders();
+            updateStatistics();
+            updateNotificationBadge();
+            renderNotifications();
+        }
+
+        // ==================== Firebase功能 ====================
         function initFirebase() {
             const savedUrl = localStorage.getItem('firebase_url');
             if (savedUrl) {
                 document.getElementById('firebase-url').value = savedUrl;
                 firebaseConfig.databaseURL = savedUrl;
                 try {
-                    firebaseApp = firebase.initializeApp(firebaseConfig);
-                    firebaseDB = firebase.database();
-                    updateSyncStatus(true);
-                    setupRealtimeListener();
-                    showToast('实时同步已连接', 'success');
+                    if (typeof firebase !== 'undefined') {
+                        firebaseApp = firebase.initializeApp(firebaseConfig);
+                        firebaseDB = firebase.database();
+                        firebaseInitialized = true;
+                        updateSyncStatus(true);
+                        setupRealtimeListener();
+                    }
                 } catch (e) {
-                    console.error('Firebase初始化失败:', e);
+                    console.log('Firebase初始化失败:', e);
                     updateSyncStatus(false);
                 }
             }
         }
-
-        // 更新同步状态
         function updateSyncStatus(connected) {
             const statusCard = document.getElementById('sync-status-card');
             const syncIcon = document.getElementById('sync-icon');
@@ -930,89 +886,106 @@
                 syncIcon.className = 'fa fa-refresh text-gray-400';
             }
         }
-
-        // 设置实时监听
         function setupRealtimeListener() {
-            if (!firebaseDB) return;
+            if (!firebaseDB || !firebaseInitialized) return;
             
             const ordersRef = firebaseDB.ref('orders');
             
-            // 监听新订单添加
-            orderListener = ordersRef.on('child_added', (snapshot) => {
+            ordersRef.on('child_added', function(snapshot) {
                 const newOrder = snapshot.val();
                 if (newOrder && newOrder.id) {
-                    const exists = orders.find(o => o.id === newOrder.id);
+                    const exists = orders.some(function(o) { return o.id === newOrder.id; });
                     if (!exists) {
                         orders.unshift(newOrder);
-                        localStorage.setItem('fg-orders', JSON.stringify(orders));
-                        addNotification('新订单', `收到新订单：${newOrder.product} - ¥${newOrder.price}`, 'new_order');
+                        saveData();
+                        addNotification('新订单', '收到新订单：' + newOrder.product + ' - ¥' + newOrder.price, 'new_order');
                         renderOrders();
                         updateStatistics();
-                        checkNotifications();
+                        updateNotificationBadge();
                         if (currentUser && currentUser.phone === ADMIN_PHONE) {
-                            showToast(`新订单：${newOrder.product}`, 'success');
+                            showToast('新订单：' + newOrder.product, 'success');
                         }
                     }
                 }
             });
 
-            // 监听订单更新
-            ordersRef.on('child_changed', (snapshot) => {
+            ordersRef.on('child_changed', function(snapshot) {
                 const updatedOrder = snapshot.val();
                 if (updatedOrder && updatedOrder.id) {
-                    const index = orders.findIndex(o => o.id === updatedOrder.id);
+                    const index = orders.findIndex(function(o) { return o.id === updatedOrder.id; });
                     if (index > -1) {
                         const oldStatus = orders[index].status;
                         orders[index] = updatedOrder;
-                        localStorage.setItem('fg-orders', JSON.stringify(orders));
+                        saveData();
                         
                         if (oldStatus !== updatedOrder.status) {
-                            addNotification('订单更新', `订单${updatedOrder.id}状态更新为：${statusConfig[updatedOrder.status].label}`, 'status_update');
-                            if (currentUser && currentUser.phone === ADMIN_PHONE) {
-                                showToast(`订单更新：${updatedOrder.id}`, 'info');
-                            }
+                            addNotification('订单更新', '订单' + updatedOrder.id + '状态更新为：' + statusConfig[updatedOrder.status].label, 'status_update');
                         }
                         
                         renderOrders();
                         updateStatistics();
-                        checkNotifications();
+                        updateNotificationBadge();
                     }
                 }
             });
 
-            // 初始加载所有订单
-            ordersRef.once('value', (snapshot) => {
+            ordersRef.once('value', function(snapshot) {
                 const data = snapshot.val();
                 if (data) {
                     const firebaseOrders = Object.values(data);
-                    const mergedOrders = [...firebaseOrders];
-                    orders.forEach(localOrder => {
-                        if (!mergedOrders.find(o => o.id === localOrder.id)) {
+                    const mergedOrders = firebaseOrders.slice();
+                    orders.forEach(function(localOrder) {
+                        if (!mergedOrders.some(function(o) { return o.id === localOrder.id; })) {
                             mergedOrders.push(localOrder);
                         }
                     });
-                    mergedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    mergedOrders.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
                     orders = mergedOrders;
-                    localStorage.setItem('fg-orders', JSON.stringify(orders));
+                    saveData();
                     renderOrders();
                     updateStatistics();
                 }
             });
         }
-
-        // 同步订单到Firebase
         function syncOrderToFirebase(order) {
-            if (!firebaseDB) return;
+            if (!firebaseDB || !firebaseInitialized) return;
             try {
                 firebaseDB.ref('orders/' + order.id).set(order);
             } catch (e) {
-                console.error('同步订单失败:', e);
+                console.log('同步失败:', e);
+            }
+        }
+        function saveFirebaseConfig() {
+            const url = document.getElementById('firebase-url').value.trim();
+            if (!url) {
+                showToast('请输入Firebase数据库URL', 'warning');
+                return;
+            }
+            localStorage.setItem('firebase_url', url);
+            firebaseConfig.databaseURL = url;
+            
+            try {
+                if (firebaseApp) {
+                    firebase.app().delete();
+                }
+                if (typeof firebase !== 'undefined') {
+                    firebaseApp = firebase.initializeApp(firebaseConfig);
+                    firebaseDB = firebase.database();
+                    firebaseInitialized = true;
+                    updateSyncStatus(true);
+                    setupRealtimeListener();
+                    showToast('配置已保存，实时同步已连接', 'success');
+                }
+            } catch (e) {
+                console.log('Firebase连接失败:', e);
+                updateSyncStatus(false);
+                showToast('Firebase连接失败，请检查URL', 'error');
             }
         }
 
-        // 添加通知
-        function addNotification(title, message, type = 'info') {
-            const notification = {
+        // ==================== 通知系统 ====================
+        function addNotification(title, message, type) {
+            type = type || 'info'; const notification = {
                 id: Date.now(),
                 title: title,
                 message: message,
@@ -1021,89 +994,65 @@
                 timestamp: new Date().toISOString()
             };
             notifications.unshift(notification);
-            localStorage.setItem('fg-notifications', JSON.stringify(notifications));
+            saveData();
             updateNotificationBadge();
             renderNotifications();
         }
-
-        // 更新通知角标
         function updateNotificationBadge() {
-            const unread = notifications.filter(n => !n.read).length;
-            const badge = document.getElementById('notification-dot');
+            const unread = notifications.filter(function(n) { return !n.read; }).length;
+            const badge1 = document.getElementById('notification-dot');
+            const badge2 = document.getElementById('nav-notification-dot');
+            
             if (unread > 0) {
-                badge.classList.remove('hidden');
+                badge1.classList.remove('hidden');
+                badge2.classList.remove('hidden');
             } else {
-                badge.classList.add('hidden');
+                badge1.classList.add('hidden');
+                badge2.classList.add('hidden');
             }
         }
 
-        // 渲染通知列表
         function renderNotifications() {
             const container = document.getElementById('notifications-list');
             
             if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-400">
-                        <i class="fa fa-inbox text-4xl mb-3"></i>
-                        <p>暂无消息</p>
-                    </div>
-                `;
+                container.innerHTML = '<div class="text-center py-8 text-gray-400"><i class="fa fa-inbox text-4xl mb-3"></i><p>暂无消息</p></div>';
                 return;
             }
             
-            container.innerHTML = notifications.map(notification => `
-                <div class="card ${notification.read ? 'opacity-60' : ''}" onclick="markNotificationRead(${notification.id})">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                            notification.type === 'new_order' ? 'bg-green-500/20 text-green-500' :
-                            notification.type === 'status_update' ? 'bg-blue-500/20 text-blue-500' :
-                            'bg-gray-500/20 text-gray-400'
-                        }">
-                            <i class="fa fa-${notification.type === 'new_order' ? 'shopping-cart' : notification.type === 'status_update' ? 'refresh' : 'bell'}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">${notification.title}</p>
-                            <p class="text-xs text-gray-400 mt-1">${notification.message}</p>
-                            <p class="text-xs text-gray-500 mt-2">${formatDate(notification.timestamp)}</p>
-                        </div>
-                        ${!notification.read ? '<div class="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>' : ''}
-                    </div>
-                </div>
-            `).join('');
+            const html = notifications.map(function(notification) {
+                const iconClass = notification.type === 'new_order' ? 'shopping-cart' : notification.type === 'status_update' ? 'refresh' : 'bell';
+                const colorClass = notification.type === 'new_order' ? 'bg-green-500/20 text-green-500' : notification.type === 'status_update' ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-400';
+                const readClass = notification.read ? 'opacity-60' : '';
+                const dot = !notification.read ? '<div class="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>' : '';
+                
+                return '<div class="card ' + readClass + '" onclick="markNotificationRead(' + notification.id + ')">' +
+                    '<div class="flex items-start gap-3">' +
+                    '<div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ' + colorClass + '">' +
+                    '<i class="fa fa-' + iconClass + '"></i></div>' +
+                    '<div class="flex-1">' +
+                    '<p class="text-sm font-medium text-white">' + notification.title + '</p>' +
+                    '<p class="text-xs text-gray-400 mt-1">' + notification.message + '</p>' +
+                    '<p class="text-xs text-gray-500 mt-2">' + formatDate(notification.timestamp) + '</p></div>' + dot +
+                    '</div></div>';
+            }).join('');
+            
+            container.innerHTML = html;
         }
-
-        // 标记通知已读
         function markNotificationRead(id) {
-            const notification = notifications.find(n => n.id === id);
+            const notification = notifications.find(function(n) { return n.id === id; });
             if (notification) {
                 notification.read = true;
-                localStorage.setItem('fg-notifications', JSON.stringify(notifications));
+                saveData();
                 updateNotificationBadge();
                 renderNotifications();
             }
         }
-
-        // 初始化应用
-        function initApp() {
-            updateUserUI();
-            renderOrders();
-            updateStatistics();
-            checkNotifications();
-            renderNotifications();
-            updateNotificationBadge();
-        }
-
-        // 检查通知
-        function checkNotifications() {
-            updateNotificationBadge();
-        }
-
-        // 切换标签页
+        // ==================== 标签页切换 ====================
         function switchTab(tab) {
             currentTab = tab;
             
-            // 更新底部导航
-            document.querySelectorAll('.nav-item').forEach(item => {
+            document.querySelectorAll('.nav-item').forEach(function(item) {
                 if (item.dataset.tab === tab) {
                     item.classList.add('active');
                     item.classList.remove('text-gray-400');
@@ -1113,29 +1062,506 @@
                 }
             });
             
-            // 切换页面内容
-            document.querySelectorAll('.page-content').forEach(page => {
+            document.querySelectorAll('.page-content').forEach(function(page) {
                 page.classList.add('hidden');
             });
             
-            const targetPage = document.getElementById(`page-${tab}`);
+            const targetPage = document.getElementById('page-' + tab);
             if (targetPage) {
                 targetPage.classList.remove('hidden');
                 targetPage.classList.add('animate-fade-in');
             }
             
-            // 滚动到顶部
+            if (tab === 'notifications') {
+                notifications.forEach(function(n) { n.read = true; });
+                saveData();
+                updateNotificationBadge();
+                renderNotifications();
+            }
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // 更新用户界面
+        // ==================== 用户界面 ====================
         function updateUserUI() {
             if (currentUser) {
                 document.getElementById('login-btn').classList.add('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
-                
                 document.getElementById('not-logged-in').classList.add('hidden');
                 document.getElementById('orders-container').classList.remove('hidden');
+                document.getElementById('profile-logged-out').classList.add('hidden');
+                document.getElementById('profile-logged-in').classList.remove('hidden');
+                document.getElementById('logout-section').classList.remove('hidden');
+                document.getElementById('profile-phone').textContent = currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+                document.getElementById('profile-name').textContent = '用户' + currentUser.phone.slice(-4);
                 
-                // 个人中心
-                document.getElementById('profile
+                if (currentUser.phone === ADMIN_PHONE) {
+                    document.getElementById('order-title').textContent = '全部订单';
+                    document.getElementById('admin-badge').classList.remove('hidden');
+                    document.getElementById('profile-admin-badge').classList.remove('hidden');
+                } else {
+                    document.getElementById('order-title').textContent = '我的订单';
+                    document.getElementById('admin-badge').classList.add('hidden');
+                    document.getElementById('profile-admin-badge').classList.add('hidden');
+                }
+            } else {
+                document.getElementById('login-btn').classList.remove('hidden');
+                document.getElementById('user-info').classList.add('hidden');
+                document.getElementById('not-logged-in').classList.remove('hidden');
+                document.getElementById('orders-container').classList.add('hidden');
+                document.getElementById('profile-logged-out').classList.remove('hidden');
+                document.getElementById('profile-logged-in').classList.add('hidden');
+                document.getElementById('logout-section').classList.add('hidden');
+            }
+        }
+        function updateStatistics() {
+            let filteredOrders = orders;
+            if (currentUser && currentUser.phone !== ADMIN_PHONE) {
+                filteredOrders = orders.filter(function(o) { return o.userPhone === currentUser.phone; });
+            }
+            document.getElementById('total-orders').textContent = filteredOrders.length;
+            document.getElementById('pending-orders').textContent = filteredOrders.filter(function(o) { return o.status === 'paid'; }).length;
+        }
+        // ==================== 订单管理 ====================
+        function filterOrders(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.tab-btn[data-filter]').forEach(function(btn) {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-dark/40', 'text-gray-400');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('bg-dark/40', 'text-gray-400');
+                }
+            });
+            renderOrders();
+        }
+        function searchOrders(query) {
+            searchQuery = query;
+            renderOrders();
+        }
+
+        function renderOrders() {
+            let filteredOrders = [];
+            
+            if (currentUser) {
+                if (currentUser.phone === ADMIN_PHONE) {
+                    filteredOrders = orders.slice();
+                } else {
+                    filteredOrders = orders.filter(function(o) { return o.userPhone === currentUser.phone; });
+                }
+            }
+            
+            if (currentFilter !== 'all') {
+                filteredOrders = filteredOrders.filter(function(o) { return o.status === currentFilter; });
+            }
+            
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filteredOrders = filteredOrders.filter(function(o) { 
+                    return o.id.toLowerCase().includes(query) || o.gameId.toLowerCase().includes(query) || o.product.toLowerCase().includes(query);
+                });
+            }
+            
+            filteredOrders.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            
+            const container = document.getElementById('orders-list');
+            const empty = document.getElementById('empty-orders');
+            
+            if (!currentUser) {
+                return;
+            }
+            
+            if (filteredOrders.length === 0) {
+                container.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            
+            const html = filteredOrders.map(function(order, index) {
+                const payButton = order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ? 
+                    '<button class="text-wechat text-sm" onclick="payOrder(\'' + order.id + '\')"><i class="fa fa-credit-card mr-1"></i>支付</button>' : '';
+                
+                return '<div class="card animate-slide-up" style="animation-delay: ' + (index * 0.05) + 's">' +
+                    '<div class="flex justify-between items-start mb-3">' +
+                    '<span class="text-primary/80 text-xs font-mono font-medium">' + order.id + '</span>' +
+                    '<span class="status-badge ' + statusConfig[order.status].class + '">' + statusConfig[order.status].label + '</span></div>' +
+                    '<div class="flex justify-between items-center mb-3">' +
+                    '<span class="text-white font-medium">' + order.product + '</span>' +
+                    '<span class="text-white font-bold text-lg">¥' + order.price.toFixed(2) + '</span></div>' +
+                    '<div class="flex items-center gap-2 text-gray-400 text-xs mb-3">' +
+                    '<i class="fa fa-gamepad"></i><span>' + order.gameId + '</span></div>' +
+                    '<div class="flex justify-between items-center pt-3 border-t border-white/10">' +
+                    '<span class="text-gray-400 text-xs"><i class="fa fa-calendar-o mr-1"></i>' + formatDate(order.createdAt) + '</span>' +
+                    '<div class="flex gap-2">' +
+                    '<button class="text-primary text-sm" onclick="viewOrder(\'' + order.id + '\')"><i class="fa fa-eye mr-1"></i>详情</button>' + payButton +
+                    '</div></div></div>';
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        function viewOrder(id) {
+            const o = orders.find(function(x) { return x.id === id; });
+            if (!o) {
+                showToast('订单不存在', 'error');
+                return;
+            }
+            
+            currentOrder = o;
+            
+            const timeline = document.getElementById('status-timeline');
+            const history = o.statusHistory || [{ status: o.status, time: o.createdAt, note: '订单创建' }];
+            
+            const timelineHtml = history.map(function(item, index) {
+                const isLast = index === history.length - 1;
+                const config = statusConfig[item.status] || statusConfig.pending;
+                const dot = !isLast ? '<div class="w-0.5 h-8 bg-gray-200"></div>' : '';
+                
+                return '<div class="flex gap-3">' +
+                    '<div class="flex flex-col items-center">' +
+                    '<div class="w-8 h-8 rounded-full ' + (isLast ? 'bg-primary text-white' : 'bg-gray-200 text-gray-400') + ' flex items-center justify-center">' +
+                    '<i class="fa fa-' + config.icon + ' text-sm"></i></div>' + dot +
+                    '</div>' +
+                    '<div class="flex-1 pb-4">' +
+                    '<p class="font-medium text-gray-900">' + config.label + '</p>' +
+                    '<p class="text-xs text-gray-500">' + item.note + '</p>' +
+                    '<p class="text-xs text-gray-400 mt-1">' + new Date(item.time).toLocaleString('zh-CN') + '</p></div>' +
+                    '</div>';
+            }).join('');
+            
+            timeline.innerHTML = timelineHtml;
+            
+            document.getElementById('detail-id').textContent = o.id;
+            document.getElementById('detail-product').textContent = o.product;
+            document.getElementById('detail-price').textContent = '¥' + o.price.toFixed(2);
+            document.getElementById('detail-status').innerHTML = '<span class="status-badge ' + statusConfig[o.status].class + '">' + statusConfig[o.status].label + '</span>';
+            document.getElementById('detail-gameid').textContent = o.gameId;
+            document.getElementById('detail-qq').textContent = o.qq;
+            document.getElementById('detail-phone').textContent = o.userPhone;
+            document.getElementById('detail-remark').textContent = o.remark;
+            document.getElementById('detail-time').textContent = formatDate(o.createdAt);
+            document.getElementById('new-status').value = o.status;
+            
+            const actionsDiv = document.getElementById('detail-actions');
+            let actionsHtml = '';
+            
+            if (o.status === 'pending' && currentUser && currentUser.phone !== ADMIN_PHONE) {
+                actionsHtml += '<button class="btn btn-wechat w-full" onclick="reopenPayment()"><i class="fa fa-credit-card"></i> 去支付</button>';
+            }
+            
+            if (o.status === 'completed') {
+                actionsHtml += '<button class="btn btn-primary w-full" onclick="showToast(\'感谢您的评价！\', \'success\')"><i class="fa fa-star"></i> 评价订单</button>';
+            }
+            
+            actionsHtml += '<button class="btn btn-outline w-full" onclick="copyToClipboard(\'' + SERVICE_QQ + '\'); showToast(\'客服QQ已复制\', \'success\')"><i class="fa fa-qq"></i> 联系客服</button>';
+            
+            actionsDiv.innerHTML = actionsHtml;
+            
+            const adminSection = document.getElementById('admin-status-update');
+            if (currentUser && currentUser.phone === ADMIN_PHONE) {
+                adminSection.classList.remove('hidden');
+            } else {
+                adminSection.classList.add('hidden');
+            }
+            
+            document.getElementById('order-detail-modal').classList.remove('hidden');
+        }
+
+        function payOrder(id) {
+            const order = orders.find(function(o) { return o.id === id; });
+            if (order) {
+                currentOrder = order;
+                showPaymentModal(order.price);
+            }
+        }
+        function reopenPayment() {
+            hideOrderDetailModal();
+            showPaymentModal(currentOrder.price);
+        }
+
+        function updateOrderStatus() {
+            const ns = document.getElementById('new-status').value;
+            if (ns === currentOrder.status) {
+                showToast('状态未修改', 'info');
+                return;
+            }
+            
+            currentOrder.status = ns;
+            currentOrder.statusHistory.push({ status: ns, time: new Date().toISOString(), note: '管理员更新状态' });
+            
+            const idx = orders.findIndex(function(o) { return o.id === currentOrder.id; });
+            if (idx > -1) {
+                orders[idx] = currentOrder;
+                saveData();
+                syncOrderToFirebase(currentOrder);
+            }
+            
+            hideOrderDetailModal();
+            renderOrders();
+            updateStatistics();
+            updateNotificationBadge();
+            showToast('状态更新成功', 'success');
+        }
+        // ==================== 登录注册 ====================
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function hideLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('login-form').reset();
+            if (countdown) {
+                clearInterval(countdown);
+                countdown = null;
+                document.getElementById('send-code').innerText = '获取验证码';
+                document.getElementById('send-code').disabled = false;
+            }
+        }
+        function sendVerificationCode() {
+            const phone = document.getElementById('phone').value.trim();
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showToast('手机号格式错误', 'error');
+                return;
+            }
+            showToast('测试验证码：123456', 'info');
+            let s = 60;
+            const btn = document.getElementById('send-code');
+            btn.disabled = true;
+            btn.innerText = s + 's';
+            if (countdown) clearInterval(countdown);
+            countdown = setInterval(function() {
+                s--;
+                btn.innerText = s + 's';
+                if (s <= 0) {
+                    clearInterval(countdown);
+                    countdown = null;
+                    btn.innerText = '获取验证码';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+        function handleLogin(e) {
+            e.preventDefault();
+            const p = document.getElementById('phone').value.trim();
+            const c = document.getElementById('code').value.trim();
+            
+            if (c !== RIGHT_CODE) {
+                showToast('验证码错误，正确：123456', 'error');
+                return;
+            }
+            
+            currentUser = { id: 'user_' + p, phone: p };
+            saveData();
+            hideLoginModal();
+            updateUserUI();
+            renderOrders();
+            updateStatistics();
+            showToast('登录成功', 'success');
+        }
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('fg-user');
+            updateUserUI();
+            renderOrders();
+            updateStatistics();
+            switchTab('home');
+            showToast('已退出登录', 'info');
+        }
+        // ==================== 下单流程 ====================
+        function handleBuyClick(product, price) {
+            if (!currentUser) {
+                showToast('请先登录', 'warning');
+                showLoginModal();
+                return;
+            }
+            currentProduct = product;
+            currentPrice = price;
+            showGameInfoModal();
+        }
+        function showGameInfoModal() {
+            document.getElementById('selected-product').textContent = currentProduct;
+            document.getElementById('selected-price').textContent = '¥' + currentPrice.toFixed(2);
+            document.getElementById('game-info-modal').classList.remove('hidden');
+        }
+        function hideGameInfoModal() {
+            document.getElementById('game-info-modal').classList.add('hidden');
+            document.getElementById('game-info-form').reset();
+        }
+        function createNewOrder(e) {
+            e.preventDefault();
+            const gid = document.getElementById('game-id').value.trim();
+            const qq = document.getElementById('qq').value.trim();
+            const rem = document.getElementById('remark').value.trim() || '无';
+            
+            if (!gid || !qq) {
+                showToast('请填写游戏ID和QQ', 'warning');
+                return;
+            }
+            
+            const oid = 'FG' + Date.now();
+            const newO = {
+                id: oid,
+                userId: currentUser.id,
+                userPhone: currentUser.phone,
+                product: currentProduct,
+                price: currentPrice,
+                gameId: gid,
+                qq: qq,
+                remark: rem,
+                status: 'pending',
+                statusHistory: [{ status: 'pending', time: new Date().toISOString(), note: '创建订单' }],
+                createdAt: new Date().toISOString()
+            };
+            
+            orders.unshift(newO);
+            saveData();
+            hideGameInfoModal();
+            currentOrder = newO;
+            syncOrderToFirebase(newO);
+            showPaymentModal(currentPrice);
+            renderOrders();
+            updateStatistics();
+            updateNotificationBadge();
+            showToast('订单创建成功', 'success');
+        }
+        // ==================== 支付流程 ====================
+        function showPaymentModal(price) {
+            document.getElementById('pay-amount').textContent = '¥' + price.toFixed(2);
+            document.getElementById('pay-product').textContent = currentOrder.product;
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+        function hidePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+            currentOrder = null;
+        }
+        function confirmPaymentSuccess() {
+            if (!currentOrder) {
+                showToast('订单异常', 'error');
+                return;
+            }
+            
+            currentOrder.status = 'paid';
+            currentOrder.statusHistory.push({ status: 'paid', time: new Date().toISOString(), note: '用户自主确认付款' });
+            
+            const idx = orders.findIndex(function(o) { return o.id === currentOrder.id; });
+            if (idx > -1) {
+                orders[idx] = currentOrder;
+                saveData();
+                syncOrderToFirebase(currentOrder);
+            }
+            
+            hidePaymentModal();
+            renderOrders();
+            updateStatistics();
+            updateNotificationBadge();
+            showToast('付款确认成功！请联系客服安排打手', 'success');
+        }
+        function saveQRCode() {
+            const qrImg = document.getElementById('qrcode-img');
+            if (qrImg) {
+                const link = document.createElement('a');
+                link.href = qrImg.src;
+                link.download = '收款码.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('收款码图片已保存', 'success');
+            } else {
+                showToast('无法找到收款码图片', 'error');
+            }
+        }
+        // ==================== 其他功能 ====================
+        function hideOrderDetailModal() {
+            document.getElementById('order-detail-modal').classList.add('hidden');
+            currentOrder = null;
+        }
+        function showAbout() {
+            document.getElementById('about-modal').classList.remove('hidden');
+        }
+        function hideAboutModal() {
+            document.getElementById('about-modal').classList.add('hidden');
+        }
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).catch(function() {
+                    var tmp = document.createElement('input');
+                    tmp.value = text;
+                    document.body.appendChild(tmp);
+                    tmp.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tmp);
+                });
+            } else {
+                var tmp = document.createElement('input');
+                tmp.value = text;
+                document.body.appendChild(tmp);
+                tmp.select();
+                document.execCommand('copy');
+                document.body.removeChild(tmp);
+            }
+        }
+        function shareApp() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'FG俱乐部',
+                    text: '专业暗区突围护航服务，安全可靠！',
+                    url: window.location.href
+                });
+            } else {
+                copyToClipboard(window.location.href);
+                showToast('链接已复制，分享给好友吧', 'success');
+            }
+        }
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+            
+            return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        }
+        // ==================== Toast提示 ====================
+        function showToast(message, type) {
+            type = type || 'info'; const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const icons = {
+                success: 'check-circle',
+                error: 'times-circle',
+                warning: 'exclamation-circle',
+                info: 'info-circle'
+            };
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            toast.className = 'flex items-center gap-3 px-5 py-3 rounded-2xl shadow-lg text-white ' + colors[type] + ' animate-slide-down';
+            toast.innerHTML = '<i class="fa fa-' + icons[type] + '"></i><span>' + message + '</span>';
+            
+            container.appendChild(toast);
+            
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // 通用模态框关闭函数
+        const modalHideMap = { 'login-modal': hideLoginModal, 'game-info-modal': hideGameInfoModal, 'payment-modal': hidePaymentModal, 'order-detail-modal': hideOrderDetailModal, 'about-modal': hideAboutModal };
+        function hideModal(id) { if (modalHideMap[id]) modalHideMap[id](); }
+        // 点击遮罩关闭模态框
+        ['login-modal', 'game-info-modal', 'payment-modal', 'order-detail-modal', 'about-modal'].forEach(function(id) {
+            document.getElementById(id).addEventListener('click', function(e) { if (e.target === e.currentTarget) hideModal(id); });
+        });
+    </script>
+</body>
+</html>
