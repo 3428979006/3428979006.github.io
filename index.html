@@ -50,24 +50,21 @@
             .btn-outline { @apply border border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100; }
             .btn-icon { @apply p-2 rounded-full transition-all duration-200 hover:bg-white/10 active:scale-90 select-none; }
             .input { @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-gray-50; }
-            .table-cell { @apply px-4 py-3 whitespace-nowrap text-sm; }
             .card { @apply bg-dark/60 rounded-2xl p-4 border border-primary/10 backdrop-blur-sm; }
             .nav-item { @apply flex flex-col items-center justify-center py-2 px-4 transition-all duration-200 select-none; }
             .nav-item.active { @apply text-primary; }
             .tab-btn { @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 select-none; }
             .tab-btn.active { @apply bg-primary text-white; }
             .glass-effect { @apply bg-dark/80 backdrop-blur-lg border border-white/10; }
-            .skeleton { @apply animate-pulse bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 bg-[length:200%_100%]; }
         }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 2px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.5); }
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { -webkit-font-smoothing: antialiased; }
         .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
-        @keyframes notificationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .notification-dot { animation: notificationPulse 1.5s ease-in-out infinite; }
+        @keyframes notificationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .loading-spinner { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
@@ -93,167 +90,78 @@
                     </div>
                 </div>
                 <div id="user-area" class="flex gap-2 items-center">
-                    <button id="sync-status" class="btn-icon text-gray-400" title="同步状态">
-                        <i class="fa fa-refresh" id="sync-icon"></i>
-                    </button>
-                    <button id="notification-btn" class="btn-icon text-gray-400 relative">
-                        <i class="fa fa-bell"></i>
-                        <span id="notification-dot" class="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full animate-pulse hidden notification-dot"></span>
-                    </button>
-                    <button id="login-btn" class="btn btn-primary text-sm py-1.5 px-3">
-                        <i class="fa fa-user"></i> 登录
-                    </button>
+                    <button id="sync-status" class="btn-icon text-gray-400"><i class="fa fa-refresh" id="sync-icon"></i></button>
+                    <button id="notification-btn" class="btn-icon text-gray-400 relative"><i class="fa fa-bell"></i><span id="notification-dot" class="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full animate-pulse hidden notification-dot"></span></button>
+                    <button id="login-btn" class="btn btn-primary text-sm py-1.5 px-3" onclick="showLoginModal()"><i class="fa fa-user"></i> 登录</button>
                     <div id="user-info" class="hidden flex items-center gap-2">
-                        <div class="w-9 h-9 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                            <i class="fa fa-user text-white text-sm"></i>
-                        </div>
+                        <div class="w-9 h-9 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center"><i class="fa fa-user text-white text-sm"></i></div>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main id="main-content" class="px-4 py-6 pb-24">
+    <main class="px-4 py-6 pb-24">
         <div id="page-home" class="page-content">
             <div class="card mb-6 relative overflow-hidden">
                 <div class="flex items-center gap-3">
-                    <div class="bg-accent/20 text-accent px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        <i class="fa fa-bullhorn"></i> 公告
-                    </div>
-                    <div class="flex-1 overflow-hidden">
-                        <div class="whitespace-nowrap">
-                            <span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单</span>
-                        </div>
-                    </div>
+                    <div class="bg-accent/20 text-accent px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"><i class="fa fa-bullhorn"></i> 公告</div>
+                    <div class="flex-1 overflow-hidden"><div class="whitespace-nowrap"><span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单</span></div></div>
                 </div>
             </div>
 
             <div id="sync-status-card" class="card mb-6 animate-fade-in hidden">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                        <i class="fa fa-wifi text-green-500 text-lg"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium text-white">实时同步已开启</p>
-                        <p class="text-xs text-gray-400">订单消息实时推送到管理员手机</p>
-                    </div>
+                    <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center"><i class="fa fa-wifi text-green-500 text-lg"></i></div>
+                    <div class="flex-1"><p class="text-sm font-medium text-white">实时同步已开启</p><p class="text-xs text-gray-400">订单消息实时推送到管理员手机</p></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="card animate-fade-in">
-                    <div class="flex items-center justify-between mb-2">
-                        <i class="fa fa-file-text-o text-primary/60 text-xl"></i>
-                        <span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">全部</span>
-                    </div>
-                    <p class="text-gray-400 text-xs mb-1">全部订单</p>
-                    <h3 class="text-2xl font-bold text-white" id="total-orders">0</h3>
-                </div>
-                <div class="card animate-fade-in">
-                    <div class="flex items-center justify-between mb-2">
-                        <i class="fa fa-clock-o text-accent/60 text-xl"></i>
-                        <span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">待接</span>
-                    </div>
-                    <p class="text-gray-400 text-xs mb-1">待接单</p>
-                    <h3 class="text-2xl font-bold text-accent" id="pending-orders">0</h3>
-                </div>
+                <div class="card"><div class="flex items-center justify-between mb-2"><i class="fa fa-file-text-o text-primary/60 text-xl"></i><span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">全部</span></div><p class="text-gray-400 text-xs mb-1">全部订单</p><h3 class="text-2xl font-bold text-white" id="total-orders">0</h3></div>
+                <div class="card"><div class="flex items-center justify-between mb-2"><i class="fa fa-clock-o text-accent/60 text-xl"></i><span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded-full">待接</span></div><p class="text-gray-400 text-xs mb-1">待接单</p><h3 class="text-2xl font-bold text-accent" id="pending-orders">0</h3></div>
             </div>
 
-            <div class="card mb-6 animate-fade-in">
+            <div class="card mb-6">
                 <div class="grid grid-cols-4 gap-4">
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
-                        <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center"><i class="fa fa-shopping-cart text-primary text-xl"></i></div>
-                        <span class="text-xs text-gray-300">下单</span>
-                    </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006'); showToast('客服QQ已复制', 'success')">
-                        <div class="w-12 h-12 bg-wechat/20 rounded-2xl flex items-center justify-center"><i class="fa fa-qq text-wechat text-xl"></i></div>
-                        <span class="text-xs text-gray-300">客服</span>
-                    </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
-                        <div class="w-12 h-12 bg-secondary/20 rounded-2xl flex items-center justify-center"><i class="fa fa-list text-secondary text-xl"></i></div>
-                        <span class="text-xs text-gray-300">订单</span>
-                    </button>
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('profile')">
-                        <div class="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center"><i class="fa fa-user text-accent text-xl"></i></div>
-                        <span class="text-xs text-gray-300">我的</span>
-                    </button>
+                    <button class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')"><div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center"><i class="fa fa-shopping-cart text-primary text-xl"></i></div><span class="text-xs text-gray-300">下单</span></button>
+                    <button class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006'); showToast('客服QQ已复制','success')"><div class="w-12 h-12 bg-wechat/20 rounded-2xl flex items-center justify-center"><i class="fa fa-qq text-wechat text-xl"></i></div><span class="text-xs text-gray-300">客服</span></button>
+                    <button class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')"><div class="w-12 h-12 bg-secondary/20 rounded-2xl flex items-center justify-center"><i class="fa fa-list text-secondary text-xl"></i></div><span class="text-xs text-gray-300">订单</span></button>
+                    <button class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('profile')"><div class="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center"><i class="fa fa-user text-accent text-xl"></i></div><span class="text-xs text-gray-300">我的</span></button>
                 </div>
             </div>
 
-            <div class="bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl p-4 mb-6 border border-primary/30 animate-fade-in">
+            <div class="bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl p-4 mb-6 border border-primary/30">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-wechat rounded-2xl flex items-center justify-center shadow-lg"><i class="fa fa-qq text-white text-2xl"></i></div>
-                    <div class="flex-1">
-                        <p class="text-sm text-gray-300 mb-1">下单后添加客服对接</p>
-                        <p class="text-lg font-bold text-white">QQ：<span class="text-primary">3428979006</span></p>
-                    </div>
+                    <div class="flex-1"><p class="text-sm text-gray-300 mb-1">下单后添加客服对接</p><p class="text-lg font-bold text-white">QQ：<span class="text-primary">3428979006</span></p></div>
                     <button class="btn btn-wechat text-sm py-2" onclick="copyToClipboard('3428979006')"><i class="fa fa-copy"></i> 复制</button>
                 </div>
             </div>
 
-            <div class="card mb-6 animate-fade-in">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa fa-fire text-accent"></i> 热门护航套餐</h2>
-                    <span class="text-xs text-gray-400">4款精选</span>
-                </div>
+            <div class="card mb-6">
+                <div class="flex items-center justify-between mb-4"><h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa fa-fire text-accent"></i> 热门护航套餐</h2><span class="text-xs text-gray-400">4款精选</span></div>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02]">
-                        <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="text-lg font-bold text-white">基础护航</h3><p class="text-xs text-gray-400 mt-1">新手首选 · 性价比高</p></div>
-                            <div class="text-right"><span class="text-2xl font-bold text-primary">¥13.9</span></div>
-                        </div>
-                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4">
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>全程护航1小时</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>包撤离失败全额退款</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出200万物资</strong></li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>专业打手一对一</li>
-                        </ul>
-                        <button class="btn btn-primary w-full" onclick="handleBuyClick('基础护航', 13.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
+                        <div class="flex justify-between items-start mb-3"><div><h3 class="text-lg font-bold text-white">基础护航</h3><p class="text-xs text-gray-400 mt-1">新手首选 · 性价比高</p></div><span class="text-2xl font-bold text-primary">¥13.9</span></div>
+                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4"><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>全程护航1小时</li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>包撤离失败全额退款</li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出200万物资</strong></li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>专业打手一对一</li></ul>
+                        <button class="btn btn-primary w-full" onclick="handleBuyClick('基础护航',13.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
                     </div>
-
                     <div class="bg-dark/40 rounded-2xl p-4 border border-primary/20 hover:border-primary/40 transition-all hover:scale-[1.02]">
-                        <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="text-lg font-bold text-white">进阶护航</h3><p class="text-xs text-gray-400 mt-1">进阶之选 · 物资更多</p></div>
-                            <div class="text-right"><span class="text-2xl font-bold text-primary">¥19.9</span></div>
-                        </div>
-                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4">
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>全程护航1.5小时</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>包撤离失败全额退款</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出350万物资</strong></li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>提供基础装备</li>
-                        </ul>
-                        <button class="btn btn-primary w-full" onclick="handleBuyClick('进阶护航', 19.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
+                        <div class="flex justify-between items-start mb-3"><div><h3 class="text-lg font-bold text-white">进阶护航</h3><p class="text-xs text-gray-400 mt-1">进阶之选 · 物资更多</p></div><span class="text-2xl font-bold text-primary">¥19.9</span></div>
+                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4"><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>全程护航1.5小时</li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>包撤离失败全额退款</li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i><strong class="text-white">保底带出350万物资</strong></li><li class="flex items-center"><i class="fa fa-check-circle text-primary mr-2"></i>提供基础装备</li></ul>
+                        <button class="btn btn-primary w-full" onclick="handleBuyClick('进阶护航',19.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
                     </div>
-
                     <div class="bg-dark/40 rounded-2xl p-4 border border-accent/20 relative hover:border-accent/40 transition-all hover:scale-[1.02]">
                         <div class="absolute -top-2 -right-2 bg-gradient-to-r from-accent to-orange-500 text-white text-xs px-3 py-1 rounded-full shadow-lg font-bold"><i class="fa fa-star mr-1"></i> 推荐</div>
-                        <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="text-lg font-bold text-white">全装包赔</h3><p class="text-xs text-gray-400 mt-1">豪华配置 · 死亡包赔</p></div>
-                            <div class="text-right"><span class="text-2xl font-bold text-accent">¥29.9</span></div>
-                        </div>
-                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4">
-                            <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>全程护航2小时</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>提供全套顶级装备</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>死亡包赔所有损失</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i><strong class="text-white">保底带出500万物资</strong></li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>优先安排订单</li>
-                        </ul>
-                        <button class="btn btn-accent w-full" onclick="handleBuyClick('全装包赔', 29.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
+                        <div class="flex justify-between items-start mb-3"><div><h3 class="text-lg font-bold text-white">全装包赔</h3><p class="text-xs text-gray-400 mt-1">豪华配置 · 死亡包赔</p></div><span class="text-2xl font-bold text-accent">¥29.9</span></div>
+                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4"><li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>全程护航2小时</li><li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>提供全套顶级装备</li><li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>死亡包赔所有损失</li><li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i><strong class="text-white">保底带出500万物资</strong></li><li class="flex items-center"><i class="fa fa-check-circle text-accent mr-2"></i>优先安排订单</li></ul>
+                        <button class="btn btn-accent w-full" onclick="handleBuyClick('全装包赔',29.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
                     </div>
-
                     <div class="bg-dark/40 rounded-2xl p-4 border border-secondary/20 hover:border-secondary/40 transition-all hover:scale-[1.02]">
-                        <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="text-lg font-bold text-white">豪华三金</h3><p class="text-xs text-gray-400 mt-1">至尊享受 · 必出大金</p></div>
-                            <div class="text-right"><span class="text-2xl font-bold text-secondary">¥99.9</span></div>
-                        </div>
-                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4">
-                            <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>全程护航3小时</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>包出3个大金</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>不出全额退款</li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i><strong class="text-white">保底带出1200万物资</strong></li>
-                            <li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>3名顶级打手护航</li>
-                        </ul>
-                        <button class="btn btn-secondary w-full" onclick="handleBuyClick('豪华三金', 99.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
+                        <div class="flex justify-between items-start mb-3"><div><h3 class="text-lg font-bold text-white">豪华三金</h3><p class="text-xs text-gray-400 mt-1">至尊享受 · 必出大金</p></div><span class="text-2xl font-bold text-secondary">¥99.9</span></div>
+                        <ul class="text-gray-400 text-sm space-y-1.5 mb-4"><li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>全程护航3小时</li><li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>包出3个大金</li><li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>不出全额退款</li><li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i><strong class="text-white">保底带出1200万物资</strong></li><li class="flex items-center"><i class="fa fa-check-circle text-secondary mr-2"></i>3名顶级打手护航</li></ul>
+                        <button class="btn btn-secondary w-full" onclick="handleBuyClick('豪华三金',99.9)"><i class="fa fa-shopping-cart"></i> 立即下单</button>
                     </div>
                 </div>
             </div>
@@ -261,11 +169,7 @@
 
         <div id="page-orders" class="page-content hidden">
             <div class="card mb-4">
-                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <i class="fa fa-list-alt text-primary"></i>
-                    <span id="order-title">我的订单</span>
-                    <span id="admin-badge" class="text-xs bg-danger/20 text-danger px-2 py-1 rounded-full hidden">管理员</span>
-                </h2>
+                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa fa-list-alt text-primary"></i><span id="order-title">我的订单</span><span id="admin-badge" class="text-xs bg-danger/20 text-danger px-2 py-1 rounded-full hidden">管理员</span></h2>
                 <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
                     <button class="tab-btn active whitespace-nowrap" data-filter="all" onclick="filterOrders('all')">全部</button>
                     <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="pending" onclick="filterOrders('pending')">待支付</button>
@@ -273,10 +177,7 @@
                     <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="in-progress" onclick="filterOrders('in-progress')">进行中</button>
                     <button class="tab-btn bg-dark/40 text-gray-400 whitespace-nowrap" data-filter="completed" onclick="filterOrders('completed')">已完成</button>
                 </div>
-                <div class="relative mb-4">
-                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="search-order" class="input pl-10 bg-dark/40 border-gray-600 text-white placeholder-gray-400" placeholder="搜索订单号、游戏ID..." oninput="searchOrders(this.value)">
-                </div>
+                <div class="relative"><i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="search-order" class="input pl-10 bg-dark/40 border-gray-600 text-white placeholder-gray-400" placeholder="搜索订单号、游戏ID..." oninput="searchOrders(this.value)"></div>
             </div>
             <div id="not-logged-in" class="card py-12 text-center">
                 <div class="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fa fa-user-lock text-gray-500 text-4xl"></i></div>
@@ -285,79 +186,42 @@
             </div>
             <div id="orders-container" class="hidden space-y-3">
                 <div id="orders-list"></div>
-                <div id="empty-orders" class="card py-8 text-center hidden">
-                    <i class="fa fa-inbox text-gray-600 text-4xl mb-3"></i>
-                    <p class="text-gray-400">暂无订单</p>
-                    <button class="btn btn-primary mt-4" onclick="switchTab('home')"><i class="fa fa-shopping-cart"></i> 去下单</button>
-                </div>
+                <div id="empty-orders" class="card py-8 text-center hidden"><i class="fa fa-inbox text-gray-600 text-4xl mb-3"></i><p class="text-gray-400">暂无订单</p><button class="btn btn-primary mt-4" onclick="switchTab('home')"><i class="fa fa-shopping-cart"></i> 去下单</button></div>
             </div>
         </div>
 
         <div id="page-notifications" class="page-content hidden">
-            <div class="card mb-4">
-                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa fa-bell text-accent"></i> 消息通知</h2>
-                <div id="notifications-list" class="space-y-3">
-                    <div class="text-center py-8 text-gray-400"><i class="fa fa-inbox text-4xl mb-3"></i><p>暂无消息</p></div>
-                </div>
-            </div>
+            <div class="card mb-4"><h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa fa-bell text-accent"></i> 消息通知</h2><div id="notifications-list" class="space-y-3"><div class="text-center py-8 text-gray-400"><i class="fa fa-inbox text-4xl mb-3"></i><p>暂无消息</p></div></div></div>
         </div>
 
         <div id="page-profile" class="page-content hidden">
             <div class="card mb-4">
                 <div id="profile-logged-out" class="text-center py-6">
                     <div class="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fa fa-user text-white text-4xl"></i></div>
-                    <h3 class="text-lg font-bold text-white mb-2">欢迎使用FG俱乐部</h3>
-                    <p class="text-gray-400 text-sm mb-4">登录后查看更多功能</p>
+                    <h3 class="text-lg font-bold text-white mb-2">欢迎使用FG俱乐部</h3><p class="text-gray-400 text-sm mb-4">登录后查看更多功能</p>
                     <button class="btn btn-primary" onclick="showLoginModal()"><i class="fa fa-sign-in"></i> 立即登录</button>
                 </div>
                 <div id="profile-logged-in" class="hidden">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-lg"><i class="fa fa-user text-white text-3xl"></i></div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-white" id="profile-name">用户</h3>
-                            <p class="text-gray-400 text-sm" id="profile-phone"></p>
-                            <span id="profile-admin-badge" class="inline-block mt-1 text-xs bg-danger/20 text-danger px-2 py-0.5 rounded-full hidden">管理员账户</span>
-                        </div>
-                    </div>
+                    <div class="flex items-center gap-4 mb-4"><div class="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-lg"><i class="fa fa-user text-white text-3xl"></i></div><div class="flex-1"><h3 class="text-xl font-bold text-white" id="profile-name">用户</h3><p class="text-gray-400 text-sm" id="profile-phone"></p><span id="profile-admin-badge" class="inline-block mt-1 text-xs bg-danger/20 text-danger px-2 py-0.5 rounded-full hidden">管理员账户</span></div></div>
                 </div>
             </div>
-
             <div class="card mb-4">
                 <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2"><i class="fa fa-cog text-primary"></i> 实时同步设置</h3>
                 <div class="space-y-3">
-                    <div class="bg-dark/40 rounded-xl p-3">
-                        <label class="block text-xs text-gray-400 mb-2">Firebase数据库URL</label>
-                        <input type="text" id="firebase-url" class="input w-full bg-dark/60 border-gray-600 text-white text-sm" placeholder="https://your-project.firebaseio.com">
-                    </div>
+                    <div class="bg-dark/40 rounded-xl p-3"><label class="block text-xs text-gray-400 mb-2">Firebase数据库URL</label><input type="text" id="firebase-url" class="input w-full bg-dark/60 border-gray-600 text-white text-sm" placeholder="配置后开启两台手机同步"></div>
                     <button class="btn btn-primary w-full py-2 text-sm" onclick="saveFirebaseConfig()"><i class="fa fa-save"></i> 保存配置</button>
                     <p class="text-xs text-gray-400"><i class="fa fa-info-circle mr-1"></i>配置后可实现两台手机实时同步订单</p>
                 </div>
             </div>
-
             <div class="card mb-4">
                 <div class="space-y-1">
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')">
-                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center"><i class="fa fa-file-text-o text-primary"></i></div><span class="text-white">我的订单</span></div>
-                        <i class="fa fa-chevron-right text-gray-500"></i>
-                    </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006'); showToast('客服QQ已复制', 'success')">
-                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-wechat/20 rounded-xl flex items-center justify-center"><i class="fa fa-qq text-wechat"></i></div><span class="text-white">联系客服</span></div>
-                        <i class="fa fa-chevron-right text-gray-500"></i>
-                    </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="shareApp()">
-                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-secondary/20 rounded-xl flex items-center justify-center"><i class="fa fa-share-alt text-secondary"></i></div><span class="text-white">分享给好友</span></div>
-                        <i class="fa fa-chevron-right text-gray-500"></i>
-                    </button>
-                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="showAbout()">
-                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center"><i class="fa fa-info-circle text-accent"></i></div><span class="text-white">关于我们</span></div>
-                        <i class="fa fa-chevron-right text-gray-500"></i>
-                    </button>
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="switchTab('orders')"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center"><i class="fa fa-file-text-o text-primary"></i></div><span class="text-white">我的订单</span></div><i class="fa fa-chevron-right text-gray-500"></i></button>
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="copyToClipboard('3428979006');showToast('客服QQ已复制','success')"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-wechat/20 rounded-xl flex items-center justify-center"><i class="fa fa-qq text-wechat"></i></div><span class="text-white">联系客服</span></div><i class="fa fa-chevron-right text-gray-500"></i></button>
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="shareApp()"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-secondary/20 rounded-xl flex items-center justify-center"><i class="fa fa-share-alt text-secondary"></i></div><span class="text-white">分享给好友</span></div><i class="fa fa-chevron-right text-gray-500"></i></button>
+                    <button class="w-full flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-all select-none" onclick="showAbout()"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center"><i class="fa fa-info-circle text-accent"></i></div><span class="text-white">关于我们</span></div><i class="fa fa-chevron-right text-gray-500"></i></button>
                 </div>
             </div>
-
-            <div id="logout-section" class="card hidden">
-                <button class="btn btn-outline w-full border-red-500/50 text-red-400 hover:bg-red-500/10" onclick="handleLogout()"><i class="fa fa-sign-out"></i> 退出登录</button>
-            </div>
+            <div id="logout-section" class="card hidden"><button class="btn btn-outline w-full border-red-500/50 text-red-400 hover:bg-red-500/10" onclick="handleLogout()"><i class="fa fa-sign-out"></i> 退出登录</button></div>
         </div>
     </main>
 
@@ -369,110 +233,58 @@
             <button class="nav-item text-gray-400" data-tab="profile" onclick="switchTab('profile')"><i class="fa fa-user text-xl mb-1"></i><span class="text-xs">我的</span></button>
         </div>
     </nav>
+
+    <!-- 登录模态框 -->
     <div id="login-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">手机登录</h3>
-                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideLoginModal()"><i class="fa fa-times text-gray-500"></i></button>
-            </div>
-            <form id="login-form" class="p-6 space-y-4" onsubmit="handleLogin(event)">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">手机号</label>
-                    <div class="relative"><i class="fa fa-mobile absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i><input type="tel" id="phone" class="input pl-12" required placeholder="请输入手机号" maxlength="11"></div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">验证码</label>
-                    <div class="flex gap-2">
-                        <div class="relative flex-1"><i class="fa fa-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="code" class="input pl-12" required placeholder="6位验证码" maxlength="6"></div>
-                        <button type="button" id="send-code" class="btn btn-outline whitespace-nowrap min-w-[100px]" onclick="sendVerificationCode()">获取验证码</button>
-                    </div>
-                </div>
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900">手机登录</h3><button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideLoginModal()"><i class="fa fa-times text-gray-500"></i></button></div>
+            <form class="p-6 space-y-4" onsubmit="handleLogin(event)">
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">手机号</label><div class="relative"><i class="fa fa-mobile absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i><input type="tel" id="phone" class="input pl-12" required placeholder="请输入手机号" maxlength="11"></div></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">验证码</label><div class="flex gap-2"><div class="relative flex-1"><i class="fa fa-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="code" class="input pl-12" required placeholder="6位验证码" maxlength="6"></div><button type="button" id="send-code" class="btn btn-outline whitespace-nowrap min-w-[100px]" onclick="sendVerificationCode()">获取验证码</button></div></div>
                 <button type="submit" class="btn btn-primary w-full py-3 text-lg"><i class="fa fa-sign-in"></i> 登录</button>
-                <div class="text-center">
-                    <p class="text-gray-500 text-xs"><span class="text-primary font-medium">测试验证码：123456</span><br><span class="text-gray-400">管理员账号：19236163806</span></p>
-                </div>
+                <div class="text-center"><p class="text-gray-500 text-xs"><span class="text-primary font-medium">测试验证码：123456</span><br><span class="text-gray-400">管理员账号：19236163806</span></p></div>
             </form>
         </div>
     </div>
 
+    <!-- 游戏信息模态框 -->
     <div id="game-info-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">填写游戏信息</h3>
-                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideGameInfoModal()"><i class="fa fa-times text-gray-500"></i></button>
-            </div>
-            <form id="game-info-form" class="p-6 space-y-4" onsubmit="createNewOrder(event)">
-                <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center"><i class="fa fa-shopping-bag text-primary text-xl"></i></div>
-                        <div><p class="text-sm text-gray-500">已选商品</p><p class="text-lg font-bold text-gray-900" id="selected-product"></p><p class="text-primary font-bold" id="selected-price"></p></div>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">游戏ID</label>
-                    <div class="relative"><i class="fa fa-gamepad absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="game-id" class="input pl-12" required placeholder="请输入你的游戏ID"></div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">联系QQ</label>
-                    <div class="relative"><i class="fa fa-qq absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="qq" class="input pl-12" required placeholder="请输入QQ号"></div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">备注（可选）</label>
-                    <textarea id="remark" class="input" rows="3" placeholder="如有特殊要求请说明"></textarea>
-                </div>
-                <div class="bg-wechat/5 p-4 rounded-xl border border-wechat/20">
-                    <p class="text-gray-700 text-sm text-center"><i class="fa fa-qq text-wechat mr-1"></i>下单后添加客服QQ：<strong class="text-wechat">3428979006</strong></p>
-                </div>
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900">填写游戏信息</h3><button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideGameInfoModal()"><i class="fa fa-times text-gray-500"></i></button></div>
+            <form class="p-6 space-y-4" onsubmit="createNewOrder(event)">
+                <div class="bg-primary/5 p-4 rounded-xl border border-primary/20 mb-4"><div class="flex items-center gap-3"><div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center"><i class="fa fa-shopping-bag text-primary text-xl"></i></div><div><p class="text-sm text-gray-500">已选商品</p><p class="text-lg font-bold text-gray-900" id="selected-product"></p><p class="text-primary font-bold" id="selected-price"></p></div></div></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">游戏ID</label><div class="relative"><i class="fa fa-gamepad absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="game-id" class="input pl-12" required placeholder="请输入你的游戏ID"></div></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">联系QQ</label><div class="relative"><i class="fa fa-qq absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input type="text" id="qq" class="input pl-12" required placeholder="请输入QQ号"></div></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">备注（可选）</label><textarea id="remark" class="input" rows="3" placeholder="如有特殊要求请说明"></textarea></div>
+                <div class="bg-wechat/5 p-4 rounded-xl border border-wechat/20"><p class="text-gray-700 text-sm text-center"><i class="fa fa-qq text-wechat mr-1"></i>下单后添加客服QQ：<strong class="text-wechat">3428979006</strong></p></div>
                 <button type="submit" class="btn btn-primary w-full py-3 text-lg"><i class="fa fa-credit-card"></i> 去支付</button>
             </form>
         </div>
     </div>
 
+    <!-- 支付模态框 -->
     <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">微信扫码支付</h3>
-                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hidePaymentModal()"><i class="fa fa-times text-gray-500"></i></button>
-            </div>
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900">微信扫码支付</h3><button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hidePaymentModal()"><i class="fa fa-times text-gray-500"></i></button></div>
             <div class="p-6">
-                <div class="text-center mb-6">
-                    <p class="text-gray-500 mb-2">应付金额</p>
-                    <p class="text-4xl font-bold text-gray-900 mb-2" id="pay-amount">¥0.00</p>
-                    <p class="text-sm text-gray-400" id="pay-product"></p>
-                </div>
+                <div class="text-center mb-6"><p class="text-gray-500 mb-2">应付金额</p><p class="text-4xl font-bold text-gray-900 mb-2" id="pay-amount">¥0.00</p><p class="text-sm text-gray-400" id="pay-product"></p></div>
                 <div class="bg-wechat/5 rounded-2xl p-4 mb-6 border border-wechat/20">
-                    <div class="text-center mb-4">
-                        <p class="text-wechat font-bold text-lg mb-2">请使用微信扫码支付</p>
-                        <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
-                            <img id="qrcode-img" src="https://neeko-copilot.bytedance.net/api/text2image?prompt=WeChat%20payment%20QR%20code%20green%20background%20Chinese%20text%20professional%20clean%20design&image_size=square_hd" 
-                                 alt="微信收款码" class="w-64 h-64 object-cover rounded-lg">
-                        </div>
+                    <div class="text-center mb-4"><p class="text-wechat font-bold text-lg mb-2">请使用微信扫码支付</p>
+                        <div class="bg-white rounded-2xl p-4 inline-block shadow-lg"><img id="qrcode-img" src="https://neeko-copilot.bytedance.net/api/text2image?prompt=WeChat%20payment%20QR%20code%20green%20background%20professional%20clean%20design&image_size=square_hd" alt="微信收款码" class="w-64 h-64 object-cover rounded-lg"></div>
                         <p class="text-sm text-gray-500 mt-3"><i class="fa fa-info-circle mr-1"></i>请扫描上方二维码完成支付</p>
                     </div>
-                    <div class="text-gray-600 text-sm space-y-2">
-                        <p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">1</span>打开微信，点击右上角【扫一扫】</p>
-                        <p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">2</span>扫描上方二维码进行支付</p>
-                        <p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">3</span>支付完成后点击下方【已完成支付】按钮</p>
-                    </div>
-                    <div class="mt-3 pt-3 border-t border-wechat/10">
-                        <p class="text-wechat font-medium text-sm text-center">付款后加客服QQ：3428979006对接服务</p>
-                    </div>
+                    <div class="text-gray-600 text-sm space-y-2"><p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">1</span>打开微信，点击右上角【扫一扫】</p><p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">2</span>扫描上方二维码进行支付</p><p class="flex items-start gap-2"><span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">3</span>支付完成后点击下方【已完成支付】按钮</p></div>
+                    <div class="mt-3 pt-3 border-t border-wechat/10"><p class="text-wechat font-medium text-sm text-center">付款后加客服QQ：3428979006对接服务</p></div>
                 </div>
-                <div class="space-y-3">
-                    <button class="btn btn-wechat w-full py-3" onclick="saveQRCode()"><i class="fa fa-download mr-2"></i>保存收款码图片</button>
-                    <button class="btn btn-primary w-full py-3" onclick="confirmPaymentSuccess()"><i class="fa fa-check-circle mr-2"></i>已完成支付</button>
-                    <button class="btn btn-outline w-full py-3" onclick="hidePaymentModal()">取消支付</button>
-                </div>
+                <div class="space-y-3"><button class="btn btn-wechat w-full py-3" onclick="saveQRCode()"><i class="fa fa-download mr-2"></i>保存收款码图片</button><button class="btn btn-primary w-full py-3" onclick="confirmPaymentSuccess()"><i class="fa fa-check-circle mr-2"></i>已完成支付</button><button class="btn btn-outline w-full py-3" onclick="hidePaymentModal()">取消支付</button></div>
             </div>
         </div>
     </div>
 
+    <!-- 订单详情模态框 -->
     <div id="order-detail-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg max-h-[85vh] overflow-y-auto animate-slide-up">
-            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">订单详情</h3>
-                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideOrderDetailModal()"><i class="fa fa-times text-gray-500"></i></button>
-            </div>
+            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900">订单详情</h3><button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideOrderDetailModal()"><i class="fa fa-times text-gray-500"></i></button></div>
             <div class="p-6">
                 <div class="mb-6"><div id="status-timeline" class="space-y-4"></div></div>
                 <div class="bg-gray-50 rounded-2xl p-4 space-y-3 mb-6">
@@ -486,434 +298,91 @@
                     <div class="flex justify-between items-start"><span class="text-gray-500 text-sm">备注</span><span id="detail-remark" class="font-medium text-gray-900 text-xs text-right max-w-[60%]"></span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-500 text-sm">创建时间</span><span id="detail-time" class="font-medium text-gray-900 text-xs"></span></div>
                 </div>
-                <div class="bg-wechat/5 p-4 rounded-2xl mb-6 border border-wechat/20 text-center">
-                    <p class="text-gray-700 text-sm"><i class="fa fa-qq text-wechat mr-1"></i>客服对接QQ：<strong class="text-wechat">3428979006</strong></p>
-                </div>
-                <div class="space-y-3">
-                    <div id="detail-actions" class="space-y-2"></div>
-                    <div id="admin-status-update" class="border-t border-gray-200 pt-4 hidden">
-                        <h4 class="text-sm font-bold text-gray-900 mb-3"><i class="fa fa-cog text-gray-500 mr-2"></i>管理员操作</h4>
-                        <div class="flex gap-2">
-                            <select id="new-status" class="input flex-1 text-sm py-2">
-                                <option value="pending">待支付</option>
-                                <option value="paid">已支付/待接单</option>
-                                <option value="in-progress">进行中</option>
-                                <option value="completed">已完成</option>
-                                <option value="cancelled">已取消</option>
-                            </select>
-                            <button class="btn btn-primary text-sm py-2 px-4" onclick="updateOrderStatus()">更新</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="bg-wechat/5 p-4 rounded-2xl mb-6 border border-wechat/20 text-center"><p class="text-gray-700 text-sm"><i class="fa fa-qq text-wechat mr-1"></i>客服对接QQ：<strong class="text-wechat">3428979006</strong></p></div>
+                <div class="space-y-3"><div id="detail-actions" class="space-y-2"></div><div id="admin-status-update" class="border-t border-gray-200 pt-4 hidden"><h4 class="text-sm font-bold text-gray-900 mb-3"><i class="fa fa-cog text-gray-500 mr-2"></i>管理员操作</h4><div class="flex gap-2"><select id="new-status" class="input flex-1 text-sm py-2"><option value="pending">待支付</option><option value="paid">已支付/待接单</option><option value="in-progress">进行中</option><option value="completed">已完成</option><option value="cancelled">已取消</option></select><button class="btn btn-primary text-sm py-2 px-4" onclick="updateOrderStatus()">更新</button></div></div></div>
             </div>
         </div>
     </div>
 
+    <!-- 关于我们模态框 -->
     <div id="about-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">关于我们</h3>
-                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideAboutModal()"><i class="fa fa-times text-gray-500"></i></button>
-            </div>
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900">关于我们</h3><button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center" onclick="hideAboutModal()"><i class="fa fa-times text-gray-500"></i></button></div>
             <div class="p-6 text-center">
                 <div class="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fa fa-shield text-white text-4xl"></i></div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">FG俱乐部</h3>
-                <p class="text-gray-500 text-sm mb-6">版本 2.1.0</p>
-                <div class="bg-gray-50 rounded-2xl p-4 text-left mb-6">
-                    <p class="text-gray-600 text-sm leading-relaxed">FG俱乐部致力于为暗区突围玩家提供专业、安全、高效的护航服务。我们拥有经验丰富的打手团队，24小时在线接单，保障您的游戏体验。</p>
-                    <p class="text-gray-600 text-sm leading-relaxed mt-3"><strong>新增功能：</strong>支持两台手机实时同步订单消息，管理员手机可24小时接收新订单通知。</p>
-                </div>
-                <div class="space-y-2 text-sm text-gray-500">
-                    <p>客服QQ：3428979006</p>
-                    <p>© 2024 FG俱乐部 版权所有</p>
-                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">FG俱乐部</h3><p class="text-gray-500 text-sm mb-6">版本 2.1.0</p>
+                <div class="bg-gray-50 rounded-2xl p-4 text-left mb-6"><p class="text-gray-600 text-sm leading-relaxed">FG俱乐部致力于为暗区突围玩家提供专业、安全、高效的护航服务。我们拥有经验丰富的打手团队，24小时在线接单，保障您的游戏体验。</p><p class="text-gray-600 text-sm leading-relaxed mt-3"><strong>新增功能：</strong>支持两台手机实时同步订单消息，管理员手机可24小时接收新订单通知。</p></div>
+                <div class="space-y-2 text-sm text-gray-500"><p>客服QQ：3428979006</p><p>© 2024 FG俱乐部 版权所有</p></div>
             </div>
         </div>
     </div>
 
     <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] space-y-2"></div>
+
     <script>
-        const WX_BASE = "wxp://f2f0JhCjMkpvim80qEhw81tHvYmGIuq8Y48N8h42SePPsGM";
-        const ADMIN_PHONE = '19236163806';
-        const SERVICE_QQ = "3428979006";
-        const RIGHT_CODE = "123456";
+        const ADMIN_PHONE='19236163806',SERVICE_QQ="3428979006",RIGHT_CODE="123456";
+        let firebaseConfig={databaseURL:""},firebaseApp=null,firebaseDB=null,firebaseInitialized=false;
+        let orders=[],notifications=[],currentUser=null,currentOrder=null,currentProduct=null,currentPrice=0,countdown=null,currentFilter='all',searchQuery='',currentTab='home';
 
-        let firebaseConfig = { databaseURL: "" };
-        let firebaseApp = null;
-        let firebaseDB = null;
-        let firebaseInitialized = false;
+        const statusConfig={pending:{label:'待支付',class:'bg-yellow-100 text-yellow-800',icon:'clock-o'},paid:{label:'已支付/待接单',class:'bg-blue-100 text-blue-800',icon:'check-circle'},'in-progress':{label:'进行中',class:'bg-purple-100 text-purple-800',icon:'spinner'},completed:{label:'已完成',class:'bg-green-100 text-green-800',icon:'check-circle'},cancelled:{label:'已取消',class:'bg-red-100 text-red-800',icon:'times-circle'}};
 
-        const statusConfig = {
-            pending: { label: '待支付', class: 'bg-yellow-100 text-yellow-800', icon: 'clock-o' },
-            paid: { label: '已支付/待接单', class: 'bg-blue-100 text-blue-800', icon: 'check-circle' },
-            'in-progress': { label: '进行中', class: 'bg-purple-100 text-purple-800', icon: 'spinner' },
-            completed: { label: '已完成', class: 'bg-green-100 text-green-800', icon: 'check-circle' },
-            cancelled: { label: '已取消', class: 'bg-red-100 text-red-800', icon: 'times-circle' }
-        };
+        document.addEventListener('DOMContentLoaded',function(){loadData();initApp();initFirebase();setTimeout(function(){document.getElementById('loading-screen').style.display='none';},500);});
 
-        let orders = [];
-        let notifications = [];
-        let currentUser = null;
-        let currentOrder = null;
-        let currentProduct = null;
-        let currentPrice = 0;
-        let countdown = null;
-        let currentFilter = 'all';
-        let searchQuery = '';
-        let currentTab = 'home';
+        function loadData(){try{orders=JSON.parse(localStorage.getItem('fg-orders'))||[];notifications=JSON.parse(localStorage.getItem('fg-notifications'))||[];currentUser=JSON.parse(localStorage.getItem('fg-user'))||null;}catch(e){orders=[];notifications=[];currentUser=null;}}
+        function saveData(){try{localStorage.setItem('fg-orders',JSON.stringify(orders));localStorage.setItem('fg-notifications',JSON.stringify(notifications));if(currentUser)localStorage.setItem('fg-user',JSON.stringify(currentUser));}catch(e){}}
+        function initApp(){updateUserUI();renderOrders();updateStatistics();updateNotificationBadge();renderNotifications();}
 
-        // ==================== 初始化 ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            initApp();
-            initFirebase();
-            setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-            }, 500);
-        });
+        function initFirebase(){var savedUrl=localStorage.getItem('firebase_url');if(savedUrl){document.getElementById('firebase-url').value=savedUrl;firebaseConfig.databaseURL=savedUrl;try{if(typeof firebase!=='undefined'){firebaseApp=firebase.initializeApp(firebaseConfig);firebaseDB=firebase.database();firebaseInitialized=true;updateSyncStatus(true);setupRealtimeListener();}}catch(e){updateSyncStatus(false);}}}}
+        function updateSyncStatus(connected){var sc=document.getElementById('sync-status-card'),si=document.getElementById('sync-icon');if(connected){sc.classList.remove('hidden');si.className='fa fa-wifi text-green-500';}else{sc.classList.add('hidden');si.className='fa fa-refresh text-gray-400';}}
+        function setupRealtimeListener(){if(!firebaseDB||!firebaseInitialized)return;var or=firebaseDB.ref('orders');or.on('child_added',function(snap){var no=snap.val();if(no&&no.id&&!orders.some(function(o){return o.id===no.id;})){orders.unshift(no);saveData();addNotification('新订单','收到新订单：'+no.product+' - ¥'+no.price,'new_order');renderOrders();updateStatistics();updateNotificationBadge();if(currentUser&&currentUser.phone===ADMIN_PHONE)showToast('新订单：'+no.product,'success');}});or.on('child_changed',function(snap){var uo=snap.val();if(uo&&uo.id){var i=orders.findIndex(function(o){return o.id===uo.id;});if(i>-1){var os=orders[i].status;orders[i]=uo;saveData();if(os!==uo.status)addNotification('订单更新','订单'+uo.id+'状态更新为：'+statusConfig[uo.status].label,'status_update');renderOrders();updateStatistics();updateNotificationBadge();}}});or.once('value',function(snap){var d=snap.val();if(d){var fo=Object.values(d);orders.forEach(function(lo){if(!fo.some(function(o){return o.id===lo.id;}))fo.push(lo);});fo.sort(function(a,b){return new Date(b.createdAt)-new Date(a.createdAt);});orders=fo;saveData();renderOrders();updateStatistics();}});}
+        function syncOrderToFirebase(order){if(!firebaseDB||!firebaseInitialized)return;try{firebaseDB.ref('orders/'+order.id).set(order);}catch(e){}}
+        function saveFirebaseConfig(){var url=document.getElementById('firebase-url').value.trim();if(!url){showToast('请输入Firebase数据库URL','warning');return;}localStorage.setItem('firebase_url',url);firebaseConfig.databaseURL=url;try{if(firebaseApp)firebase.app().delete();if(typeof firebase!=='undefined'){firebaseApp=firebase.initializeApp(firebaseConfig);firebaseDB=firebase.database();firebaseInitialized=true;updateSyncStatus(true);setupRealtimeListener();showToast('配置已保存，实时同步已连接','success');}}catch(e){updateSyncStatus(false);showToast('Firebase连接失败，请检查URL','error');}}
 
-        function loadData() {
-            try {
-                orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
-                notifications = JSON.parse(localStorage.getItem('fg-notifications')) || [];
-                currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
-            } catch (e) {
-                console.error('加载数据失败:', e);
-                orders = [];
-                notifications = [];
-                currentUser = null;
-            }
-        }
+        function addNotification(title,message,type){type=type||'info';notifications.unshift({id:Date.now(),title:title,message:message,type:type,read:false,timestamp:new Date().toISOString()});saveData();updateNotificationBadge();renderNotifications();}
+        function updateNotificationBadge(){var unread=notifications.filter(function(n){return !n.read;}).length;document.getElementById('notification-dot').classList[unread>0?'remove':'add']('hidden');document.getElementById('nav-notification-dot').classList[unread>0?'remove':'add']('hidden');}
+        function renderNotifications(){var c=document.getElementById('notifications-list');if(notifications.length===0){c.innerHTML='<div class="text-center py-8 text-gray-400"><i class="fa fa-inbox text-4xl mb-3"></i><p>暂无消息</p></div>';return;}c.innerHTML=notifications.map(function(n){var ic=n.type==='new_order'?'shopping-cart':n.type==='status_update'?'refresh':'bell';var cc=n.type==='new_order'?'bg-green-500/20 text-green-500':n.type==='status_update'?'bg-blue-500/20 text-blue-500':'bg-gray-500/20 text-gray-400';return'<div class="card'+(n.read?' opacity-60':'')+'" onclick="markNotificationRead('+n.id+')"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 '+cc+'"><i class="fa fa-'+ic+'"></i></div><div class="flex-1"><p class="text-sm font-medium text-white">'+n.title+'</p><p class="text-xs text-gray-400 mt-1">'+n.message+'</p><p class="text-xs text-gray-500 mt-2">'+formatDate(n.timestamp)+'</p></div>'+(n.read?'':'<div class="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>')+'</div></div>';}).join('');}
+        function markNotificationRead(id){var n=notifications.find(function(x){return x.id===id;});if(n){n.read=true;saveData();updateNotificationBadge();renderNotifications();}}
 
-        function saveData() {
-            try {
-                localStorage.setItem('fg-orders', JSON.stringify(orders));
-                localStorage.setItem('fg-notifications', JSON.stringify(notifications));
-                if (currentUser) {
-                    localStorage.setItem('fg-user', JSON.stringify(currentUser));
-                }
-            } catch (e) {
-                console.error('保存数据失败:', e);
-            }
-        }
+        function switchTab(tab){currentTab=tab;document.querySelectorAll('.nav-item').forEach(function(item){item.classList[item.dataset.tab===tab?'add':'remove']('active','text-primary');item.classList[item.dataset.tab===tab?'remove':'add']('text-gray-400');});document.querySelectorAll('.page-content').forEach(function(p){p.classList.add('hidden');});var tp=document.getElementById('page-'+tab);if(tp){tp.classList.remove('hidden');tp.classList.add('animate-fade-in');}if(tab==='notifications'){notifications.forEach(function(n){n.read=true;});saveData();updateNotificationBadge();renderNotifications();}window.scrollTo({top:0,behavior:'smooth'});}
 
-        function initApp() {
-            updateUserUI();
-            renderOrders();
-            updateStatistics();
-            updateNotificationBadge();
-            renderNotifications();
-        }
+        function updateUserUI(){if(currentUser){document.getElementById('login-btn').classList.add('hidden');document.getElementById('user-info').classList.remove('hidden');document.getElementById('not-logged-in').classList.add('hidden');document.getElementById('orders-container').classList.remove('hidden');document.getElementById('profile-logged-out').classList.add('hidden');document.getElementById('profile-logged-in').classList.remove('hidden');document.getElementById('logout-section').classList.remove('hidden');document.getElementById('profile-phone').textContent=currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/,'$1****$2');document.getElementById('profile-name').textContent='用户'+currentUser.phone.slice(-4);if(currentUser.phone===ADMIN_PHONE){document.getElementById('order-title').textContent='全部订单';document.getElementById('admin-badge').classList.remove('hidden');document.getElementById('profile-admin-badge').classList.remove('hidden');}else{document.getElementById('order-title').textContent='我的订单';document.getElementById('admin-badge').classList.add('hidden');document.getElementById('profile-admin-badge').classList.add('hidden');}}else{document.getElementById('login-btn').classList.remove('hidden');document.getElementById('user-info').classList.add('hidden');document.getElementById('not-logged-in').classList.remove('hidden');document.getElementById('orders-container').classList.add('hidden');document.getElementById('profile-logged-out').classList.remove('hidden');document.getElementById('profile-logged-in').classList.add('hidden');document.getElementById('logout-section').classList.add('hidden');}}}
+        function updateStatistics(){var fo=currentUser&&currentUser.phone!==ADMIN_PHONE?orders.filter(function(o){return o.userPhone===currentUser.phone;}):orders.slice();document.getElementById('total-orders').textContent=fo.length;document.getElementById('pending-orders').textContent=fo.filter(function(o){return o.status==='paid';}).length;}
 
-        // ==================== Firebase功能 ====================
-        function initFirebase() {
-            const savedUrl = localStorage.getItem('firebase_url');
-            if (savedUrl) {
-                document.getElementById('firebase-url').value = savedUrl;
-                firebaseConfig.databaseURL = savedUrl;
-                try {
-                    if (typeof firebase !== 'undefined') {
-                        firebaseApp = firebase.initializeApp(firebaseConfig);
-                        firebaseDB = firebase.database();
-                        firebaseInitialized = true;
-                        updateSyncStatus(true);
-                        setupRealtimeListener();
-                    }
-                } catch (e) {
-                    console.log('Firebase初始化失败:', e);
-                    updateSyncStatus(false);
-                }
-            }
-        }
-        function updateSyncStatus(connected) {
-            const statusCard = document.getElementById('sync-status-card');
-            const syncIcon = document.getElementById('sync-icon');
-            if (connected) {
-                statusCard.classList.remove('hidden');
-                syncIcon.className = 'fa fa-wifi text-green-500';
-            } else {
-                statusCard.classList.add('hidden');
-                syncIcon.className = 'fa fa-refresh text-gray-400';
-            }
-        }
-        function setupRealtimeListener() {
-            if (!firebaseDB || !firebaseInitialized) return;
-            const ordersRef = firebaseDB.ref('orders');
-            ordersRef.on('child_added', function(snapshot) {
-                const newOrder = snapshot.val();
-                if (newOrder && newOrder.id) {
-                    const exists = orders.some(function(o) { return o.id === newOrder.id; });
-                    if (!exists) {
-                        orders.unshift(newOrder);
-                        saveData();
-                        addNotification('新订单', '收到新订单：' + newOrder.product + ' - ¥' + newOrder.price, 'new_order');
-                        renderOrders();
-                        updateStatistics();
-                        updateNotificationBadge();
-                        if (currentUser && currentUser.phone === ADMIN_PHONE) {
-                            showToast('新订单：' + newOrder.product, 'success');
-                        }
-                    }
-                }
-            });
-            ordersRef.on('child_changed', function(snapshot) {
-                const updatedOrder = snapshot.val();
-                if (updatedOrder && updatedOrder.id) {
-                    const index = orders.findIndex(function(o) { return o.id === updatedOrder.id; });
-                    if (index > -1) {
-                        const oldStatus = orders[index].status;
-                        orders[index] = updatedOrder;
-                        saveData();
-                        if (oldStatus !== updatedOrder.status) {
-                            addNotification('订单更新', '订单' + updatedOrder.id + '状态更新为：' + statusConfig[updatedOrder.status].label, 'status_update');
-                        }
-                        renderOrders();
-                        updateStatistics();
-                        updateNotificationBadge();
-                    }
-                }
-            });
-            ordersRef.once('value', function(snapshot) {
-                const data = snapshot.val();
-                if (data) {
-                    const firebaseOrders = Object.values(data);
-                    const mergedOrders = firebaseOrders.slice();
-                    orders.forEach(function(localOrder) {
-                        if (!mergedOrders.some(function(o) { return o.id === localOrder.id; })) {
-                            mergedOrders.push(localOrder);
-                        }
-                    });
-                    mergedOrders.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-                    orders = mergedOrders;
-                    saveData();
-                    renderOrders();
-                    updateStatistics();
-                }
-            });
-        }
-        function syncOrderToFirebase(order) {
-            if (!firebaseDB || !firebaseInitialized) return;
-            try {
-                firebaseDB.ref('orders/' + order.id).set(order);
-            } catch (e) {
-                console.log('同步失败:', e);
-            }
-        }
-        function saveFirebaseConfig() {
-            const url = document.getElementById('firebase-url').value.trim();
-            if (!url) {
-                showToast('请输入Firebase数据库URL', 'warning');
-                return;
-            }
-            localStorage.setItem('firebase_url', url);
-            firebaseConfig.databaseURL = url;
-            try {
-                if (firebaseApp) {
-                    firebase.app().delete();
-                }
-                if (typeof firebase !== 'undefined') {
-                    firebaseApp = firebase.initializeApp(firebaseConfig);
-                    firebaseDB = firebase.database();
-                    firebaseInitialized = true;
-                    updateSyncStatus(true);
-                    setupRealtimeListener();
-                    showToast('配置已保存，实时同步已连接', 'success');
-                }
-            } catch (e) {
-                console.log('Firebase连接失败:', e);
-                updateSyncStatus(false);
-                showToast('Firebase连接失败，请检查URL', 'error');
-            }
-        }
+        function filterOrders(filter){currentFilter=filter;document.querySelectorAll('.tab-btn[data-filter]').forEach(function(btn){btn.classList[btn.dataset.filter===filter?'add':'remove']('active','bg-primary','text-white');btn.classList[btn.dataset.filter===filter?'remove':'add']('bg-dark/40','text-gray-400');});renderOrders();}
+        function searchOrders(query){searchQuery=query;renderOrders();}
+        function renderOrders(){if(!currentUser)return;var fo=currentUser.phone===ADMIN_PHONE?orders.slice():orders.filter(function(o){return o.userPhone===currentUser.phone;});if(currentFilter!=='all')fo=fo.filter(function(o){return o.status===currentFilter;});if(searchQuery){var q=searchQuery.toLowerCase();fo=fo.filter(function(o){return o.id.toLowerCase().includes(q)||o.gameId.toLowerCase().includes(q)||o.product.toLowerCase().includes(q);});}fo.sort(function(a,b){return new Date(b.createdAt)-new Date(a.createdAt);});var c=document.getElementById('orders-list'),e=document.getElementById('empty-orders');if(fo.length===0){c.innerHTML='';e.classList.remove('hidden');return;}e.classList.add('hidden');c.innerHTML=fo.map(function(o,i){var pb=o.status==='pending'&&currentUser.phone!==ADMIN_PHONE?'<button class="text-wechat text-sm" onclick="payOrder(\''+o.id+'\')"><i class="fa fa-credit-card mr-1"></i>支付</button>':'';return'<div class="card animate-slide-up" style="animation-delay:'+(i*0.05)+'s"><div class="flex justify-between items-start mb-3"><span class="text-primary/80 text-xs font-mono">'+o.id+'</span><span class="status-badge '+statusConfig[o.status].class+'">'+statusConfig[o.status].label+'</span></div><div class="flex justify-between items-center mb-3"><span class="text-white font-medium">'+o.product+'</span><span class="text-white font-bold text-lg">¥'+o.price.toFixed(2)+'</span></div><div class="flex items-center gap-2 text-gray-400 text-xs mb-3"><i class="fa fa-gamepad"></i><span>'+o.gameId+'</span></div><div class="flex justify-between items-center pt-3 border-t border-white/10"><span class="text-gray-400 text-xs"><i class="fa fa-calendar-o mr-1"></i>'+formatDate(o.createdAt)+'</span><div class="flex gap-2"><button class="text-primary text-sm" onclick="viewOrder(\''+o.id+'\')"><i class="fa fa-eye mr-1"></i>详情</button>'+pb+'</div></div></div>';}).join('');}
+        function viewOrder(id){var o=orders.find(function(x){return x.id===id;});if(!o){showToast('订单不存在','error');return;}currentOrder=o;var h=o.statusHistory||[{status:o.status,time:o.createdAt,note:'订单创建'}];document.getElementById('status-timeline').innerHTML=h.map(function(item,i){var isLast=i===h.length-1,c=statusConfig[item.status]||statusConfig.pending;return'<div class="flex gap-3"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full '+(isLast?'bg-primary text-white':'bg-gray-200 text-gray-400')+' flex items-center justify-center"><i class="fa fa-'+c.icon+' text-sm"></i></div>'+(isLast?'':'<div class="w-0.5 h-8 bg-gray-200"></div>')+'</div><div class="flex-1 pb-4"><p class="font-medium text-gray-900">'+c.label+'</p><p class="text-xs text-gray-500">'+item.note+'</p><p class="text-xs text-gray-400 mt-1">'+new Date(item.time).toLocaleString('zh-CN')+'</p></div></div>';}).join('');document.getElementById('detail-id').textContent=o.id;document.getElementById('detail-product').textContent=o.product;document.getElementById('detail-price').textContent='¥'+o.price.toFixed(2);document.getElementById('detail-status').innerHTML='<span class="status-badge '+statusConfig[o.status].class+'">'+statusConfig[o.status].label+'</span>';document.getElementById('detail-gameid').textContent=o.gameId;document.getElementById('detail-qq').textContent=o.qq;document.getElementById('detail-phone').textContent=o.userPhone;document.getElementById('detail-remark').textContent=o.remark;document.getElementById('detail-time').textContent=formatDate(o.createdAt);document.getElementById('new-status').value=o.status;var ah='';if(o.status==='pending'&&currentUser&&currentUser.phone!==ADMIN_PHONE)ah+='<button class="btn btn-wechat w-full" onclick="reopenPayment()"><i class="fa fa-credit-card"></i> 去支付</button>';if(o.status==='completed')ah+='<button class="btn btn-primary w-full" onclick="showToast(\'感谢您的评价！\',\'success\')"><i class="fa fa-star"></i> 评价订单</button>';ah+='<button class="btn btn-outline w-full" onclick="copyToClipboard(\''+SERVICE_QQ+'\');showToast(\'客服QQ已复制\',\'success\')"><i class="fa fa-qq"></i> 联系客服</button>';document.getElementById('detail-actions').innerHTML=ah;document.getElementById('admin-status-update').classList[currentUser&&currentUser.phone===ADMIN_PHONE?'remove':'add']('hidden');document.getElementById('order-detail-modal').classList.remove('hidden');}
+        function payOrder(id){var o=orders.find(function(x){return x.id===id;});if(o){currentOrder=o;showPaymentModal(o.price);}}
+        function reopenPayment(){hideOrderDetailModal();showPaymentModal(currentOrder.price);}
+        function updateOrderStatus(){var ns=document.getElementById('new-status').value;if(ns===currentOrder.status){showToast('状态未修改','info');return;}currentOrder.status=ns;currentOrder.statusHistory.push({status:ns,time:new Date().toISOString(),note:'管理员更新状态'});var i=orders.findIndex(function(o){return o.id===currentOrder.id;});if(i>-1){orders[i]=currentOrder;saveData();syncOrderToFirebase(currentOrder);}hideOrderDetailModal();renderOrders();updateStatistics();updateNotificationBadge();showToast('状态更新成功','success');}
 
-        // ==================== 通知系统 ====================
-        function addNotification(title, message, type) {
-            type = type || 'info'; const notification = {
-                id: Date.now(),
-                title: title,
-                message: message,
-                type: type,
-                read: false,
-                timestamp: new Date().toISOString()
-            };
-            notifications.unshift(notification);
-            saveData();
-            updateNotificationBadge();
-            renderNotifications();
-        }
-        function updateNotificationBadge() {
-            const unread = notifications.filter(function(n) { return !n.read; }).length;
-            const badge1 = document.getElementById('notification-dot');
-            const badge2 = document.getElementById('nav-notification-dot');
-            if (unread > 0) {
-                badge1.classList.remove('hidden');
-                badge2.classList.remove('hidden');
-            } else {
-                badge1.classList.add('hidden');
-                badge2.classList.add('hidden');
-            }
-        }
-        function renderNotifications() {
-            const container = document.getElementById('notifications-list');
-            if (notifications.length === 0) {
-                container.innerHTML = '<div class="text-center py-8 text-gray-400"><i class="fa fa-inbox text-4xl mb-3"></i><p>暂无消息</p></div>';
-                return;
-            }
-            const html = notifications.map(function(notification) {
-                const iconClass = notification.type === 'new_order' ? 'shopping-cart' : notification.type === 'status_update' ? 'refresh' : 'bell';
-                const colorClass = notification.type === 'new_order' ? 'bg-green-500/20 text-green-500' : notification.type === 'status_update' ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-400';
-                const readClass = notification.read ? 'opacity-60' : '';
-                const dot = !notification.read ? '<div class="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>' : '';
-                return '<div class="card ' + readClass + '" onclick="markNotificationRead(' + notification.id + ')">' +
-                    '<div class="flex items-start gap-3">' +
-                    '<div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ' + colorClass + '">' +
-                    '<i class="fa fa-' + iconClass + '"></i></div>' +
-                    '<div class="flex-1">' +
-                    '<p class="text-sm font-medium text-white">' + notification.title + '</p>' +
-                    '<p class="text-xs text-gray-400 mt-1">' + notification.message + '</p>' +
-                    '<p class="text-xs text-gray-500 mt-2">' + formatDate(notification.timestamp) + '</p></div>' + dot +
-                    '</div></div>';
-            }).join('');
-            container.innerHTML = html;
-        }
-        function markNotificationRead(id) {
-            const notification = notifications.find(function(n) { return n.id === id; });
-            if (notification) {
-                notification.read = true;
-                saveData();
-                updateNotificationBadge();
-                renderNotifications();
-            }
-        }
+        function showLoginModal(){document.getElementById('login-modal').classList.remove('hidden');}
+        function hideLoginModal(){document.getElementById('login-modal').classList.add('hidden');document.getElementById('login-form')&&document.getElementById('login-form').reset();if(countdown){clearInterval(countdown);countdown=null;document.getElementById('send-code').innerText='获取验证码';document.getElementById('send-code').disabled=false;}}
+        function sendVerificationCode(){var phone=document.getElementById('phone').value.trim();if(!/^1[3-9]\d{9}$/.test(phone)){showToast('手机号格式错误','error');return;}showToast('测试验证码：123456','info');var s=60,b=document.getElementById('send-code');b.disabled=true;b.innerText=s+'s';if(countdown)clearInterval(countdown);countdown=setInterval(function(){s--;b.innerText=s+'s';if(s<=0){clearInterval(countdown);countdown=null;b.innerText='获取验证码';b.disabled=false;}},1000);}
+        function handleLogin(e){e.preventDefault();var p=document.getElementById('phone').value.trim(),c=document.getElementById('code').value.trim();if(c!==RIGHT_CODE){showToast('验证码错误，正确：123456','error');return;}currentUser={id:'user_'+p,phone:p};saveData();hideLoginModal();updateUserUI();renderOrders();updateStatistics();showToast('登录成功','success');}
+        function handleLogout(){currentUser=null;localStorage.removeItem('fg-user');updateUserUI();renderOrders();updateStatistics();switchTab('home');showToast('已退出登录','info');}
 
-        // ==================== 标签页切换 ====================
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.nav-item').forEach(function(item) {
-                if (item.dataset.tab === tab) {
-                    item.classList.add('active');
-                    item.classList.remove('text-gray-400');
-                } else {
-                    item.classList.remove('active');
-                    item.classList.add('text-gray-400');
-                }
-            });
-            document.querySelectorAll('.page-content').forEach(function(page) {
-                page.classList.add('hidden');
-            });
-            const targetPage = document.getElementById('page-' + tab);
-            if (targetPage) {
-                targetPage.classList.remove('hidden');
-                targetPage.classList.add('animate-fade-in');
-            }
-            if (tab === 'notifications') {
-                notifications.forEach(function(n) { n.read = true; });
-                saveData();
-                updateNotificationBadge();
-                renderNotifications();
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function handleBuyClick(product,price){if(!currentUser){showToast('请先登录','warning');showLoginModal();return;}currentProduct=product;currentPrice=price;showGameInfoModal();}
+        function showGameInfoModal(){document.getElementById('selected-product').textContent=currentProduct;document.getElementById('selected-price').textContent='¥'+currentPrice.toFixed(2);document.getElementById('game-info-modal').classList.remove('hidden');}
+        function hideGameInfoModal(){document.getElementById('game-info-modal').classList.add('hidden');document.getElementById('game-info-form')&&document.getElementById('game-info-form').reset();}
+        function createNewOrder(e){e.preventDefault();var gid=document.getElementById('game-id').value.trim(),qq=document.getElementById('qq').value.trim(),rem=document.getElementById('remark').value.trim()||'无';if(!gid||!qq){showToast('请填写游戏ID和QQ','warning');return;}var oid='FG'+Date.now(),newO={id:oid,userId:currentUser.id,userPhone:currentUser.phone,product:currentProduct,price:currentPrice,gameId:gid,qq:qq,remark:rem,status:'pending',statusHistory:[{status:'pending',time:new Date().toISOString(),note:'创建订单'}],createdAt:new Date().toISOString()};orders.unshift(newO);saveData();hideGameInfoModal();currentOrder=newO;syncOrderToFirebase(newO);showPaymentModal(currentPrice);renderOrders();updateStatistics();updateNotificationBadge();showToast('订单创建成功','success');}
 
-        // ==================== 用户界面 ====================
-        function updateUserUI() {
-            if (currentUser) {
-                document.getElementById('login-btn').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('not-logged-in').classList.add('hidden');
-                document.getElementById('orders-container').classList.remove('hidden');
-                document.getElementById('profile-logged-out').classList.add('hidden');
-                document.getElementById('profile-logged-in').classList.remove('hidden');
-                document.getElementById('logout-section').classList.remove('hidden');
-                document.getElementById('profile-phone').textContent = currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-                document.getElementById('profile-name').textContent = '用户' + currentUser.phone.slice(-4);
-                if (currentUser.phone === ADMIN_PHONE) {
-                    document.getElementById('order-title').textContent = '全部订单';
-                    document.getElementById('admin-badge').classList.remove('hidden');
-                    document.getElementById('profile-admin-badge').classList.remove('hidden');
-                } else {
-                    document.getElementById('order-title').textContent = '我的订单';
-                    document.getElementById('admin-badge').classList.add('hidden');
-                    document.getElementById('profile-admin-badge').classList.add('hidden');
-                }
-            } else {
-                document.getElementById('login-btn').classList.remove('hidden');
-                document.getElementById('user-info').classList.add('hidden');
-                document.getElementById('not-logged-in').classList.remove('hidden');
-                document.getElementById('orders-container').classList.add('hidden');
-                document.getElementById('profile-logged-out').classList.remove('hidden');
-                document.getElementById('profile-logged-in').classList.add('hidden');
-                document.getElementById('logout-section').classList.add('hidden');
-            }
-        }
-        function updateStatistics() {
-            let filteredOrders = orders;
-            if (currentUser && currentUser.phone !== ADMIN_PHONE) {
-                filteredOrders = orders.filter(function(o) { return o.userPhone === currentUser.phone; });
-            }
-            document.getElementById('total-orders').textContent = filteredOrders.length;
-            document.getElementById('pending-orders').textContent = filteredOrders.filter(function(o) { return o.status === 'paid'; }).length;
-        }
+        function showPaymentModal(price){document.getElementById('pay-amount').textContent='¥'+price.toFixed(2);document.getElementById('pay-product').textContent=currentOrder.product;document.getElementById('payment-modal').classList.remove('hidden');}
+        function hidePaymentModal(){document.getElementById('payment-modal').classList.add('hidden');currentOrder=null;}
+        function confirmPaymentSuccess(){if(!currentOrder){showToast('订单异常','error');return;}currentOrder.status='paid';currentOrder.statusHistory.push({status:'paid',time:new Date().toISOString(),note:'用户自主确认付款'});var i=orders.findIndex(function(o){return o.id===currentOrder.id;});if(i>-1){orders[i]=currentOrder;saveData();syncOrderToFirebase(currentOrder);}hidePaymentModal();renderOrders();updateStatistics();updateNotificationBadge();showToast('付款确认成功！请联系客服安排打手','success');}
+        function saveQRCode(){var qr=document.getElementById('qrcode-img');if(qr){var a=document.createElement('a');a.href=qr.src;a.download='收款码.jpg';document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('收款码图片已保存','success');}else{showToast('无法找到收款码图片','error');}}
 
-        // ==================== 订单管理 ====================
-        function filterOrders(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.tab-btn[data-filter]').forEach(function(btn) {
-                if (btn.dataset.filter === filter) {
-                    btn.classList.add('active');
-                    btn.classList.remove('bg-dark/40', 'text-gray-400');
-                } else {
-                    btn.classList.remove('active');
-                    btn.classList.add('bg-dark/40', 'text-gray-400');
-                }
-            });
-            renderOrders();
-        }
-        function searchOrders(query) {
-            searchQuery = query;
-            renderOrders();
-        }
-        function renderOrders() {
-            let filteredOrders = [];
-            if (currentUser) {
-                if (currentUser.phone === ADMIN_PHONE) {
-                    filteredOrders = orders.slice();
-                } else {
-                    filteredOrders = orders.filter(function(o) { return o.userPhone === currentUser.phone; });
-                }
-            }
-            if (currentFilter !== 'all') {
-                filteredOrders = filteredOrders.filter(function(o) { return o.status === currentFilter; });
-            }
-            if (searchQuery) {
-                const query = searchQuery.toLowerCase();
-                filteredOrders = filteredOrders.filter(function(o) {
-                    return o.id.toLowerCase().includes(query) || o.gameId.toLowerCase().includes(query) || o.product.toLowerCase().includes(query);
-                });
-            }
-            filteredOrders.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-            const container = document.getElementById('orders-list');
-            const empty = document.getElementById('empty-orders');
-            if (!currentUser) return;
-            if (filteredOrders.length === 0) {
-                container.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-            const html = filteredOrders.map(function(order, index) {
-                const payButton = order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ?
-                    '<button class="text-wechat text-sm" onclick="payOrder(\'' + order.id + '\')"><i class="fa fa-credit-card mr-1"></i>支付</button>' : '';
-                return '<div class="card animate-slide-up" style="animation-delay: ' + (index * 0.05) + 's">' +
-                    '<div class="flex justify-between items-start mb-3">' +
-                    '<span class="text-primary/80 text-xs font-mono font-medium">' + order.id + '</span>' +
-                    '<span class="status-badge ' + statusConfig[order.status].class + '">' + statusConfig[order.status].label + '</span></div>' +
-                    '<div class="flex justify-between items-center mb-3">' +
-                    '<span class="text-white font-medium">' + order.product + '</span>' +
-                    '<span class="text-white font-bold text-lg">¥' + order.price.toFixed(2) + '</span></div>' +
-                    '<div class="flex items-center gap-2 text-gray-400 text-xs mb-3">' +
-                    '<i class="fa fa-gamepad"></i><span>' + order.gameId + '</span></div>' +
-                    '<div class="flex justify-between items-center pt-3 border-t border-white/10">' +
-                    '<span class="text-gray-400 text-xs"><i class="fa fa-calendar-o mr-1"></i>' + formatDate(order.createdAt) + '</span>' +
-                    '<div class="flex gap-2">' +
-                    '<button class="text-primary text-sm" onclick="viewOrder(\''
+        function hideOrderDetailModal(){document.getElementById('order-detail-modal').classList.add('hidden');currentOrder=null;}
+        function showAbout(){document.getElementById('about-modal').classList.remove('hidden');}
+        function hideAboutModal(){document.getElementById('about-modal').classList.add('hidden');}
+        function copyToClipboard(text){var tmp=document.createElement('input');tmp.value=text;document.body.appendChild(tmp);tmp.select();document.execCommand('copy');document.body.removeChild(tmp);}
+        function shareApp(){if(navigator.share){navigator.share({title:'FG俱乐部',text:'专业暗区突围护航服务，安全可靠！',url:window.location.href});}else{copyToClipboard(window.location.href);showToast('链接已复制，分享给好友吧','success');}}
+        function formatDate(iso){var d=new Date(iso),n=new Date(),diff=n-d;if(diff<60000)return'刚刚';if(diff<3600000)return Math.floor(diff/60000)+'分钟前';if(diff<86400000)return Math.floor(diff/3600000)+'小时前';if(diff<604800000)return Math.floor(diff/86400000)+'天前';return d.toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}
+        function showToast(message,type){type=type||'info';var c=document.getElementById('toast-container'),t=document.createElement('div');var icons={success:'check-circle',error:'times-circle',warning:'exclamation-circle',info:'info-circle'};var colors={success:'bg-green-500',error:'bg-red-500',warning:'bg-yellow-500',info:'bg-blue-500'};t.className='flex items-center gap-3 px-5 py-3 rounded-2xl shadow-lg text-white '+colors[type]+' animate-slide-down';t.innerHTML='<i class="fa fa-'+icons[type]+'"></i><span>'+message+'</span>';c.appendChild(t);setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},300);},3000);}
+
+        var modalHideMap={'login-modal':hideLoginModal,'game-info-modal':hideGameInfoModal,'payment-modal':hidePaymentModal,'order-detail-modal':hideOrderDetailModal,'about-modal':hideAboutModal};
+        function hideModal(id){if(modalHideMap[id])modalHideMap[id]();}
+        ['login-modal','game-info-modal','payment-modal','order-detail-modal','about-modal'].forEach(function(id){document.getElementById(id).addEventListener('click',function(e){if(e.target===e.currentTarget)hideModal(id);});});
+    </script>
+</body>
+</html>
