@@ -6,6 +6,9 @@
     <title>FG俱乐部 - 暗区突围护航</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -133,6 +136,15 @@
         .safe-area-bottom {
             padding-bottom: env(safe-area-inset-bottom, 0px);
         }
+        
+        /* 通知动画 */
+        @keyframes notificationPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .notification-dot {
+            animation: notificationPulse 1.5s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-darker via-dark to-slate-900 min-h-screen text-white antialiased">
@@ -150,12 +162,12 @@
                     </div>
                 </div>
                 <div id="user-area" class="flex gap-2 items-center">
-                    <button id="clear-cache-btn" class="btn-icon text-gray-400">
-                        <i class="fa fa-refresh"></i>
+                    <button id="sync-status" class="btn-icon text-gray-400" title="同步状态">
+                        <i class="fa fa-refresh" id="sync-icon"></i>
                     </button>
                     <button id="notification-btn" class="btn-icon text-gray-400 relative">
                         <i class="fa fa-bell"></i>
-                        <span id="notification-dot" class="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full animate-pulse hidden"></span>
+                        <span id="notification-dot" class="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full animate-pulse hidden notification-dot"></span>
                     </button>
                     <button id="login-btn" class="btn btn-primary text-sm py-1.5 px-3">
                         <i class="fa fa-user"></i> 登录
@@ -182,8 +194,21 @@
                     </div>
                     <div class="flex-1 overflow-hidden">
                         <div id="notice-marquee" class="whitespace-nowrap animate-[slide-in_10s_linear_infinite]">
-                            <span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单</span>
+                            <span class="text-sm text-gray-300">🔥 新用户首单立减5元！| 💎 全装包赔套餐限时特惠 | ⚡ 打手24小时在线接单 | 📱 实时同步订单消息</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 同步状态提示 -->
+            <div id="sync-status-card" class="card mb-6 animate-fade-in hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <i class="fa fa-wifi text-green-500 text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white">实时同步已开启</p>
+                        <p class="text-xs text-gray-400">订单消息实时推送到管理员手机</p>
                     </div>
                 </div>
             </div>
@@ -211,7 +236,7 @@
             <!-- 快捷入口 -->
             <div class="card mb-6 animate-fade-in" style="animation-delay: 0.3s">
                 <div class="grid grid-cols-4 gap-4">
-                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all">
+                    <button class="quick-action flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all" onclick="switchTab('orders')">
                         <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
                             <i class="fa fa-shopping-cart text-primary text-xl"></i>
                         </div>
@@ -404,6 +429,22 @@
             </div>
         </div>
 
+        <!-- 通知消息页内容 -->
+        <div id="page-notifications" class="page-content hidden">
+            <div class="card mb-4">
+                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa fa-bell text-accent"></i>
+                    消息通知
+                </h2>
+                <div id="notifications-list" class="space-y-3">
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="fa fa-inbox text-4xl mb-3"></i>
+                        <p>暂无消息</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 个人中心页内容 -->
         <div id="page-profile" class="page-content hidden">
             <div class="card mb-4">
@@ -429,6 +470,27 @@
                             <span id="profile-admin-badge" class="inline-block mt-1 text-xs bg-danger/20 text-danger px-2 py-0.5 rounded-full hidden">管理员账户</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Firebase配置区域 -->
+            <div class="card mb-4">
+                <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                    <i class="fa fa-cog text-primary"></i>
+                    实时同步设置
+                </h3>
+                <div class="space-y-3">
+                    <div class="bg-dark/40 rounded-xl p-3">
+                        <label class="block text-xs text-gray-400 mb-2">Firebase数据库URL</label>
+                        <input type="text" id="firebase-url" class="input w-full bg-dark/60 border-gray-600 text-white text-sm" placeholder="https://your-project.firebaseio.com">
+                    </div>
+                    <button id="save-firebase-config" class="btn btn-primary w-full py-2 text-sm">
+                        <i class="fa fa-save"></i> 保存配置
+                    </button>
+                    <p class="text-xs text-gray-400">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        配置后可实现两台手机实时同步订单
+                    </p>
                 </div>
             </div>
 
@@ -493,6 +555,10 @@
             <button class="nav-item text-gray-400" data-tab="orders">
                 <i class="fa fa-list-alt text-xl mb-1"></i>
                 <span class="text-xs">订单</span>
+            </button>
+            <button class="nav-item text-gray-400" data-tab="notifications">
+                <i class="fa fa-bell text-xl mb-1"></i>
+                <span class="text-xs">消息</span>
             </button>
             <button class="nav-item text-gray-400" data-tab="profile">
                 <i class="fa fa-user text-xl mb-1"></i>
@@ -600,7 +666,7 @@
     <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-end justify-center z-50 hidden">
         <div class="bg-white rounded-t-3xl w-full max-w-lg animate-slide-up">
             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">微信转账付款</h3>
+                <h3 class="text-lg font-bold text-gray-900">微信扫码支付</h3>
                 <button id="close-payment" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
                     <i class="fa fa-times text-gray-500"></i>
                 </button>
@@ -613,28 +679,31 @@
                 </div>
 
                 <div class="bg-wechat/5 rounded-2xl p-4 mb-6 border border-wechat/20">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 bg-wechat rounded-full flex items-center justify-center">
-                            <i class="fa fa-check text-white"></i>
+                    <div class="text-center mb-4">
+                        <p class="text-wechat font-bold text-lg mb-2">请使用微信扫码支付</p>
+                        <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
+                            <img id="qrcode-img" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=300&auto=format&fit=crop" 
+                                 alt="微信收款码" 
+                                 class="w-64 h-64 object-cover rounded-lg"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2Y1ZjVmNSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNDAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1vYmlsZSBQYXltZW50PC90ZXh0PgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMzAiIGZpbGw9IiMwN2MxNjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuWKoOi9veWKoDwvdGV4dD4KICA8dGV4dCB4PSI1MCUiIHk9IjY1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7luoTlupMgU2NhbiBIZWhlPC90ZXh0Pgo8L3N2Zz4='">
                         </div>
-                        <p class="text-wechat font-bold">付款链接已自动复制！</p>
+                        <p class="text-sm text-gray-500 mt-3">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            请扫描上方二维码完成支付
+                        </p>
                     </div>
                     <div class="text-gray-600 text-sm space-y-2">
                         <p class="flex items-start gap-2">
                             <span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">1</span>
-                            打开微信 → 打开【文件传输助手】
+                            打开微信，点击右上角【扫一扫】
                         </p>
                         <p class="flex items-start gap-2">
                             <span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">2</span>
-                            长按输入框粘贴链接并发送
+                            扫描上方二维码进行支付
                         </p>
                         <p class="flex items-start gap-2">
                             <span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">3</span>
-                            点击发送的链接直接跳转转账
-                        </p>
-                        <p class="flex items-start gap-2">
-                            <span class="w-5 h-5 bg-wechat text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">4</span>
-                            付款完成后返回本页点【已付完款】
+                            支付完成后点击下方【已完成支付】按钮
                         </p>
                     </div>
                     <div class="mt-3 pt-3 border-t border-wechat/10">
@@ -645,11 +714,11 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <button id="copy-link-btn" class="btn btn-wechat w-full py-3">
-                        <i class="fa fa-copy mr-2"></i>重新复制付款链接
+                    <button id="save-qr-btn" class="btn btn-wechat w-full py-3">
+                        <i class="fa fa-download mr-2"></i>保存收款码图片
                     </button>
                     <button id="paid-btn" class="btn btn-primary w-full py-3">
-                        <i class="fa fa-check-circle mr-2"></i>我已经付款完成
+                        <i class="fa fa-check-circle mr-2"></i>已完成支付
                     </button>
                     <button id="cancel-pay-btn" class="btn btn-outline w-full py-3">
                         取消支付
@@ -766,6 +835,9 @@
                     <p class="text-gray-600 text-sm leading-relaxed">
                         FG俱乐部致力于为暗区突围玩家提供专业、安全、高效的护航服务。我们拥有经验丰富的打手团队，24小时在线接单，保障您的游戏体验。
                     </p>
+                    <p class="text-gray-600 text-sm leading-relaxed mt-3">
+                        <strong>新增功能：</strong>支持两台手机实时同步订单消息，管理员手机可24小时接收新订单通知。
+                    </p>
                 </div>
                 <div class="space-y-2 text-sm text-gray-500">
                     <p>客服QQ：3428979006</p>
@@ -785,6 +857,15 @@
         const SERVICE_QQ = "3428979006";
         const RIGHT_CODE = "123456";
 
+        // Firebase配置（用户需要替换为自己的配置）
+        let firebaseConfig = {
+            databaseURL: localStorage.getItem('firebase_url') || ""
+        };
+
+        let firebaseApp = null;
+        let firebaseDB = null;
+        let orderListener = null;
+
         // 订单状态配置
         const statusConfig = {
             pending: { label: '待支付', class: 'bg-yellow-100 text-yellow-800', icon: 'clock-o', color: 'text-yellow-500' },
@@ -799,6 +880,7 @@
 
         // 全局变量
         let orders = JSON.parse(localStorage.getItem('fg-orders')) || [];
+        let notifications = JSON.parse(localStorage.getItem('fg-notifications')) || [];
         let currentUser = JSON.parse(localStorage.getItem('fg-user')) || null;
         let currentOrder = null;
         let currentProduct = null;
@@ -813,8 +895,193 @@
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
             bindAllEvents();
+            initFirebase();
             checkForUpdates();
         });
+
+        // 初始化Firebase
+        function initFirebase() {
+            const savedUrl = localStorage.getItem('firebase_url');
+            if (savedUrl) {
+                document.getElementById('firebase-url').value = savedUrl;
+                firebaseConfig.databaseURL = savedUrl;
+                try {
+                    firebaseApp = firebase.initializeApp(firebaseConfig);
+                    firebaseDB = firebase.database();
+                    updateSyncStatus(true);
+                    setupRealtimeListener();
+                    showToast('实时同步已连接', 'success');
+                } catch (e) {
+                    console.error('Firebase初始化失败:', e);
+                    updateSyncStatus(false);
+                }
+            }
+        }
+
+        // 更新同步状态
+        function updateSyncStatus(connected) {
+            const statusCard = document.getElementById('sync-status-card');
+            const syncIcon = document.getElementById('sync-icon');
+            if (connected) {
+                statusCard.classList.remove('hidden');
+                syncIcon.className = 'fa fa-wifi text-green-500';
+            } else {
+                statusCard.classList.add('hidden');
+                syncIcon.className = 'fa fa-refresh text-gray-400';
+            }
+        }
+
+        // 设置实时监听
+        function setupRealtimeListener() {
+            if (!firebaseDB) return;
+            
+            const ordersRef = firebaseDB.ref('orders');
+            
+            // 监听新订单添加
+            orderListener = ordersRef.on('child_added', (snapshot) => {
+                const newOrder = snapshot.val();
+                if (newOrder && newOrder.id) {
+                    const exists = orders.find(o => o.id === newOrder.id);
+                    if (!exists) {
+                        orders.unshift(newOrder);
+                        localStorage.setItem('fg-orders', JSON.stringify(orders));
+                        addNotification('新订单', `收到新订单：${newOrder.product} - ¥${newOrder.price}`, 'new_order');
+                        renderOrders();
+                        updateStatistics();
+                        checkNotifications();
+                        if (currentUser && currentUser.phone === ADMIN_PHONE) {
+                            showToast(`新订单：${newOrder.product}`, 'success');
+                        }
+                    }
+                }
+            });
+
+            // 监听订单更新
+            ordersRef.on('child_changed', (snapshot) => {
+                const updatedOrder = snapshot.val();
+                if (updatedOrder && updatedOrder.id) {
+                    const index = orders.findIndex(o => o.id === updatedOrder.id);
+                    if (index > -1) {
+                        const oldStatus = orders[index].status;
+                        orders[index] = updatedOrder;
+                        localStorage.setItem('fg-orders', JSON.stringify(orders));
+                        
+                        if (oldStatus !== updatedOrder.status) {
+                            addNotification('订单更新', `订单${updatedOrder.id}状态更新为：${statusConfig[updatedOrder.status].label}`, 'status_update');
+                            if (currentUser && currentUser.phone === ADMIN_PHONE) {
+                                showToast(`订单更新：${updatedOrder.id}`, 'info');
+                            }
+                        }
+                        
+                        renderOrders();
+                        updateStatistics();
+                        checkNotifications();
+                    }
+                }
+            });
+
+            // 初始加载所有订单
+            ordersRef.once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const firebaseOrders = Object.values(data);
+                    const mergedOrders = [...firebaseOrders];
+                    orders.forEach(localOrder => {
+                        if (!mergedOrders.find(o => o.id === localOrder.id)) {
+                            mergedOrders.push(localOrder);
+                        }
+                    });
+                    mergedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    orders = mergedOrders;
+                    localStorage.setItem('fg-orders', JSON.stringify(orders));
+                    renderOrders();
+                    updateStatistics();
+                }
+            });
+        }
+
+        // 同步订单到Firebase
+        function syncOrderToFirebase(order) {
+            if (!firebaseDB) return;
+            try {
+                firebaseDB.ref('orders/' + order.id).set(order);
+            } catch (e) {
+                console.error('同步订单失败:', e);
+            }
+        }
+
+        // 添加通知
+        function addNotification(title, message, type = 'info') {
+            const notification = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                type: type,
+                read: false,
+                timestamp: new Date().toISOString()
+            };
+            notifications.unshift(notification);
+            localStorage.setItem('fg-notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+            renderNotifications();
+        }
+
+        // 更新通知角标
+        function updateNotificationBadge() {
+            const unread = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notification-dot');
+            if (unread > 0) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // 渲染通知列表
+        function renderNotifications() {
+            const container = document.getElementById('notifications-list');
+            
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="fa fa-inbox text-4xl mb-3"></i>
+                        <p>暂无消息</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = notifications.map(notification => `
+                <div class="card ${notification.read ? 'opacity-60' : ''}" onclick="markNotificationRead(${notification.id})">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            notification.type === 'new_order' ? 'bg-green-500/20 text-green-500' :
+                            notification.type === 'status_update' ? 'bg-blue-500/20 text-blue-500' :
+                            'bg-gray-500/20 text-gray-400'
+                        }">
+                            <i class="fa fa-${notification.type === 'new_order' ? 'shopping-cart' : notification.type === 'status_update' ? 'refresh' : 'bell'}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-white">${notification.title}</p>
+                            <p class="text-xs text-gray-400 mt-1">${notification.message}</p>
+                            <p class="text-xs text-gray-500 mt-2">${formatDate(notification.timestamp)}</p>
+                        </div>
+                        ${!notification.read ? '<div class="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 标记通知已读
+        function markNotificationRead(id) {
+            const notification = notifications.find(n => n.id === id);
+            if (notification) {
+                notification.read = true;
+                localStorage.setItem('fg-notifications', JSON.stringify(notifications));
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        }
 
         // 初始化应用
         function initApp() {
@@ -822,15 +1089,13 @@
             renderOrders();
             updateStatistics();
             checkNotifications();
+            renderNotifications();
+            updateNotificationBadge();
         }
 
         // 检查通知
         function checkNotifications() {
-            const hasPending = orders.some(o => o.status === 'paid');
-            const dot = document.getElementById('notification-dot');
-            if (hasPending) {
-                dot.classList.remove('hidden');
-            }
+            updateNotificationBadge();
         }
 
         // 切换标签页
@@ -852,22 +1117,16 @@
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.add('hidden');
             });
-            document.getElementById(`page-${tab}`).classList.remove('hidden');
-            document.getElementById(`page-${tab}`).classList.add('animate-fade-in');
+            
+            const targetPage = document.getElementById(`page-${tab}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                targetPage.classList.add('animate-fade-in');
+            }
             
             // 滚动到顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // 清除本地缓存
-        document.getElementById('clear-cache-btn').addEventListener('click', function(){
-            localStorage.removeItem('fg-orders');
-            localStorage.removeItem('fg-user');
-            orders = [];
-            currentUser = null;
-            initApp();
-            showToast('缓存已清空', 'success');
-        });
 
         // 更新用户界面
         function updateUserUI() {
@@ -879,563 +1138,4 @@
                 document.getElementById('orders-container').classList.remove('hidden');
                 
                 // 个人中心
-                document.getElementById('profile-logged-out').classList.add('hidden');
-                document.getElementById('profile-logged-in').classList.remove('hidden');
-                document.getElementById('logout-section').classList.remove('hidden');
-                document.getElementById('profile-phone').textContent = currentUser.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-                document.getElementById('profile-name').textContent = '用户' + currentUser.phone.slice(-4);
-                
-                if (currentUser.phone === ADMIN_PHONE) {
-                    document.getElementById('order-title').textContent = '全部订单';
-                    document.getElementById('admin-badge').classList.remove('hidden');
-                    document.getElementById('profile-admin-badge').classList.remove('hidden');
-                } else {
-                    document.getElementById('order-title').textContent = '我的订单';
-                    document.getElementById('admin-badge').classList.add('hidden');
-                    document.getElementById('profile-admin-badge').classList.add('hidden');
-                }
-            } else {
-                document.getElementById('login-btn').classList.remove('hidden');
-                document.getElementById('user-info').classList.add('hidden');
-                
-                document.getElementById('not-logged-in').classList.remove('hidden');
-                document.getElementById('orders-container').classList.add('hidden');
-                
-                // 个人中心
-                document.getElementById('profile-logged-out').classList.remove('hidden');
-                document.getElementById('profile-logged-in').classList.add('hidden');
-                document.getElementById('logout-section').classList.add('hidden');
-            }
-        }
-
-        // 更新统计数据
-        function updateStatistics() {
-            let filteredOrders = orders;
-            if (currentUser && currentUser.phone !== ADMIN_PHONE) {
-                filteredOrders = orders.filter(o => o.userPhone === currentUser.phone);
-            }
-            document.getElementById('total-orders').textContent = filteredOrders.length;
-            document.getElementById('pending-orders').textContent = filteredOrders.filter(o => o.status === 'paid').length;
-        }
-
-        // 渲染订单列表
-        function renderOrders() {
-            let filteredOrders = currentUser ? 
-                (currentUser.phone !== ADMIN_PHONE ? orders.filter(o => o.userPhone === currentUser.phone) : orders) 
-                : [];
-            
-            // 应用筛选
-            if (currentFilter !== 'all') {
-                filteredOrders = filteredOrders.filter(o => o.status === currentFilter);
-            }
-            
-            // 应用搜索
-            if (searchQuery) {
-                const query = searchQuery.toLowerCase();
-                filteredOrders = filteredOrders.filter(o => 
-                    o.id.toLowerCase().includes(query) ||
-                    o.gameId.toLowerCase().includes(query) ||
-                    o.product.toLowerCase().includes(query)
-                );
-            }
-            
-            filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            const container = document.getElementById('orders-list');
-            const empty = document.getElementById('empty-orders');
-            
-            if (!currentUser) {
-                return;
-            }
-            
-            if (filteredOrders.length === 0) {
-                container.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-            
-            container.innerHTML = filteredOrders.map((order, index) => `
-                <div class="card animate-slide-up" style="animation-delay: ${index * 0.1}s">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-primary/80 text-xs font-mono font-medium">${order.id}</span>
-                        <span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>
-                    </div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-white font-medium">${order.product}</span>
-                        <span class="text-white font-bold text-lg">¥${order.price.toFixed(2)}</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-gray-400 text-xs mb-3">
-                        <i class="fa fa-gamepad"></i>
-                        <span>${order.gameId}</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-3 border-t border-white/10">
-                        <span class="text-gray-400 text-xs">
-                            <i class="fa fa-calendar-o mr-1"></i>${formatDate(order.createdAt)}
-                        </span>
-                        <div class="flex gap-2">
-                            <button class="text-primary text-sm view-order" data-id="${order.id}">
-                                <i class="fa fa-eye mr-1"></i>详情
-                            </button>
-                            ${order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ? 
-                                `<button class="text-wechat text-sm pay-order" data-id="${order.id}">
-                                    <i class="fa fa-credit-card mr-1"></i>支付
-                                </button>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            bindOrderEvents();
-        }
-
-        // 绑定订单操作事件
-        function bindOrderEvents() {
-            document.querySelectorAll('.view-order').forEach(btn => {
-                btn.addEventListener('click', () => showOrderDetail(btn.dataset.id));
-            });
-            document.querySelectorAll('.pay-order').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const order = orders.find(o => o.id === btn.dataset.id);
-                    if(order){
-                        currentOrder = order;
-                        showPaymentModal(order.price);
-                    }
-                });
-            });
-        }
-
-        // 格式化日期
-        function formatDate(isoString) {
-            const date = new Date(isoString);
-            const now = new Date();
-            const diff = now - date;
-            
-            if (diff < 60000) return '刚刚';
-            if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
-            if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
-            if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
-            
-            return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-        }
-
-        // 绑定所有事件
-        function bindAllEvents() {
-            // 底部导航
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => switchTab(item.dataset.tab));
-            });
-            
-            // 订单筛选
-            document.querySelectorAll('.tab-btn[data-filter]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-btn[data-filter]').forEach(b => {
-                        b.classList.remove('active');
-                        b.classList.add('bg-dark/40', 'text-gray-400');
-                    });
-                    btn.classList.add('active');
-                    btn.classList.remove('bg-dark/40', 'text-gray-400');
-                    currentFilter = btn.dataset.filter;
-                    renderOrders();
-                });
-            });
-            
-            // 搜索
-            document.getElementById('search-order').addEventListener('input', (e) => {
-                searchQuery = e.target.value;
-                renderOrders();
-            });
-            
-            // 登录相关
-            document.getElementById('login-btn').addEventListener('click', showLoginModal);
-            document.getElementById('login-now-btn').addEventListener('click', showLoginModal);
-            document.getElementById('profile-login-btn').addEventListener('click', showLoginModal);
-            document.getElementById('close-login').addEventListener('click', hideLoginModal);
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-            document.getElementById('send-code').addEventListener('click', sendVerificationCode);
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            
-            // 下单按钮
-            document.querySelectorAll('.buy-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if(!currentUser){
-                        showToast('请先登录', 'warning');
-                        showLoginModal();
-                        return;
-                    }
-                    currentProduct = btn.dataset.product;
-                    currentPrice = Number(btn.dataset.price);
-                    showGameInfoModal();
-                });
-            });
-            document.getElementById('close-game-info').addEventListener('click', hideGameInfoModal);
-            document.getElementById('game-info-form').addEventListener('submit', createNewOrder);
-            
-            // 支付弹窗
-            document.getElementById('close-payment').addEventListener('click', hidePaymentModal);
-            document.getElementById('cancel-pay-btn').addEventListener('click', hidePaymentModal);
-            document.getElementById('copy-link-btn').addEventListener('click', copyPayLink);
-            document.getElementById('paid-btn').addEventListener('click', confirmPaymentSuccess);
-            
-            // 订单详情
-            document.getElementById('close-detail').addEventListener('click', hideOrderDetailModal);
-            document.getElementById('update-status-btn').addEventListener('click', updateOrderStatus);
-            
-            // 关于我们
-            document.getElementById('close-about').addEventListener('click', hideAboutModal);
-            
-            // 点击遮罩关闭弹窗
-            ['login-modal', 'game-info-modal', 'payment-modal', 'order-detail-modal', 'about-modal'].forEach(id => {
-                document.getElementById(id).addEventListener('click', e => {
-                    if(e.target === e.currentTarget) {
-                        if(id === 'login-modal') hideLoginModal();
-                        if(id === 'game-info-modal') hideGameInfoModal();
-                        if(id === 'payment-modal') hidePaymentModal();
-                        if(id === 'order-detail-modal') hideOrderDetailModal();
-                        if(id === 'about-modal') hideAboutModal();
-                    }
-                });
-            });
-        }
-
-        // 复制到剪贴板
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('已复制到剪贴板', 'success');
-            }).catch(() => {
-                const tmp = document.createElement('input');
-                tmp.value = text;
-                document.body.appendChild(tmp);
-                tmp.select();
-                document.execCommand('copy');
-                document.body.removeChild(tmp);
-                showToast('已复制到剪贴板', 'success');
-            });
-        }
-
-        // 复制付款链接
-        function copyPayLink(){
-            copyToClipboard(payUrl);
-        }
-
-        // 分享应用
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'FG俱乐部',
-                    text: '专业暗区突围护航服务，安全可靠！',
-                    url: window.location.href
-                });
-            } else {
-                copyToClipboard(window.location.href);
-                showToast('链接已复制，分享给好友吧', 'success');
-            }
-        }
-
-        // 显示关于我们
-        function showAbout() {
-            document.getElementById('about-modal').classList.remove('hidden');
-        }
-
-        function hideAboutModal() {
-            document.getElementById('about-modal').classList.add('hidden');
-        }
-
-        // 弹窗开关
-        function showLoginModal(){
-            document.getElementById('login-modal').classList.remove('hidden');
-        }
-        function hideLoginModal(){
-            document.getElementById('login-modal').classList.add('hidden');
-            document.getElementById('login-form').reset();
-            if(countdown){
-                clearInterval(countdown);
-                countdown = null;
-                document.getElementById('send-code').innerText = '获取验证码';
-                document.getElementById('send-code').disabled = false;
-            }
-        }
-
-        // 获取验证码
-        function sendVerificationCode(){
-            const phone = document.getElementById('phone').value.trim();
-            if(!/^1[3-9]\d{9}$/.test(phone)){
-                showToast('手机号格式错误', 'error');
-                return;
-            }
-            showToast('测试验证码：123456', 'info');
-            let s = 60;
-            const btn = document.getElementById('send-code');
-            btn.disabled = true;
-            btn.innerText = s + 's';
-            if(countdown) clearInterval(countdown);
-            countdown = setInterval(() => {
-                s--;
-                btn.innerText = s + 's';
-                if(s <= 0){
-                    clearInterval(countdown);
-                    countdown = null;
-                    btn.innerText = '获取验证码';
-                    btn.disabled = false;
-                }
-            }, 1000);
-        }
-
-        // 登录处理
-        function handleLogin(e){
-            e.preventDefault();
-            const p = document.getElementById('phone').value.trim();
-            const c = document.getElementById('code').value.trim();
-            if(c !== RIGHT_CODE){
-                showToast('验证码错误，正确：123456', 'error');
-                return;
-            }
-            currentUser = { id: 'user_' + p, phone: p };
-            localStorage.setItem('fg-user', JSON.stringify(currentUser));
-            hideLoginModal();
-            updateUserUI();
-            renderOrders();
-            updateStatistics();
-            showToast('登录成功', 'success');
-        }
-
-        // 退出登录
-        function handleLogout(){
-            currentUser = null;
-            localStorage.removeItem('fg-user');
-            updateUserUI();
-            renderOrders();
-            updateStatistics();
-            switchTab('home');
-            showToast('已退出登录', 'info');
-        }
-
-        function showGameInfoModal(){
-            document.getElementById('selected-product').textContent = currentProduct;
-            document.getElementById('selected-price').textContent = '¥' + currentPrice.toFixed(2);
-            document.getElementById('game-info-modal').classList.remove('hidden');
-        }
-        function hideGameInfoModal(){
-            document.getElementById('game-info-modal').classList.add('hidden');
-            document.getElementById('game-info-form').reset();
-        }
-
-        // 创建订单
-        function createNewOrder(e){
-            e.preventDefault();
-            const gid = document.getElementById('game-id').value.trim();
-            const qq = document.getElementById('qq').value.trim();
-            const rem = document.getElementById('remark').value.trim() || '无';
-            if(!gid || !qq){
-                showToast('请填写游戏ID和QQ', 'warning');
-                return;
-            }
-            const oid = 'FG' + Date.now();
-            const newO = {
-                id: oid,
-                userId: currentUser.id,
-                userPhone: currentUser.phone,
-                product: currentProduct,
-                price: currentPrice,
-                gameId: gid,
-                qq: qq,
-                remark: rem,
-                status: 'pending',
-                statusHistory: [{ status: 'pending', time: new Date().toISOString(), note: '创建订单' }],
-                createdAt: new Date().toISOString()
-            };
-            orders.unshift(newO);
-            localStorage.setItem('fg-orders', JSON.stringify(orders));
-            hideGameInfoModal();
-            currentOrder = newO;
-            showPaymentModal(currentPrice);
-            renderOrders();
-            updateStatistics();
-            checkNotifications();
-            showToast('订单创建成功', 'success');
-        }
-
-        // 打开支付弹窗
-        function showPaymentModal(price){
-            const remark = encodeURIComponent(currentOrder.product + '|QQ:' + currentOrder.qq);
-            payUrl = WX_BASE + `?amount=${price.toFixed(2)}&remark=${remark}`;
-            document.getElementById('pay-amount').textContent = '¥' + price.toFixed(2);
-            document.getElementById('pay-product').textContent = currentOrder.product;
-            document.getElementById('payment-modal').classList.remove('hidden');
-            copyPayLink();
-        }
-        function hidePaymentModal(){
-            document.getElementById('payment-modal').classList.add('hidden');
-            currentOrder = null;
-        }
-
-        // 确认付款
-        function confirmPaymentSuccess(){
-            if(!currentOrder){
-                showToast('订单异常', 'error');
-                return;
-            }
-            currentOrder.status = 'paid';
-            currentOrder.statusHistory.push({ status: 'paid', time: new Date().toISOString(), note: '用户自主确认付款' });
-            const idx = orders.findIndex(o => o.id === currentOrder.id);
-            if(idx > -1){
-                orders[idx] = currentOrder;
-                localStorage.setItem('fg-orders', JSON.stringify(orders));
-            }
-            hidePaymentModal();
-            renderOrders();
-            updateStatistics();
-            checkNotifications();
-            showToast('付款确认成功！请联系客服安排打手', 'success');
-        }
-
-        // 查看订单详情
-        function showOrderDetail(id){
-            const o = orders.find(x => x.id === id);
-            if(!o){
-                showToast('订单不存在', 'error');
-                return;
-            }
-            currentOrder = o;
-            
-            // 生成时间线
-            const timeline = document.getElementById('status-timeline');
-            const history = o.statusHistory || [{ status: o.status, time: o.createdAt, note: '订单创建' }];
-            
-            timeline.innerHTML = history.map((item, index) => {
-                const isLast = index === history.length - 1;
-                const config = statusConfig[item.status] || statusConfig.pending;
-                return `
-                    <div class="flex gap-3">
-                        <div class="flex flex-col items-center">
-                            <div class="w-8 h-8 rounded-full ${isLast ? 'bg-primary text-white' : 'bg-gray-200 text-gray-400'} flex items-center justify-center">
-                                <i class="fa fa-${config.icon} text-sm"></i>
-                            </div>
-                            ${!isLast ? '<div class="w-0.5 h-8 bg-gray-200"></div>' : ''}
-                        </div>
-                        <div class="flex-1 pb-4">
-                            <p class="font-medium text-gray-900">${config.label}</p>
-                            <p class="text-xs text-gray-500">${item.note}</p>
-                            <p class="text-xs text-gray-400 mt-1">${new Date(item.time).toLocaleString('zh-CN')}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.getElementById('detail-id').textContent = o.id;
-            document.getElementById('detail-product').textContent = o.product;
-            document.getElementById('detail-price').textContent = '¥' + o.price.toFixed(2);
-            document.getElementById('detail-status').innerHTML = `<span class="status-badge ${statusConfig[o.status].class}">${statusConfig[o.status].label}</span>`;
-            document.getElementById('detail-gameid').textContent = o.gameId;
-            document.getElementById('detail-qq').textContent = o.qq;
-            document.getElementById('detail-phone').textContent = o.userPhone;
-            document.getElementById('detail-remark').textContent = o.remark;
-            document.getElementById('detail-time').textContent = formatDate(o.createdAt);
-            document.getElementById('new-status').value = o.status;
-            
-            // 操作按钮
-            const actionsDiv = document.getElementById('detail-actions');
-            let actionsHtml = '';
-            
-            if (o.status === 'pending' && currentUser && currentUser.phone !== ADMIN_PHONE) {
-                actionsHtml += `<button class="btn btn-wechat w-full" onclick="reopenPayment()">
-                    <i class="fa fa-credit-card"></i> 去支付
-                </button>`;
-            }
-            
-            if (o.status === 'completed') {
-                actionsHtml += `<button class="btn btn-primary w-full" onclick="showToast('感谢您的评价！')">
-                    <i class="fa fa-star"></i> 评价订单
-                </button>`;
-            }
-            
-            actionsHtml += `<button class="btn btn-outline w-full" onclick="copyToClipboard('${SERVICE_QQ}'); showToast('客服QQ已复制')">
-                <i class="fa fa-qq"></i> 联系客服
-            </button>`;
-            
-            actionsDiv.innerHTML = actionsHtml;
-            
-            // 管理员操作
-            const adminSection = document.getElementById('admin-status-update');
-            if (currentUser && currentUser.phone === ADMIN_PHONE) {
-                adminSection.classList.remove('hidden');
-            } else {
-                adminSection.classList.add('hidden');
-            }
-            
-            document.getElementById('order-detail-modal').classList.remove('hidden');
-        }
-        
-        // 重新打开支付
-        function reopenPayment() {
-            hideOrderDetailModal();
-            showPaymentModal(currentOrder.price);
-        }
-        
-        function hideOrderDetailModal(){
-            document.getElementById('order-detail-modal').classList.add('hidden');
-            currentOrder = null;
-        }
-
-        // 管理员改状态
-        function updateOrderStatus(){
-            const ns = document.getElementById('new-status').value;
-            if(ns === currentOrder.status){
-                showToast('状态未修改', 'info');
-                return;
-            }
-            currentOrder.status = ns;
-            currentOrder.statusHistory.push({ status: ns, time: new Date().toISOString(), note: '管理员更新状态' });
-            const idx = orders.findIndex(o => o.id === currentOrder.id);
-            if(idx > -1){
-                orders[idx] = currentOrder;
-                localStorage.setItem('fg-orders', JSON.stringify(orders));
-            }
-            hideOrderDetailModal();
-            renderOrders();
-            updateStatistics();
-            checkNotifications();
-            showToast('状态更新成功', 'success');
-        }
-
-        // 检查更新（模拟）
-        function checkForUpdates() {
-            // 可以在这里添加版本检查逻辑
-        }
-
-        // 显示Toast提示
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const icons = {
-                success: 'check-circle',
-                error: 'times-circle',
-                warning: 'exclamation-circle',
-                info: 'info-circle'
-            };
-            
-            const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
-            };
-            
-            toast.className = `flex items-center gap-3 px-5 py-3 rounded-2xl shadow-lg text-white ${colors[type]} animate-slide-down`;
-            toast.innerHTML = `
-                <i class="fa fa-${icons[type]}"></i>
-                <span>${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('profile
