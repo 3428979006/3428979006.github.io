@@ -1,811 +1,477 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>LUMIN PACT · 暗区突围护航保单系统 v5.0</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --bg-deep: #080b0f;
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-card: #1c2129;
-            --border-gold: #c9a23b;
-            --border-dim: #2a3039;
-            --text-primary: #e6e8ec;
-            --text-secondary: #b0b3b8;
-            --text-muted: #7d8289;
-            --accent-blue: #4a9eff;
-            --accent-gold: #d4af37;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --hunter-color: #ff6b35;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-        .app-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-        .role-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            background: var(--bg-card);
-            padding: 0.4rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-dim);
-            flex-wrap: wrap;
-        }
-        .role-tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 0.7rem 1rem;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            border: 2px solid transparent;
-            color: var(--text-secondary);
-            background: transparent;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .role-tab:hover {
-            color: var(--text-primary);
-        }
-        .role-tab.active {
-            background: linear-gradient(135deg, #1a1f28, #252b36);
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-        }
-        .role-tab.hunter-tab.active {
-            border-color: var(--hunter-color);
-            color: var(--hunter-color);
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.2);
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.5rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        .brand i {
-            font-size: 2rem;
-            color: var(--accent-gold);
-        }
-        .brand h1 {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(180deg, #f0d78c, #c9a23b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .brand span {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            display: block;
-        }
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.3;
-            }
-        }
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        .card-gold {
-            border-color: var(--border-gold);
-        }
-        .card-hunter {
-            border-color: var(--hunter-color);
-        }
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-gold);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid var(--border-dim);
-            background: #252b36;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .btn:hover {
-            border-color: var(--accent-gold);
-            background: #2a3039;
-        }
-        .btn-gold {
-            background: linear-gradient(180deg, #d4af37, #b4942e);
-            border-color: #f0c45a;
-            color: #000;
-            font-weight: 700;
-        }
-        .btn-hunter {
-            background: linear-gradient(180deg, #ff6b35, #e55a2b);
-            border-color: #ff8c5a;
-            color: #fff;
-        }
-        .btn-danger {
-            background: #c0392b;
-            border-color: #e74c3c;
-            color: #fff;
-        }
-        .btn-sm {
-            padding: 0.3rem 0.8rem;
-            font-size: 0.75rem;
-        }
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1rem;
-        }
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 0.5rem;
-            margin: 0.8rem 0;
-        }
-        .price-item {
-            background: #141820;
-            border: 1px solid #2a3039;
-            border-radius: 8px;
-            padding: 0.6rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .price-item:hover {
-            border-color: var(--accent-gold);
-            transform: translateY(-2px);
-        }
-        .price-item.selected {
-            border-color: var(--accent-gold) !important;
-            background: #2a2518 !important;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
-        .price-cat {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-        .price-name {
-            font-weight: 700;
-            font-size: 0.8rem;
-            margin: 0.2rem 0;
-        }
-        .price-val {
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: var(--accent-gold);
-        }
-        .table-wrap {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-        th {
-            text-align: left;
-            padding: 0.5rem;
-            color: var(--accent-gold);
-            border-bottom: 2px solid var(--border-gold);
-            background: rgba(212, 175, 55, 0.05);
-            white-space: nowrap;
-        }
-        td {
-            padding: 0.5rem;
-            border-bottom: 1px solid var(--border-dim);
-        }
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        input,
-        select {
-            width: 100%;
-            padding: 0.6rem;
-            background: #0d1117;
-            border: 1px solid #2a3039;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-        .badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        .badge-gold {
-            background: linear-gradient(135deg, #f0d78c, #c9a23b);
-            color: #000;
-        }
-        .badge-elite {
-            background: var(--hunter-color);
-            color: #fff;
-        }
-        .badge-success {
-            background: var(--success);
-            color: #fff;
-        }
-        .badge-warning {
-            background: var(--warning);
-            color: #000;
-        }
-        .badge-danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .mt-1 {
-            margin-top: 0.5rem;
-        }
-        .mb-1 {
-            margin-bottom: 0.5rem;
-        }
-        .text-gold {
-            color: var(--accent-gold);
-        }
-        .text-hunter {
-            color: var(--hunter-color);
-        }
-        .text-success {
-            color: var(--success);
-        }
-        .text-danger {
-            color: var(--danger);
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .text-blue {
-            color: var(--accent-blue);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #1e222b;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 0.3rem;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #1c2129;
-            border: 1px solid var(--accent-gold);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            z-index: 9999;
-            animation: slideIn 0.3s ease;
-            max-width: 400px;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-box {
-            width: 90%;
-            max-width: 500px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-gold);
-            border-radius: 12px;
-            padding: 2rem;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-title {
-            font-size: 1.2rem;
-            color: var(--accent-gold);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .chart-wrap {
-            width: 100%;
-            height: 300px;
-            margin: 1rem 0;
-        }
-        @media (max-width: 768px) {
-            .app-container {
-                padding: 0.5rem;
-            }
-            .pricing-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .role-tabs {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <!-- 角色切换标签 -->
-        <div class="role-tabs" id="roleTabs">
-            <button class="role-tab active" onclick="switchRole('user')">
-                <i class="fas fa-user"></i> 普通用户·下单
-            </button>
-            <button class="role-tab hunter-tab" onclick="switchRole('hunter')">
-                <i class="fas fa-crosshairs"></i> 打手·接单系统
-            </button>
-            <button class="role-tab admin-tab" onclick="switchRole('admin')">
-                <i class="fas fa-shield-alt"></i> 管理员·后台
-            </button>
-        </div>
+const router = require("express").Router();
 
-        <!-- 头部 -->
-        <div class="header">
-            <div class="brand">
-                <i class="fas fa-shield-haltered"></i>
-                <div>
-                    <h1>LUMIN PACT</h1>
-                    <span>暗区突围·护航保单系统 v5.0</span>
-                </div>
-            </div>
-            <div class="status">
-                <span class="status-dot"></span> 系统在线 |
-                <span id="currentRoleLabel" class="text-gold">👤 普通用户模式</span> |
-                <span id="liveTime" class="text-muted">--:--:--</span>
-            </div>
-        </div>
+const db = require("../config/database");
 
-        <!-- ==================== 普通用户界面 ==================== -->
-        <div id="userPanel">
-            <div class="grid-2">
-                <div>
-                    <div class="card card-gold">
-                        <div class="section-title"><i class="fas fa-shopping-cart text-gold"></i> 自助下单系统</div>
-                        <div class="pricing-grid" id="pricingGrid"></div>
-                        <div class="flex-between mt-1">
-                            <span>
-                                <span id="vipBadge" class="badge badge-gold">🥈 银牌VIP</span>
-                                累计消费: <b id="totalSpent" class="text-gold">¥0</b>
-                            </span>
-                            <span class="text-muted" id="discountInfo">连购3单享95折</span>
-                        </div>
-                        <div class="flex-between mt-1">
-                            <select id="packageSelect" style="flex:2;"></select>
-                            <button class="btn btn-gold" onclick="userPlaceOrder()" style="flex:1;">⚡ 立即护航</button>
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:0.8rem;">
-                            预计接单: <span id="estTime" class="text-gold">选择套餐</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div class="section-title"><i class="fas fa-scroll text-gold"></i> 我的保单</div>
-                        <div class="table-wrap">
-                            <table id="userOrdersTable">
-                                <thead><tr><th>订单号</th><th>套餐</th><th>打手</th><th>进度</th><th>操作</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div class="flex-between mt-1">
-                            <button class="btn btn-sm" onclick="userRefund()">🔄 免费续打</button>
-                            <button class="btn btn-sm" onclick="showToast('录屏功能开发中','info')">📹 录屏</button>
-                            <button class="btn btn-sm" onclick="showToast('客服已接入','info')">💬 客服</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+const auth = require("../middleware/auth");
 
-        <!-- ==================== 打手界面 ==================== -->
-        <div id="hunterPanel" class="hidden">
-            <div class="grid-2">
-                <div>
-                    <div class="card card-hunter">
-                        <div class="flex-between mb-1">
-                            <div class="section-title" style="border:none;margin:0;padding:0;">
-                                <i class="fas fa-crosshairs text-hunter"></i> 打手工作台
-                            </div>
-                            <span class="badge badge-elite">🥇 精英打手</span>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
-                            <div><div class="text-muted" style="font-size:0.7rem;">今日接单</div>
-                                <div style="font-size:1.3rem;font-weight:700;color:var(--hunter-color);" id="hunterTodayOrders">0</div></div>
-                            <div><div class="text-muted" style="font-size:0.7rem;">今日收入</div>
-                                <div style="font-size:1.3rem;font-weight:700;color:var(--success);" id="hunterTodayIncome">¥0</div></div>
-                            <div><div class="text-muted" style="font-size:0.7rem;">完成率</div>
-                                <div style="font-size:1.3rem;font-weight:700;color:var(--accent-blue);">98%</div></div>
-                            <div><div class="text-muted" style="font-size:0.7rem;">好评率</div>
-                                <div style="font-size:1.3rem;font-weight:700;color:var(--accent-gold);">4.9⭐</div></div>
-                        </div>
-                        <button class="btn btn-hunter btn-block mt-1" id="toggleOnlineBtn" onclick="toggleHunterOnline()">
-                            <i class="fas fa-wifi"></i> <span id="onlineStatusText">在线接单中</span>
-                        </button>
-                    </div>
-                    <div class="card">
-                        <div class="section-title"><i class="fas fa-inbox text-hunter"></i> 可接订单池
-                            <span class="text-muted" style="font-size:0.7rem;" id="poolCount">0个</span></div>
-                        <div class="table-wrap">
-                            <table id="hunterPoolTable">
-                                <thead><tr><th>订单号</th><th>套餐</th><th>保额</th><th>佣金</th><th>操作</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div class="section-title"><i class="fas fa-list-check text-hunter"></i> 进行中订单</div>
-                        <div class="table-wrap">
-                            <table id="hunterActiveTable">
-                                <thead><tr><th>订单号</th><th>客户</th><th>套餐</th><th>进度</th><th>操作</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="section-title"><i class="fas fa-history text-hunter"></i> 近期完成记录</div>
-                        <div id="hunterHistory" style="font-size:0.8rem;max-height:200px;overflow-y:auto;">
-                            <div style="padding:0.3rem 0;border-bottom:1px solid var(--border-dim);">
-                                LC20260722-001 400万豪华保 ✅ ¥20 ⭐⭐⭐⭐⭐</div>
-                            <div style="padding:0.3rem 0;border-bottom:1px solid var(--border-dim);">
-                                LC20260721-005 250万基础保 ✅ ¥8 ⭐⭐⭐⭐</div>
-                            <div style="padding:0.3rem 0;">LC20260720-003 600万至尊保 ✅ ¥80 ⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- ==================== 管理员界面 ==================== -->
-        <div id="adminPanel" class="hidden">
-            <div id="adminLoginBox" class="card card-gold" style="max-width:450px;margin:2rem auto;text-align:center;">
-                <i class="fas fa-lock" style="font-size:3rem;color:var(--accent-gold);"></i>
-                <h3 style="color:var(--accent-gold);margin:1rem 0;">管理员三级安全验证</h3>
-                <input type="password" id="adminPass" placeholder="第一层：固定登录密码" class="mb-1">
-                <input type="text" id="adminCode" placeholder="第二层：动态验证码(6位)" class="mb-1" maxlength="6">
-                <input type="password" id="adminKey" placeholder="第三层：超级管理员密钥" class="mb-1">
-                <button class="btn btn-gold btn-block" onclick="adminLogin()">🔑 三级验证进入系统</button>
-                <p style="font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;">
-                    演示凭证：LUMIN2026 / 123456 / admin777</p>
-            </div>
-            <div id="adminDashboard" class="hidden">
-                <div class="card mb-1">
-                    <div class="flex-between">
-                        <span><i class="fas fa-user-shield text-gold"></i> <b>超级管理员控制台</b></span>
-                        <button class="btn btn-sm btn-danger" onclick="adminLogout()">🔒 锁定退出</button>
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="section-title"><i class="fas fa-tasks text-gold"></i> 订单调度中心</div>
-                        <div class="table-wrap">
-                            <table id="adminOrdersTable">
-                                <thead><tr><th>订单号</th><th>客户</th><th>套餐</th><th>打手</th><th>状态</th><th>干预</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="card">
-                            <div class="section-title"><i class="fas fa-user-ninja text-gold"></i> 打手人事管理</div>
-                            <div id="adminHunterList" style="font-size:0.8rem;">
-                                <div class="flex-between" style="padding:0.3rem 0;border-bottom:1px solid var(--border-dim);">
-                                    <span>🥇 暗影先锋 <span class="badge badge-elite">精英</span></span>
-                                    <span style="color:var(--success);">●在线</span>
-                                </div>
-                                <div class="flex-between" style="padding:0.3rem 0;border-bottom:1px solid var(--border-dim);">
-                                    <span>🥈 战术专家 <span class="badge badge-gold">专业</span></span>
-                                    <span style="color:var(--warning);">●出勤</span>
-                                </div>
-                                <div class="flex-between" style="padding:0.3rem 0;">
-                                    <span>🥉 见习护卫 <span class="badge" style="background:#95a5a6;">新人</span></span>
-                                    <span style="color:var(--danger);">●训练</span>
-                                </div>
-                            </div>
-                            <div class="flex-between mt-1">
-                                <button class="btn btn-sm">⬆️升级</button>
-                                <button class="btn btn-sm">⬇️降级</button>
-                                <button class="btn btn-sm btn-danger">🚫拉黑</button>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="section-title"><i class="fas fa-coins text-gold"></i> 财务台账</div>
-                            <div style="font-size:0.8rem;">
-                                <div class="flex-between"><span>今日营收</span><span class="text-gold">¥3,200</span></div>
-                                <div class="flex-between"><span>折扣让利</span><span class="text-danger">-¥180</span></div>
-                                <div class="flex-between"><span>打手佣金</span><span>-¥1,280</span></div>
-                                <div class="flex-between" style="border-top:1px solid var(--border-gold);padding-top:0.3rem;margin-top:0.3rem;">
-                                    <span>净利</span><b class="text-blue">¥1,740</b></div>
-                            </div>
-                            <button class="btn btn-sm btn-block mt-1">📊 导出Excel报表</button>
-                        </div>
-                        <div class="card">
-                            <div class="section-title"><i class="fas fa-chart-line text-gold"></i> 数据看板</div>
-                            <div class="chart-wrap"><canvas id="adminChart"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+// ==============================
+// 获取护航套餐列表
+// ==============================
 
-        <!-- 下单弹窗 -->
-        <div class="modal-overlay hidden" id="orderModal">
-            <div class="modal-box">
-                <div class="modal-title">📋 确认下单信息</div>
-                <div class="mb-1"><label>选择服务器</label>
-                    <select id="orderServer">
-                        <option value="国服">国服</option>
-                        <option value="国际服">国际服</option>
-                    </select>
-                </div>
-                <div class="mb-1"><label>游戏角色ID</label>
-                    <input type="text" id="orderGameId" placeholder="请输入游戏角色编码">
-                </div>
-                <div class="mb-1"><label>套餐信息</label>
-                    <div id="orderPkgInfo" class="text-gold" style="font-size:1.1rem;"></div>
-                </div>
-                <div class="mb-1"><label>价格明细</label>
-                    <div id="orderPriceDetail" style="font-size:0.9rem;"></div>
-                </div>
-                <div class="flex-between">
-                    <button class="btn" onclick="closeOrderModal()">取消</button>
-                    <button class="btn btn-gold" onclick="confirmOrder()">✅ 确认下单</button>
-                </div>
-            </div>
-        </div>
-    </div>
+router.get("/packages", async (req,res)=>{
 
-    <div id="toastContainer"></div>
 
-    <script>
-        // ==================== 全局数据 ====================
-        const PACKAGES = [
-            { id: 'p1', cat: '新手体验专区', name: '200万体验保', price: 13.5, comm: 5 },
-            { id: 'p2', cat: '常规护航专区', name: '250万基础保', price: 15, comm: 8 },
-            { id: 'p3', cat: '顶级护航专区', name: '400万豪华保', price: 50, comm: 20 },
-            { id: 'p4', cat: '顶级护航专区', name: '600万至尊保', price: 199, comm: 80 },
-            { id: 'p5', cat: '顶级护航专区', name: '1000万帝王保', price: 399, comm: 160 },
-            { id: 'p6', cat: '顶级护航专区', name: '3500万总统保', price: 1099, comm: 440 },
-            { id: 'p7', cat: '顶级护航专区', name: '6500万爽吃保', price: 3999, comm: 1600 },
-            { id: 'p8', cat: '大金单点服务', name: '单个大金', price: 35, comm: 14 }
-        ];
+    const [rows] = await db.query(
 
-        // 从localStorage加载或初始化
-        function loadData() {
-            const saved = localStorage.getItem('luminPactData');
-            if (saved) {
-                try { return JSON.parse(saved); } catch (e) {}
-            }
-            return {
-                userTotalSpent: 468,
-                userOrderCount: 4,
-                userOrders: [
-                    { id: 'LC20260722-003', pkg: '400万豪华保', hunter: '暗影先锋', progress: 78,
-                    status: 'active' },
-                    { id: 'LC20260721-002', pkg: '250万基础保', hunter: '战术专家', progress: 100,
-                    status: 'completed' }
-                ],
-                hunterOnline: true,
-                hunterTodayOrders: 3,
-                hunterTodayIncome: 420,
-                hunterActiveOrders: [
-                    { id: 'LC20260722-003', customer: 'VIP_1024', pkg: '400万豪华保', progress: 78 }
-                ],
-                poolOrders: [
-                    { id: 'LC20260722-005', pkg: '600万至尊保', comm: 80 },
-                    { id: 'LC20260722-006', pkg: '250万基础保', comm: 8 }
-                ],
-                adminOrders: [
-                    { id: 'LC20260722-003', customer: 'VIP_1024', pkg: '400万豪华保', hunter: '暗影先锋',
-                        status: '履约中' },
-                    { id: 'LC20260722-005', customer: 'USER_558', pkg: '600万至尊保', hunter: '待分配',
-                        status: '新订单' },
-                    { id: 'LC20260721-002', customer: 'VIP_1024', pkg: '250万基础保', hunter: '战术专家',
-                        status: '已完成' }
-                ],
-                adminLoggedIn: false
-            };
-        }
+        `
+        SELECT *
+        FROM packages
+        WHERE status=1
+        ORDER BY sort ASC
+        `
 
-        let appData = loadData();
-        let currentRole = 'user';
-        let selectedPackageId = 'p1';
-        let pendingOrderPkg = null;
+    );
 
-        function saveData() {
-            localStorage.setItem('luminPactData', JSON.stringify(appData));
-        }
 
-        // ==================== Toast通知 ====================
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-            toast.innerHTML = `${icons[type] || 'ℹ️'} ${msg}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s';
-                setTimeout(() => toast.remove(), 300); }, 3000);
-        }
+    res.json({
 
-        // ==================== 角色切换 ====================
-        function switchRole(role) {
-            currentRole = role;
-            document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-            const tabMap = { user: 0, hunter: 1, admin: 2 };
-            document.querySelectorAll('.role-tab')[tabMap[role]].classList.add('active');
+        success:true,
 
-            document.getElementById('userPanel').classList.add('hidden');
-            document.getElementById('hunterPanel').classList.add('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
+        data:rows
 
-            const label = document.getElementById('currentRoleLabel');
-            if (role === 'user') {
-                document.getElementById('userPanel').classList.remove('hidden');
-                label.innerHTML = '👤 普通用户模式';
-                label.className = 'text-gold';
-                renderUserUI();
-            } else if (role === 'hunter') {
-                document.getElementById('hunterPanel').classList.remove('hidden');
-                label.innerHTML = '🎯 打手工作模式';
-                label.className = 'text-hunter';
-                renderHunterUI();
-            } else if (role === 'admin') {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                label.innerHTML = '🛡️ 管理员模式';
-                label.className = 'text-gold';
-                if (appData.adminLoggedIn) {
-                    document.getElementById('adminLoginBox').classList.add('hidden');
-                    document.getElementById('adminDashboard').classList.remove('hidden');
-                    renderAdminUI();
-                } else {
-                    document.getElementById('adminLoginBox').classList.remove('hidden');
-                    document.getElementById('adminDashboard').classList.add('hidden');
-                }
-            }
-        }
+    });
 
-        // ==================== VIP折扣计算 ====================
-        function getVIPLevel() {
-            if (appData.userOrderCount >= 5) return { name: '黑金VIP', discount: 0.9, class: 'badge-gold' };
-            if (appData.userOrderCount >= 3) return { name: '金牌VIP', discount: 0.95, class: 'badge-gold' };
-            return { name: '银牌VIP', discount: 1, class: 'badge-gold' };
-        }
 
-        function getDiscountedPrice(basePrice) {
-            return basePrice * getVIPLevel().discount;
-        }
+});
 
-        // ==================== 普通用户渲染 ====================
-        function renderUserUI() {
-            // 价格网格
-            const grid = document.getElementById('pricingGrid');
-            grid.innerHTML = PACKAGES.map(p => `
-                <div class="price-item ${p.id === selectedPackageId ? 'selected' : ''}" data-id="${p.id}" onclick="selectPackage('${p.id}')">
-                    <div class="price-cat">${p.cat}</div>
-                    <div class="price-name">${p.name}</div>
-                    <div class="price-val">¥${p.price}</div>
-                </div>
-            `).join('');
 
-            // 下拉框
-            const select = document.getElementById('packageSelect');
-            select.innerHTML = PACKAGES.map(p => `<option value="${p.id}">${p.name} - ¥${p.price}</option>`).join(
-            '');
-            select.value = selectedPackageId;
 
-            // VIP信息
-            const vip = getVIPLevel();
-            document.getElementById('vipBadge').textContent = vip.name;
-            document.getElementById('vipBadge').className = 'badge ' + vip.class;
-            document.getElementById('totalSpent').textContent = '¥' + appData.user
+
+
+// ==============================
+// 创建订单
+// ==============================
+
+router.post(
+"/create",
+auth,
+async(req,res)=>{
+
+
+const {
+
+package_id
+
+}=req.body;
+
+
+
+//查询套餐
+
+const [pkg]=await db.query(
+
+"SELECT * FROM packages WHERE id=?",
+
+[package_id]
+
+);
+
+
+
+if(!pkg.length){
+
+return res.json({
+
+message:"套餐不存在"
+
+});
+
+}
+
+
+
+let price=pkg[0].price;
+
+
+
+//查询用户VIP
+
+const [user]=await db.query(
+
+"SELECT vip_level FROM users WHERE id=?",
+
+[req.user.id]
+
+);
+
+
+
+let discount=1;
+
+
+
+if(user[0].vip_level==="银牌"){
+
+discount=0.98;
+
+}
+
+
+if(user[0].vip_level==="金牌"){
+
+discount=0.95;
+
+}
+
+
+if(user[0].vip_level==="黑金"){
+
+discount=0.90;
+
+}
+
+
+
+
+let finalPrice=
+
+Number(price)*discount;
+
+
+
+
+//生成订单号
+
+let orderNo=
+
+"LMP"+Date.now();
+
+
+
+
+
+await db.query(
+
+`
+INSERT INTO orders
+
+(
+order_no,
+user_id,
+package_id,
+original_price,
+discount_price,
+status,
+insurance_target
+)
+
+VALUES(?,?,?,?,?,?,?)
+
+`,
+
+[
+
+orderNo,
+
+req.user.id,
+
+package_id,
+
+price,
+
+finalPrice,
+
+"待接单",
+
+pkg[0].insurance_amount
+
+]
+
+);
+
+
+
+res.json({
+
+success:true,
+
+order_no:orderNo,
+
+pay_price:finalPrice
+
+});
+
+
+
+});
+
+
+
+
+
+
+
+
+// ==============================
+// 用户订单列表
+// ==============================
+
+
+router.get(
+"/my",
+auth,
+async(req,res)=>{
+
+
+const [rows]=await db.query(
+
+`
+
+SELECT
+
+o.*,
+
+p.package_name
+
+FROM orders o
+
+LEFT JOIN packages p
+
+ON o.package_id=p.id
+
+
+WHERE o.user_id=?
+
+
+ORDER BY o.id DESC
+
+`,
+
+[req.user.id]
+
+);
+
+
+
+res.json({
+
+success:true,
+
+data:rows
+
+});
+
+
+});
+
+
+
+
+
+
+
+
+
+// ==============================
+// 管理员查看全部订单
+// ==============================
+
+
+router.get(
+"/all",
+auth,
+async(req,res)=>{
+
+
+const [rows]=await db.query(
+
+`
+
+SELECT
+
+o.*,
+
+u.username,
+
+p.package_name
+
+
+FROM orders o
+
+
+LEFT JOIN users u
+
+ON o.user_id=u.id
+
+
+
+LEFT JOIN packages p
+
+ON o.package_id=p.id
+
+
+
+ORDER BY o.id DESC
+
+
+`
+
+);
+
+
+
+res.json({
+
+success:true,
+
+data:rows
+
+});
+
+
+
+});
+
+
+
+
+
+
+
+
+
+// ==============================
+// 更新保单进度
+// ==============================
+
+
+router.post(
+"/progress",
+auth,
+async(req,res)=>{
+
+
+const {
+
+order_id,
+
+progress,
+
+insurance_current
+
+}=req.body;
+
+
+
+let status="进行中";
+
+
+
+if(progress>=100){
+
+status="已完成";
+
+}
+
+
+
+await db.query(
+
+`
+
+UPDATE orders
+
+SET
+
+progress=?,
+
+insurance_current=?,
+
+status=?
+
+WHERE id=?
+
+`,
+
+[
+
+progress,
+
+insurance_current,
+
+status,
+
+order_id
+
+]
+
+);
+
+
+
+res.json({
+
+success:true
+
+});
+
+
+});
+
+
+
+
+
+
+
+
+
+// ==============================
+// 失败自动续打
+// ==============================
+
+
+router.post(
+
+"/failed",
+
+auth,
+
+async(req,res)=>{
+
+
+const {
+
+order_id
+
+}=req.body;
+
+
+
+await db.query(
+
+`
+
+UPDATE orders
+
+SET
+
+status='失败续打'
+
+WHERE id=?
+
+`,
+
+[order_id]
+
+);
+
+
+
+res.json({
+
+success:true,
+
+message:"已进入免费续打流程"
+
+});
+
+
+});
+
+
+
+
+
+module.exports=router;
