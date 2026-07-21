@@ -1,1 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>LUMIN PACT · 暗区突围护航保单管理系统</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg-deep: #080b0f;
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-card: #1c2129;
+      --bg-card-hover: #21262e;
+      --border-gold: #c9a23b;
+      --border-gold-light: #e2c15e;
+      --border-dim: #2a3039;
+      --border-blue: #3b5998;
+      --text-primary: #e6e8ec;
+      --text-secondary: #b0b3b8;
+      --text-muted: #7d8289;
+      --accent-blue: #4a9eff;
+      --accent-blue-dark: #2d6bb4;
+      --accent-gold: #d4af37;
+      --accent-gold-dark: #b4942e;
+      --danger: #e74c3c;
+      --danger-dark: #c0392b;
+      --success: #2ecc71;
+      --success-dark: #27ae60;
+      --warning: #f39c12;
+      --hunter-color: #ff6b35;
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.8);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.6);
+      --transition-fast: 0.15s ease;
+      --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-deep);
+      background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(74, 158, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(255, 107, 53, 0.02) 0%, transparent 50%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--accent-gold-dark), var(--border-gold));
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-gold);
+    }
+
+    .app-wrapper {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* 角色切换标签 */
+    .role-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--bg-card);
+      padding: 0.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-dim);
+    }
+    .role-tab {
+      flex: 1;
+      padding: 0.8rem 1.5rem;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all var(--transition-fast);
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+    }
+    .role-tab.active {
+      background: linear-gradient(135deg, #1a1f28, #252b36);
+      border-color: var(--border-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 20px rgba(212,175,55,0.2);
+    }
+    .role-tab.hunter-tab.active {
+      border-color: var(--hunter-color);
+      color: var(--hunter-color);
+      box-shadow: 0 0 20px rgba(255,107,53,0.2);
+    }
+
+    /* 顶部导航栏 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.8rem;
+      background: linear-gradient(180deg, rgba(28,33,41,0.95) 0%, rgba(22,27,34,0.95) 100%);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), var(--accent-blue), var(--hunter-color), transparent);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .brand-logo {
+      font-size: 2.2rem;
+      color: var(--accent-gold);
+      filter: drop-shadow(0 0 12px rgba(212,175,55,0.5));
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
+      50% { filter: drop-shadow(0 0 20px rgba(212,175,55,0.8)); }
+    }
+    .brand-text h1 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(180deg, #f0d78c 0%, #c9a23b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .system-status {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* 通用组件 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      background: linear-gradient(180deg, #2a3039 0%, #1c2129 100%);
+      border: 1px solid var(--border-dim);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      border-color: var(--border-gold);
+      background: linear-gradient(180deg, #353b46 0%, #252b36 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, #d4af37 0%, #b4942e 100%);
+      border: 1px solid #f0c45a;
+      color: #0a0c0f;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(180deg, #e2c15e 0%, #c9a23b 100%);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+    }
+    .btn-hunter {
+      background: linear-gradient(180deg, #ff6b35 0%, #e55a2b 100%);
+      border-color: #ff8c5a;
+      color: white;
+      box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+    }
+    .btn-hunter:hover {
+      box-shadow: 0 6px 20px rgba(255,107,53,0.5);
+    }
+    .btn-danger {
+      background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+      border-color: #ff6b6b;
+      color: white;
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-smooth);
+      position: relative;
+    }
+    .card:hover {
+      border-color: #3a4555;
+      box-shadow: var(--shadow-lg);
+    }
+    .card-gold-border {
+      border-color: var(--border-gold);
+      box-shadow: 0 0 20px rgba(212,175,55,0.1);
+    }
+    .card-hunter-border {
+      border-color: var(--hunter-color);
+      box-shadow: 0 0 20px rgba(255,107,53,0.1);
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, var(--border-gold), transparent) 1;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: 0.5px;
+    }
+    .gold-text {
+      color: var(--accent-gold);
+    }
+    .blue-text {
+      color: var(--accent-blue);
+    }
+    .hunter-text {
+      color: var(--hunter-color);
+    }
+    .danger-text {
+      color: var(--danger);
+    }
+
+    /* 双栏布局 */
+    .dual-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 定价网格 */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.7rem;
+      margin: 1rem 0;
+    }
+    .price-card {
+      background: linear-gradient(135deg, #1a1f28 0%, #141820 100%);
+      border: 1px solid #2a3039;
+      border-radius: 10px;
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+    .price-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .price-card.selected {
+      border-color: var(--accent-gold) !important;
+      background: linear-gradient(135deg, #2a2518 0%, #1c2129 100%) !important;
+      box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    }
+    .price-category {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .price-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin: 0.3rem 0;
+    }
+    .price-value {
+      font-size: 1.3rem;
+      font-weight: 900;
+      background: linear-gradient(180deg, #f0d78c, #c9a23b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* VIP标签 */
+    .vip-badge {
+      display: inline-block;
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+    .vip-silver {
+      background: linear-gradient(135deg, #b0b3b8, #7d8289);
+      color: #0a0c0f;
+    }
+    .vip-gold {
+      background: linear-gradient(135deg, #f0d78c, #c9a23b);
+      color: #0a0c0f;
+    }
+    .vip-black {
+      background: linear-gradient(135deg, #2a2a2a, #0a0a0a);
+      color: #d4af37;
+      border: 1px solid #d4af37;
+    }
+
+    /* 打手等级标签 */
+    .hunter-badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+    .hunter-elite {
+      background: linear-gradient(135deg, #ff6b35, #e55a2b);
+      color: white;
+    }
+    .hunter-pro {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white;
+    }
+    .hunter-rookie {
+      background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+      color: white;
+    }
+
+    /* 表格 */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.7rem 0.5rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+      border-bottom: 2px solid var(--border-gold);
+      background: rgba(212,175,55,0.05);
+      white-space: nowrap;
+    }
+    td {
+      padding: 0.65rem 0.5rem;
+      border-bottom: 1px solid var(--border-dim);
+      color: var(--text-secondary);
+    }
+    tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    .order-id {
+      font-family: var(--font-mono);
+      color: var(--accent-blue) !important;
+      font-size: 0.8rem;
+    }
+
+    /* 进度条 */
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #1e222b;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.3rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* 管理员登录面板 */
+    .admin-lock-panel {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+      border: 2px solid var(--border-gold);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(212,175,55,0.2);
+    }
+    .input-group {
+      margin: 1rem 0;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: #0d1117;
+      border: 1px solid #2a3039;
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+    }
+
+    /* 通知弹窗 */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1c2129;
+      border: 1px solid var(--accent-gold);
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      animation: slideIn 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .app-wrapper {
+        padding: 0.5rem;
+      }
+      .dual-panel {
+        grid-template-columns: 1fr;
+      }
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- ========== 角色切换标签 ========== -->
+  <div class="role-tabs" id="roleTabs">
+    <div class="role-tab active" data-role="user" onclick="switchRole('user')">
+      <i class="fas fa-user"></i> 普通用户 · 自助下单
+    </div>
+    <div class="role-tab hunter-tab" data-role="hunter" onclick="switchRole('hunter')">
+      <i class="fas fa-crosshairs"></i> 打手 · 接单系统
+    </div>
+    <div class="role-tab" data-role="admin" onclick="switchRole('admin')">
+      <i class="fas fa-shield-alt"></i> 管理员 · 后台管控
+    </div>
+  </div>
+
+  <!-- ========== 顶部品牌栏 ========== -->
+  <header class="header">
+    <div class="brand">
+      <i class="fas fa-shield-haltered brand-logo"></i>
+      <div class="brand-text">
+        <h1>LUMIN PACT</h1>
+        <span>暗区突围 · 护航保单系统 v3.0</span>
+      </div>
+    </div>
+    <div class="system-status">
+      <div class="status-dot"></div>
+      <span style="font-size:0.85rem; color:var(--success);">系统在线</span>
+      <span style="color:var(--text-muted);">|</span>
+      <span style="font-size:0.85rem;"><i class="fas fa-clock"></i> <span id="liveTime">--</span></span>
+      <span style="color:var(--text-muted);">|</span>
+      <span id="currentRoleDisplay" style="font-size:0.85rem; color:var(--accent-gold);">👤 普通用户</span>
+    </div>
+  </header>
+
+  <!-- ========== 普通用户界面 ========== -->
+  <div id="userPanel">
+    <div class="dual-panel">
+      <div class="user-panel">
+        <!-- 下单卡片 -->
+        <div class="card card-gold-border" style="margin-bottom: 1.5rem;">
+          <div class="section-title">
+            <i class="fas fa-shopping-cart gold-text"></i> 自助下单系统
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <span class="gold-text" style="font-weight:700;"><i class="fas fa-boxes"></i> 护航套餐专区</span>
+          </div>
+          <div class="pricing-grid" id="pricingGrid"></div>
+
+          <div style="display:flex; justify-content: space-between; align-items: center; margin: 1rem 0; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <span id="vipLevelBadge" class="vip-badge vip-silver">🥈 银牌会员</span>
+              <span style="margin-left:0.5rem; font-size:0.85rem;">累计消费 <strong id="totalSpent" class="gold-text">¥0</strong></span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-secondary);">
+              <span id="discountText">连购3单享95折</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+            <select id="packageSelect" style="flex:2; min-width: 180px;"></select>
+            <button class="btn btn-primary" id="placeOrderBtn" style="flex:1;">
+              <i class="fas fa-bolt"></i> 立即护航
+            </button>
+          </div>
+          <div style="margin-top: 0.6rem; font-size:0.8rem; color:var(--text-muted);">
+            <i class="fas fa-robot"></i> 系统自动派单 · 预计 <span id="estimatedTime" class="blue-text">--</span>
+          </div>
+        </div>
+
+        <!-- 我的保单 -->
+        <div class="card">
+          <div class="section-title">
+            <i class="fas fa-scroll gold-text"></i> 我的保单 & 履约进度
+          </div>
+          <div class="table-container">
+            <table id="userOrderTable">
+              <thead>
+                <tr>
+                  <th>订单编号</th>
+                  <th>套餐方案</th>
+                  <th>接单打手</th>
+                  <th>保额进度</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div style="margin-top: 1rem; display:flex; gap:1rem; flex-wrap: wrap;">
+            <button class="btn btn-sm" id="refundBtn">
+              <i class="fas fa-redo-alt"></i> 未达标·免费续打
+            </button>
+            <button class="btn btn-sm">
+              <i class="fas fa-video"></i> 录屏存档
+            </button>
+            <button class="btn btn-sm">
+              <i class="fas fa-headset"></i> 在线客服
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 打手界面 ========== -->
+  <div id="hunterPanel" class="hidden">
+    <div class="dual-panel">
+      <div>
+        <!-- 打手状态卡片 -->
+        <div class="card card-hunter-border" style="margin-bottom: 1.5rem;">
+          <div class="section-title">
+            <i class="fas fa-crosshairs hunter-text"></i> 打手工作台
+            <span class="hunter-badge hunter-elite" style="margin-left:auto;">🥇 精英打手</span>
+          </div>
+          
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem;">今日接单</div>
+              <div style="font-size:1.5rem; font-weight:700; color:var(--hunter-color);">8</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem;">今日收入</div>
+              <div style="font-size:1.5rem; font-weight:700; color:var(--success);">¥1,280</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem;">完成率</div>
+              <div style="font-size:1.5rem; font-weight:700; color:var(--accent-blue);">96%</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem;">好评率</div>
+              <div style="font-size:1.5rem; font-weight:700; color:var(--accent-gold);">4.9⭐</div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+            <button class="btn btn-hunter" id="toggleOnlineBtn">
+              <i class="fas fa-wifi"></i> 在线接单中
+            </button>
+            <button class="btn btn-sm">
+              <i class="fas fa-calendar-alt"></i> 排班管理
+            </button>
+          </div>
+        </div>
+
+        <!-- 可接订单池 -->
+        <div class="card">
+          <div class="section-title">
+            <i class="fas fa-inbox hunter-text"></i> 可接订单池
+            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:auto;" id="poolCount">3个新订单</span>
+          </div>
+          <div class="table-container">
+            <table id="hunterOrderPool">
+              <thead>
+                <tr>
+                  <th>订单编号</th>
+                  <th>套餐</th>
+                  <th>保额</th>
+                  <th>佣金</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- 我的接单记录 -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="section-title">
+            <i class="fas fa-list-check hunter-text"></i> 我的进行中订单
+          </div>
+          <div class="table-container">
+            <table id="hunterActiveOrders">
+              <thead>
+                <tr>
+                  <th>订单编号</th>
+                  <th>客户</th>
+                  <th>套餐</th>
+                  <th>进度</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 历史记录与评价 -->
+        <div class="card">
+          <div class="section-title">
+            <i class="fas fa-history hunter-text"></i> 近期完成记录
+          </div>
+          <div id="hunterHistory" style="font-size:0.85rem;">
+            <div style="padding:0.5rem; border-bottom:1px solid var(--border-dim);">
+              <strong>LC20260722-001</strong> 400万豪华保 ✅ 佣金¥20 · ⭐⭐⭐⭐⭐
+            </div>
+            <div style="padding:0.5rem; border-bottom:1px solid var(--border-dim);">
+              <strong>LC20260721-005</strong> 250万基础保 ✅ 佣金¥8 · ⭐⭐⭐⭐
+            </div>
+            <div style="padding:0.5rem;">
+              <strong>LC20260720-003</strong> 600万至尊保 ✅ 佣金¥80 · ⭐⭐⭐⭐⭐
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 管理员界面 ========== -->
+  <div id="adminPanel" class="hidden">
+    <div class="dual-panel">
+      <div>
+        <!-- 登录面板 -->
+        <div class="admin-lock-panel" id="adminLoginPanel">
+          <i class="fas fa-lock" style="font-size:3rem; color:var(--accent-gold); margin-bottom:1rem;"></i>
+          <h3 style="color:var(--accent-gold); margin-bottom:1.5rem;">管理员安全验证</h3>
+          <div class="input-group">
+            <input type="password" id="adminPassword" placeholder="第一层：固定登录密码" value="LUMIN2026">
+          </div>
+          <div class="input-group">
+            <input type="text" id="adminDynamicCode" placeholder="第二层：动态验证码" value="123456">
+          </div>
+          <div class="input-group">
+            <input type="password" id="superKey" placeholder="第三层：超级管理员密钥" value="admin777">
+          </div>
+          <button class="btn btn-primary" id="adminLoginBtn" style="width:100%; margin-top:0.5rem;">
+            <i class="fas fa-key"></i> 三级验证进入系统
+          </button>
+          <p style="font-size:0.7rem; color:var(--text-muted); margin-top:0.8rem;">
+            演示凭证：LUMIN2026 / 123456 / admin777
+          </p>
+        </div>
+
+        <!-- 管理仪表盘（初始隐藏） -->
+<<="adminDashboard"风格="显示：没有一个；">=身份标识ID="adminDashboard"style="显示：无；"：没有一个；">div身份标识="adminDashboard"style="显示：无；"：没有一个；">
+<div 班级="卡"风格="底边距：1rem；填充：0.8REM1.2rem；"：1rem；填料：0.8rem1.2rem；"><div 班级="卡" 风格="底边距：1rem；填料：0.8REM1.2rem；"：1rem； 填料：0.8rem 1.2rem；">
+<div 风格="显示：flex；对齐内容：间距；对齐项目：居中；""><div 风格="显示：弹性；对齐内容：间距；对齐项目：居中；"：flex； justify-Content：间隔； 对齐项：居中；">
+<跨度><我 班级="fas fa-user-shield gold-text"></我><强大的 身份标识="adminRoleDisplay">超级管理员</强大的></跨度><跨度><我 班级="fas fa-user-shield gold-text"></我> <强大的 身份标识="adminRoleDisplay">超级管理员</强大的></跨度>
+<按钮 班级="btn btn-sm btn-危险"身份标识="logoutAdminBtn"><按钮 班级="btn btn-sm btn-危险" 身份标识="logoutAdminBtn">
+<我 班级="fas fa-sign-out-alt"></我>锁定系统<我 班级="fas fa-sign-out-alt"></我>锁定系统
+</按钮></按钮>
+</div></div>
+</div></div>
+
+<div 班级="卡"风格="底距：1 rem；":1rem；"><div 班级="卡" 风格="底距：1 rem；"：1rem；">
+<div 班级="节标题"><div 班级="节标题">
+<我 班级="fas fa-tasks gold-text"></我>订单调度中心<我 班级="fas fa-tasks gold-text"></我> 订单调度中心
+</div></div>
+<div 班级="表容器"><div 班级="表容器">
+<桌子 身份标识="adminOrderTable"><桌子 身份标识="adminOrderTable">
+<西德><西德>
+<TR><TR>
+<th>订单号</th><th>订单号</th>
+<th>客户</th><th>客户</th>
+<th>套餐</th><th>套餐</th>
+<th>打手</th><th>打手</th>
+<th>状态</th><th>状态</th>
+<th>干预</th><th>干预</th>
+</TR></TR>
+</西德></西德>
+<T车身></T车身><T车身></T车身>
+</桌子></桌子>
+</div></div>
+</div></div>
+
+<div 风格="显示：网格；网格模板列：1fr1fr；间隙：1rem；""><div 风格="显示：网格；网格模板列：1fr1fr；间隙：1rem；"：网格； 网格模板列： 1FR 1FR； 间隙：1rem；">
+<div 班级="卡"><div 班级="卡">
+<div 班级="节标题"><我 班级="fas fa-user-ninja gold-text"></我>打手管理</div><div 班级="节标题"><我 班级="fas fa-user-ninja gold-text"></我> 打手管理</div>
+<div 身份标识="adminHunterList"风格="字体大小：0.85rem；":0.85rem；"></div><div 身份标识="adminHunterList" 风格="字体大小：0.85rem；"：0.85rem；"></div>
+<div 风格="上边距：0.5REM；显示屏：弯曲；间隙：0.3rem；"：0.5rem；显示：弯曲；间隙：0.3rem；"><div 风格="上边距：0.5REM；显示：弯曲；间隙：0.3rem；"：0.5rem； 显示：柔性； 间隙：0.3rem；">
+<按钮 班级="btn btn-sm">升级</按钮><按钮 班级="btn btn-sm">升降级</按钮>
+<按钮 班级="btn btn-sm btn-危险">拉黑</按钮><按钮 班级="btn btn-sm btn-危险">拉黑</按钮>
+</div></div>
+</div></div>
+<div 班级="卡"><div 班级="卡">
+<div 班级="节标题"><我 班级="fas fa-coins gold-text"></我>财务台账</div><div 班级="节标题"><我 班级="fas fa-coins gold-text"></我>财务台账</div>
+<div>今天营业收入￥3，200|佣金￥1，280|净利￥1，740</div><div>今日营收 ¥3,200 | 佣金 ¥1,280 | 净利 ¥1,740</div>
+<按钮 班级="btn btn-sm"风格="页边距：0.5rem；":0.5rem；">导出报表</按钮><按钮 班级="btn btn-sm" 风格="页边距-顶部：0.5 rem；"：0.5rem；">导出报表</按钮>
+</div></div>
+</div></div>
+</div></div>
+</div></div>
+</div></div>
+</div></div>
+
+<! -- 底部 --><! -- 底部 -->
+<页脚 风格="文字对齐：居中；填充：1。5rem；颜色：var(--text-muted)；字体大小：0.75rem；border-top:1px solid var(--border-dim)；border-top:1rem；"：居中；填充：1。5rem；颜色：var(--text-muted)；字体大小：0.75rem；上边框：1px 固体 var(--border-dim)；border-top:1rem；"><页脚 风格="文字对齐：居中；填充：1.5rem；颜色：var(--文本静音)；字体大小：0.75rem；上边框：1px实心var(--border-dim)；上边距：1rem；"：中心； 填料：1.5rem； 颜色：var(--文本静音)； font-size:0.75rem； 上边框：1px 固体 var(--border-dim)； margin-top:1rem；">
+©2026Lumin PACT·暗区突围护航俱乐部·全链路数字化管控·用户/打手/管理员三端协同
+</页脚></页脚>
+</div>div>
+
+<div 身份标识="ToastContainer"></div>div id="toastContainer"></div>
+
+<脚本>剧本>>
+(函数(){(函数(){函数(){(函数(){
+//====================全局数据====================// ====================全局数据====================
+const PACKAGES=[const PACKAGES=[PACKAGES=[const PACKAGES=[
+{id："p1"，类别：""新手体验专区'，名称：'200万体验保'，价格13.5，佣金5}，{ID：'p1'，类别：'新手体验专区'，名称：'200万体验保'，价格：13.5，佣金：5id："p1"，类别：""新手体验专区'，名称：'200万体验保'，价格13.5，佣金5}，{ID：'p1'，类别：'新手体验专区'，名称：'200万体验保'，价格13.5，佣金5}，
+{id："p2"，类别：""常规护航专区'，名称：'250万基础保'，价格：15，佣金：8}，{ID：'p2'，类别：'常规护航专区'，名称：‘250万基础保’，价格：15，佣金：8}，身份标识："p2"，类别：“”常规护航专区'，名称：‘250万基础保’，价格：15，佣金：8}，{ID：'p2'，类别：'常规护航专区'，名称：‘250万基础保’，价格：15，佣金：8}，
+{id："p3"，类别：""顶级护航专区'，名称："400万豪华保"，价格：50，佣金：20}，{ID：'p3'，类别：'顶级护航专区'，名称：‘400万豪华保’，价格：50，佣金：20}，{id："p8"，类别：""大钱单点服务'，名称：'单个大钱'，价格：35，佣金：14}{id：'p8'，类别：'大金单点服务'，名称：'单个大金'，价格：35，佣金：14}'，名称：“400万豪华保”，价格：50，佣金：20}，{ID：'p3'，类别：'顶级护航专区'，名称：“400万豪华保”，价格：50，佣金：20}，
+{id："p4"，类别：""顶级护航专区'，名称：'600万至尊保'，价格：199，佣金：80}，{ID：'p4'，类别：'顶级护航专区'，名称：'600万至尊保'，价格：199，佣金：80}，
+{id："p5"，类别：""顶级护航专区'，名称：'1000万帝王保'，价格：399，佣金：160}，{ID：'p5'，类别：'顶级护航专区'，名称：'1000万帝王保'，价格：399，佣金：160}，
+{id："p6"，类别：""顶级护航专区'，名称：'3500万总统保'，价格：1099，佣金：440}，{ID：'p6'，类别：'顶级护航专区'，名称：'3500万总统保'，价格：1099，佣金：440}，
+{id："p7"，类别：""顶级护航专区'，商品名称：6500万爽吃保，价格：3999，佣金：1600}，{ID：'p7'，类别：'顶级护航专区'，商品名称：6500万爽吃保，价格：3999，佣金：1600}，
+{id："p8"，类别：""大钱单点服务'，名称：'单个大钱'，价格：35，佣金：14}{id：'p8'，category：'大金单点服务'，名称：'单个大金'，价格：35，佣金：14}
+    ];
+
+    // 用户状态// 用户状态// 用户状态// 用户状态
+让UserState={let UserState={={let UserState={
+总开支：468，总开支：468，: 468,
+orderCount:4，orderCount:4，：4，orderCount:4，
+订单：[订单：[[订单：[
+{id：'lc20260722-003'，包名：'400万豪华保'，hunterId：'HUNTER_GHOST'，进度：78{id：'lc20260722-003'， PackageName：'400万豪华保'，hunterId：'HUNTER_GHOST'，进度：78id:'LC20260722-003', PackageName：'400万豪华保'，hunterId：'HUNTER_GHOST'，进度：78{id:'LC20260722-003', PackageName：'400万豪华保'，hunterId：'HUNTER_GHOST'，进度：78
