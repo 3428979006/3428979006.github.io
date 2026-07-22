@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lumin Pact俱乐部 - 暗区突围护航</title>
+    <title>LUMIN PACT - 暗区突围护航保单</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -17,7 +17,8 @@
                         danger: '#ef4444',
                         dark: '#0f172a',
                         darker: '#020617',
-                        wechat: '#07c160'
+                        wechat: '#07c160',
+                        gold: '#d4af37'
                     }
                 }
             }
@@ -42,6 +43,9 @@
             }
             .btn-secondary {
                 @apply bg-secondary text-white hover:bg-secondary/90 active:bg-secondary/80;
+            }
+            .btn-gold {
+                @apply bg-gold text-black hover:bg-gold/90 active:bg-gold/80;
             }
             .btn-wechat {
                 @apply bg-wechat text-white hover:bg-wechat/90 active:bg-wechat/80;
@@ -92,12 +96,12 @@
     <!-- 雪花容器 -->
     <div id="snow-box"></div>
     <!-- 顶部导航 -->
-    <nav class="bg-dark/90 shadow-lg sticky top-0 z-50 border-b border-primary/20">
+    <nav class="bg-dark/90 shadow-lg sticky top-0 z-50 border-b border-gold/30">
         <div class="px-4">
             <div class="flex justify-between h-14 items-center">
                 <div class="flex items-center">
-                    <i class="fa fa-shield text-primary text-xl mr-2"></i>
-                    <h1 class="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">FG俱乐部</h1>
+                    <i class="fa fa-shield text-gold text-xl mr-2"></i>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-gold to-secondary bg-clip-text text-transparent">LUMIN PACT</h1>
                 </div>
                 <div id="user-area">
                     <button id="login-btn" class="btn btn-primary text-sm py-1 px-3">
@@ -118,7 +122,7 @@
     <main class="px-4 py-6 pb-20">
         <!-- 统计卡片 -->
         <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-dark/60 rounded-lg p-4 border border-primary/10">
+            <div class="bg-dark/60 rounded-lg p-4 border border-gold/10">
                 <p class="text-gray-400 text-xs mb-1">全部订单</p>
                 <h3 class="text-xl font-bold text-white" id="total-orders">0</h3>
             </div>
@@ -128,81 +132,166 @@
             </div>
         </div>
 
-        <!-- 商品套餐区 -->
-        <div class="bg-dark/60 rounded-lg p-4 border border-primary/10 mb-6">
-            <h2 class="text-base font-bold text-white mb-4">🔥 热门护航套餐</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <div class="bg-dark/40 rounded-lg p-4 border border-primary/20 card-hover">
+        <!-- 商品套餐区 完全按照图片价目重写 -->
+        <div class="bg-dark/60 rounded-lg p-4 border border-gold/10 mb-6">
+            <h2 class="text-base font-bold text-white mb-4">🔥 LUMIN PACT 护航保单价目</h2>
+            <h3 class="text-green-400 font-semibold mb-3">一、新手体验专区</h3>
+            <div class="grid grid-cols-1 gap-4 mb-6">
+                <!-- 体验保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-green-500/20 card-hover">
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-lg font-bold text-white">基础护航</h3>
-                        <span class="text-xl font-bold text-primary">¥13.9</span>
+                        <h3 class="text-lg font-bold text-white">体验保</h3>
+                        <span class="text-xl font-bold text-green-400">¥13.5</span>
                     </div>
                     <ul class="text-gray-400 text-sm space-y-1 mb-4">
-                        <li><i class="fa fa-check text-primary mr-2"></i>全程护航1小时</li>
-                        <li><i class="fa fa-check text-primary mr-2"></i>包撤离失败全额退款</li>
-                        <li><i class="fa fa-check text-primary mr-2"></i><strong>保底带出200万物资</strong></li>
-                        <li><i class="fa fa-check text-primary mr-2"></i>专业打手一对一</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>保额保底200万物资</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>不出货继续重打</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>全程语音指挥带飞</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>24小时随时接单</li>
                     </ul>
-                    <button class="btn btn-primary w-full buy-btn" data-product="基础护航" data-price="13.9">
+                    <button class="btn btn-primary w-full buy-btn" data-product="体验保" data-price="13.5">
                         立即下单
                     </button>
                 </div>
-
-                <div class="bg-dark/40 rounded-lg p-4 border border-primary/20 card-hover">
+                <!-- 基础保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-green-500/20 card-hover">
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-lg font-bold text-white">进阶护航</h3>
-                        <span class="text-xl font-bold text-primary">¥19.9</span>
+                        <h3 class="text-lg font-bold text-white">基础保</h3>
+                        <span class="text-xl font-bold text-green-400">¥15</span>
                     </div>
                     <ul class="text-gray-400 text-sm space-y-1 mb-4">
-                        <li><i class="fa fa-check text-primary mr-2"></i>全程护航1.5小时</li>
-                        <li><i class="fa fa-check text-primary mr-2"></i>包撤离失败全额退款</li>
-                        <li><i class="fa fa-check text-primary mr-2"></i><strong>保底带出350万物资</strong></li>
-                        <li><i class="fa fa-check text-primary mr-2"></i>提供基础装备</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>保额保底250万物资</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>金牌打手全程护航</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>撤离失败免费补单</li>
+                        <li><i class="fa fa-check text-green-400 mr-2"></i>全天在线接单</li>
                     </ul>
-                    <button class="btn btn-primary w-full buy-btn" data-product="进阶护航" data-price="19.9">
-                        立即下单
-                    </button>
-                </div>
-
-                <div class="bg-dark/40 rounded-lg p-4 border border-accent/20 relative card-hover">
-                    <div class="absolute top-0 right-0 bg-accent text-white text-xs px-2 py-1 rounded-bl">推荐</div>
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-lg font-bold text-white">全装包赔</h3>
-                        <span class="text-xl font-bold text-accent">¥29.9</span>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
-                        <li><i class="fa fa-check text-accent mr-2"></i>全程护航2小时</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i>提供全套顶级装备</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i>死亡包赔所有损失</li>
-                        <li><i class="fa fa-check text-accent mr-2"></i><strong>保底带出500万物资</strong></li>
-                        <li><i class="fa fa-check text-accent mr-2"></i>优先安排订单</li>
-                    </ul>
-                    <button class="btn btn-accent w-full buy-btn" data-product="全装包赔" data-price="29.9">
-                        立即下单
-                    </button>
-                </div>
-
-                <div class="bg-dark/40 rounded-lg p-4 border border-secondary/20 card-hover">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-lg font-bold text-white">豪华三金</h3>
-                        <span class="text-xl font-bold text-secondary">¥99.9</span>
-                    </div>
-                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
-                        <li><i class="fa fa-check text-secondary mr-2"></i>全程护航3小时</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i>包出3个大金</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i>不出全额退款</li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i><strong>保底带出1200万物资</strong></li>
-                        <li><i class="fa fa-check text-secondary mr-2"></i>3名顶级打手护航</li>
-                    </ul>
-                    <button class="btn btn-secondary w-full buy-btn" data-product="豪华三金" data-price="99.9">
+                    <button class="btn btn-primary w-full buy-btn" data-product="基础保" data-price="15">
                         立即下单
                     </button>
                 </div>
             </div>
+
+            <h3 class="text-blue-400 font-semibold mb-3">二、常规护航专区</h3>
+            <div class="grid grid-cols-1 gap-4 mb-6">
+                <!-- 豪华保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-blue-500/20 card-hover">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-white">豪华保</h3>
+                        <span class="text-xl font-bold text-blue-400">¥50</span>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>保额保底400万物资</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>优先安排撤离路线</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>全程语音带队</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>多次补单直到达标保额</li>
+                    </ul>
+                    <button class="btn btn-secondary w-full buy-btn" data-product="豪华保" data-price="50">
+                        立即下单
+                    </button>
+                </div>
+                <!-- 至尊保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-blue-500/20 card-hover">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-white">至尊保</h3>
+                        <span class="text-xl font-bold text-blue-400">¥199</span>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>保额保底600万物资</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>金牌顶配车队</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>安全撤离优先级最高</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>超时未达标免费续单</li>
+                    </ul>
+                    <button class="btn btn-secondary w-full buy-btn" data-product="至尊保" data-price="199">
+                        立即下单
+                    </button>
+                </div>
+                <!-- 帝王保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-blue-500/20 card-hover">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-white">帝王保</h3>
+                        <span class="text-xl font-bold text-blue-400">¥399</span>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>保额保底1000万物资</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>顶尖打手专属车队</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>全程一对一指挥</li>
+                        <li><i class="fa fa-check text-blue-400 mr-2"></i>多次补单无额外收费</li>
+                    </ul>
+                    <button class="btn btn-secondary w-full buy-btn" data-product="帝王保" data-price="399">
+                        立即下单
+                    </button>
+                </div>
+            </div>
+
+            <h3 class="text-amber-400 font-semibold mb-3">三、顶级护航专区</h3>
+            <div class="grid grid-cols-1 gap-4 mb-6">
+                <!-- 总统保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-amber-500/20 card-hover">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-white">总统保</h3>
+                        <span class="text-xl font-bold text-amber-400">¥1099</span>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
+                        <li><i class="fa fa-check text-amber-400 mr-2"></i>保额保底3500万物资</li>
+                        <li><i class="fa fa-check text-amber-400 mr-2"></i>优先安排金牌队员</li>
+                        <li><i class="fa fa-check text-amber-400 mr-2"></i>全程顶配装备供给</li>
+                        <li><i class="fa fa-check text-amber-400 mr-2"></i>无限补单直至保额达标</li>
+                    </ul>
+                    <button class="btn btn-accent w-full buy-btn" data-product="总统保" data-price="1099">
+                        立即下单
+                    </button>
+                </div>
+                <!-- 爽吃保 -->
+                <div class="bg-dark/40 rounded-lg p-4 border border-gold/30 relative card-hover">
+                    <div class="absolute top-0 right-0 bg-gold text-black text-xs px-2 py-1 rounded-bl">顶配推荐</div>
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-white">爽吃保</h3>
+                        <span class="text-xl font-bold text-gold">¥3999</span>
+                    </div>
+                    <ul class="text-gray-400 text-sm space-y-1 mb-4">
+                        <li><i class="fa fa-check text-gold mr-2"></i>保额保底6500万物资+附赠1大金</li>
+                        <li><i class="fa fa-check text-gold mr-2"></i>顶配王牌车队全程带队</li>
+                        <li><i class="fa fa-check text-gold mr-2"></i>不出货无限免费重打</li>
+                        <li><i class="fa fa-check text-gold mr-2"></i>赠送1个单独大金服务</li>
+                    </ul>
+                    <button class="btn btn-gold w-full buy-btn" data-product="爽吃保" data-price="3999">
+                        立即下单
+                    </button>
+                </div>
+            </div>
+
+            <h3 class="text-gray-200 font-semibold mb-3">四、大金单独服务</h3>
+            <div class="bg-dark/40 rounded-lg p-4 border border-gray-500/20 mb-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-white">单独大金护送单</span>
+                    <span class="text-lg font-bold text-wechat">¥35 / 单个</span>
+                </div>
+                <button class="btn btn-wechat w-full mt-3 buy-btn" data-product="单个大金护送" data-price="35">
+                    下单大金单
+                </button>
+            </div>
+
+            <div class="bg-dark/30 border border-gray-700 rounded-lg p-3 mt-4">
+                <p class="text-gold text-sm font-medium mb-2">套餐附赠折扣规则</p>
+                <ul class="text-gray-400 text-xs space-y-1">
+                    <li>• 爽吃保赠送1个大金名额</li>
+                    <li>• 总统保以上订单优先安排金牌队员</li>
+                    <li>• 连续购买3单享95折优惠</li>
+                    <li>• 连续购买5单享9折优惠</li>
+                </ul>
+                <p class="text-blue-300 text-sm font-medium mt-3 mb-2">通用服务说明</p>
+                <ul class="text-gray-400 text-xs space-y-1">
+                    <li>• 不出货免费续打，不额外加价</li>
+                    <li>• 全程语音实时指挥，打法透明</li>
+                    <li>• 金牌队员稳带飞，撤离率极高</li>
+                    <li>• 优先规划安全撤离点位</li>
+                    <li>• 全天24小时均可接单下单</li>
+                </ul>
+            </div>
         </div>
 
         <!-- 订单列表区 -->
-        <div class="bg-dark/60 rounded-lg p-4 border border-primary/10">
+        <div class="bg-dark/60 rounded-lg p-4 border border-gold/10">
             <h2 class="text-base font-bold text-white mb-4">
                 <span id="order-title">我的订单</span>
                 <span id="admin-badge" class="ml-2 text-xs bg-danger/20 text-danger px-2 py-1 rounded hidden">管理员</span>
@@ -254,7 +343,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-full">登录</button>
-                <p class="text-gray-500 text-xs text-center">测试验证码：123456<br>管理员账号：13800138000</p>
+                <p class="text-gray-500 text-xs text-center">测试验证码：123456<br>管理员账号：19236163806</p>
             </form>
         </div>
     </div>
@@ -288,7 +377,7 @@
         </div>
     </div>
 
-    <!-- 【新版支付弹窗：二维码+唤起微信】 -->
+    <!-- 支付弹窗（已替换收款码位置+付款文案+新增客服QQ） -->
     <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg w-full max-w-sm mx-4">
             <div class="p-4 border-b border-gray-200">
@@ -303,20 +392,24 @@
                 <p class="text-gray-600 mb-2">应付金额</p>
                 <p class="text-3xl font-bold text-gray-900 mb-4" id="pay-amount">¥0.00</p>
 
-                <!-- 收款二维码区域，替换成你的微信收款二维码图片地址 -->
+                <!-- 收款二维码位置 -->
                 <div class="border-2 border-wechat rounded-lg p-3 mb-4 inline-block">
-                    <div class="w-[180px] h-[180px] bg-gray-100 flex items-center justify-center text-gray-500 text-sm">
-                        粘贴你的微信收款码
-                    </div>
+                    <img src="" class="w-[180px] h-[180px] object-contain" alt="微信收款二维码">
                 </div>
 
                 <div class="bg-green-50 rounded-lg p-3 mb-4 border border-wechat">
                     <p class="text-wechat font-medium mb-2">付款说明</p>
                     <p class="text-gray-500 text-xs leading-relaxed">
                         1.点击下方按钮唤起微信App<br>
-                        2.转账备注：订单号+游戏ID<br>
-                        3.付款后点击【已付完款】
+                        2.转账收款人：是江不是姜(**丽)，备注：订单号+游戏ID<br>
+                        3.付款完成后点击【我已经付款完成】
                     </p>
+                </div>
+
+                <!-- 新增：无法支付客服QQ提示 -->
+                <div class="bg-red-50 rounded-lg p-3 mb-4 border border-red-400">
+                    <p class="text-red-600 font-medium mb-1">无法支付？请联系客服</p>
+                    <p class="text-gray-600 text-xs">客服QQ：3428979006</p>
                 </div>
                 
                 <!-- 一键唤起微信APP按钮 -->
@@ -518,7 +611,7 @@
             container.innerHTML = filteredOrders.map(order => `
                 <div class="bg-dark/40 rounded-lg p-3 border border-gray-700">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-primary text-xs font-medium">${order.id}</span>
+                        <span class="text-gold text-xs font-medium">${order.id}</span>
                         <span class="status-badge ${statusConfig[order.status].class}">${statusConfig[order.status].label}</span>
                     </div>
                     <div class="flex justify-between items-center mb-2">
@@ -528,7 +621,7 @@
                     <div class="flex justify-between items-center">
                         <span class="text-gray-400 text-xs">${formatDate(order.createdAt)}</span>
                         <div class="flex gap-2">
-                            <button class="text-primary text-xs view-order" data-id="${order.id}">详情</button>
+                            <button class="text-gold text-xs view-order" data-id="${order.id}">详情</button>
                             ${order.status === 'pending' && currentUser.phone !== ADMIN_PHONE ? `<button class="text-wechat text-xs pay-order" data-id="${order.id}">支付</button>` : ''}
                         </div>
                     </div>
@@ -558,52 +651,7 @@
             return new Date(isoString).toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
         }
 
-        // 绑定所有事件
-        function bindAllEvents() {
-            //登录
-            document.getElementById('login-btn').onclick=showLoginModal;
-            document.getElementById('login-now-btn').onclick=showLoginModal;
-            document.getElementById('close-login').onclick=hideLoginModal;
-            document.getElementById('login-form').onsubmit=handleLogin;
-            document.getElementById('send-code').onclick=sendVerificationCode;
-            document.getElementById('logout-btn').onclick=handleLogout;
-
-            //下单
-            document.querySelectorAll('.buy-btn').forEach(btn=>{
-                btn.onclick=()=>{
-                    if(!currentUser){showToast('请先登录');showLoginModal();return;}
-                    currentProduct=btn.dataset.product;
-                    currentPrice=Number(btn.dataset.price);
-                    showGameInfoModal();
-                }
-            })
-            document.getElementById('close-game-info').onclick=hideGameInfoModal;
-            document.getElementById('game-info-form').onsubmit=createNewOrder;
-
-            //支付弹窗按钮
-            document.getElementById('close-payment').onclick=hidePaymentModal;
-            document.getElementById('cancel-pay-btn').onclick=hidePaymentModal;
-            //已付款按钮
-            document.getElementById('paid-btn').onclick=confirmPaymentSuccess;
-
-            //订单详情
-            document.getElementById('close-detail').onclick=hideOrderDetailModal;
-            document.getElementById('update-status-btn').onclick=updateOrderStatus;
-
-            //空白关闭弹窗
-            ["login-modal","game-info-modal","payment-modal","order-detail-modal"].forEach(id=>{
-                document.getElementById(id).addEventListener('click',e=>{
-                    if(e.target==e.currentTarget){
-                        if(id==='login-modal')hideLoginModal();
-                        if(id==='game-info-modal')hideGameInfoModal();
-                        if(id==='payment-modal')hidePaymentModal();
-                        if(id==='order-detail-modal')hideOrderDetailModal();
-                    }
-                })
-            })
-        }
-
-        // 显示登录弹窗
+        // 弹窗控制
         function showLoginModal(){document.getElementById('login-modal').classList.remove('hidden');}
         function hideLoginModal(){
             document.getElementById('login-modal').classList.add('hidden');
@@ -611,7 +659,6 @@
             if(countdown){clearInterval(countdown);countdown=null;document.getElementById('send-code').textContent='获取验证码';document.getElementById('send-code').disabled=false;}
         }
 
-        //获取验证码
         function sendVerificationCode(){
             const phone=document.getElementById('phone').value.trim();
             if(!/^1[3-9]\d{9}$/.test(phone)){showToast('手机号格式错误');return;}
@@ -620,7 +667,6 @@
             countdown=setInterval(()=>{s--;btn.textContent=s+'s';if(s<=0){clearInterval(countdown);countdown=null;btn.textContent='获取验证码';btn.disabled=false;}},1000)
         }
 
-        //登录逻辑
         function handleLogin(e){
             e.preventDefault();
             const p=document.getElementById('phone').value.trim();
@@ -630,7 +676,6 @@
             localStorage.setItem('fg-user',JSON.stringify(currentUser));
             hideLoginModal();updateUserUI();renderOrders();updateStatistics();showToast('登录成功');
         }
-        //退出登录
         function handleLogout(){
             currentUser=null;localStorage.removeItem('fg-user');updateUserUI();renderOrders();updateStatistics();showToast('已退出');
         }
@@ -713,6 +758,50 @@
             t.className='toast-message fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-5 py-3 rounded-lg z-[9999] text-sm';
             t.textContent=msg;document.body.appendChild(t);
             setTimeout(()=>{t.style.opacity='0';t.style.transition='0.3s';setTimeout(()=>t.remove(),300)},3000)
+        }
+
+        //绑定所有点击事件
+        function bindAllEvents() {
+            //登录
+            document.getElementById('login-btn').onclick=showLoginModal;
+            document.getElementById('login-now-btn').onclick=showLoginModal;
+            document.getElementById('close-login').onclick=hideLoginModal;
+            document.getElementById('login-form').onsubmit=handleLogin;
+            document.getElementById('send-code').onclick=sendVerificationCode;
+            document.getElementById('logout-btn').onclick=handleLogout;
+
+            //下单
+            document.querySelectorAll('.buy-btn').forEach(btn=>{
+                btn.onclick=()=>{
+                    if(!currentUser){showToast('请先登录');showLoginModal();return;}
+                    currentProduct=btn.dataset.product;
+                    currentPrice=Number(btn.dataset.price);
+                    showGameInfoModal();
+                }
+            })
+            document.getElementById('close-game-info').onclick=hideGameInfoModal;
+            document.getElementById('game-info-form').onsubmit=createNewOrder;
+
+            //支付弹窗按钮
+            document.getElementById('close-payment').onclick=hidePaymentModal;
+            document.getElementById('cancel-pay-btn').onclick=hidePaymentModal;
+            document.getElementById('paid-btn').onclick=confirmPaymentSuccess;
+
+            //订单详情
+            document.getElementById('close-detail').onclick=hideOrderDetailModal;
+            document.getElementById('update-status-btn').onclick=updateOrderStatus;
+
+            //空白背景关闭弹窗
+            ["login-modal","game-info-modal","payment-modal","order-detail-modal"].forEach(id=>{
+                document.getElementById(id).addEventListener('click',e=>{
+                    if(e.target==e.currentTarget){
+                        if(id==='login-modal')hideLoginModal();
+                        if(id==='game-info-modal')hideGameInfoModal();
+                        if(id==='payment-modal')hidePaymentModal();
+                        if(id==='order-detail-modal')hideOrderDetailModal();
+                    }
+                })
+            })
         }
     </script>
 </body>
